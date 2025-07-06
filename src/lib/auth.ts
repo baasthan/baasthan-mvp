@@ -2,14 +2,14 @@ import { betterAuth } from "better-auth";
 import { prismaAdapter } from "better-auth/adapters/prisma";
 // If your Prisma file is located elsewhere, you can change the path
 
-import { AUTH_CONFIG } from "@/config";
+import { APP_CONFIG, AUTH_CONFIG } from "@/config";
 import { PrismaClient } from "@/generated/prisma";
 import { nextCookies } from "better-auth/next-js";
 import { haveIBeenPwned } from "better-auth/plugins";
 
 const prisma = new PrismaClient();
 export const auth = betterAuth({
-  appName: AUTH_CONFIG.APP_NAME,
+  appName: APP_CONFIG.APP_NAME,
   database: prismaAdapter(prisma, {
     provider: "postgresql",
   }),
@@ -22,7 +22,7 @@ export const auth = betterAuth({
   ],
   emailAndPassword: {
     enabled: AUTH_CONFIG.EMAIL_PASSWORD.enabled,
-    autoSignIn: true,
+    autoSignIn: false,
     minPasswordLength: AUTH_CONFIG.EMAIL_PASSWORD.minLength,
     maxPasswordLength: AUTH_CONFIG.EMAIL_PASSWORD.maxLength,
     requireEmailVerification:
