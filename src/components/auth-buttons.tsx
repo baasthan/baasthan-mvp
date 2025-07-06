@@ -25,7 +25,6 @@ import {
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "./ui/tabs";
-import Typography from "./ui/typography";
 
 const AuthButtons = () => {
   const searchParams = useSearchParams();
@@ -58,12 +57,14 @@ const AuthButtons = () => {
     return (
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <Avatar>
-            {data.user.image && <AvatarImage src={data.user.image} />}
-            <AvatarFallback className="bg-primary text-primary-foreground">
-              {getInitials(data.user.name)}
-            </AvatarFallback>
-          </Avatar>
+          <Button size={"icon"} asChild className=" cursor-pointer">
+            <Avatar>
+              {data.user.image && <AvatarImage src={data.user.image} />}
+              <AvatarFallback className="bg-primary text-primary-foreground">
+                {getInitials(data.user.name)}
+              </AvatarFallback>
+            </Avatar>
+          </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent
           align="start"
@@ -78,14 +79,18 @@ const AuthButtons = () => {
                 </AvatarFallback>
               </Avatar>
               <div>
-                <Typography.p>{data.user.name}</Typography.p>
-                <Button variant={"link"} asChild>
-                  <Link href="/profile">View Profile</Link>
-                </Button>
+                <p className="text-sm text-muted-foreground">
+                  {data.user.name}
+                </p>
+                <p className="text-sm text-muted-foreground">
+                  {data.user.email}
+                </p>
               </div>
             </div>
           </DropdownMenuGroup>
-
+          <Button variant={"link"} asChild>
+            <Link href="/profile">View Profile</Link>
+          </Button>
           <Button
             variant="destructive"
             className="w-full"
