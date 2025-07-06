@@ -1,93 +1,115 @@
 "use client";
 
+import { zodResolver } from "@hookform/resolvers/zod";
+
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { signIn } from "@/lib/auth-client";
 import { cn } from "@/lib/utils";
+import signInSchema from "@/validation-schemas/sign-in-schema";
 import { Loader2 } from "lucide-react";
-import Link from "next/link";
 import { useState } from "react";
+import { useForm } from "react-hook-form";
+import z from "zod";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "./ui/form";
 
 export default function SignIn() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const form = useForm<z.infer<typeof signInSchema>>({
+    resolver: zodResolver(signInSchema),
+    defaultValues: {
+      email: "",
+      password: "",
+    },
+  });
+
+  const [apiError, setApiError] = useState<{
+    code?: string | undefined;
+    message?: string | undefined;
+    status: number;
+    statusText: string;
+  } | null>(null);
+
+  async function onSubmit({ email, password }: z.infer<typeof signInSchema>) {
+    setLoading(true);
+    const { data, error } = await signIn.email({
+      email,
+      password,
+    });
+    if (error) {
+      setApiError(error);
+    }
+    if (data) {
+      setApiError(null);
+    }
+    setLoading(false);
+  }
+
   const [loading, setLoading] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
 
   return (
     <div className="grid gap-4">
-      <div className="grid gap-2">
-        <Label htmlFor="email">Email</Label>
-        <Input
-          id="email"
-          type="email"
-          placeholder="m@example.com"
-          required
-          onChange={(e) => {
-            setEmail(e.target.value);
-          }}
-          value={email}
-        />
-      </div>
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(onSubmit)} className="grid gap-4">
+          <FormField
+            control={form.control}
+            name="email"
+            render={({ field }) => (
+              <FormItem className="grid gap-2">
+                <FormLabel>Email</FormLabel>
+                <FormControl>
+                  <Input placeholder="Email Address" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="password"
+            render={({ field }) => (
+              <FormItem className="grid gap-2">
+                <FormLabel>Password</FormLabel>
+                <FormControl>
+                  <Input placeholder="Password" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
 
-      <div className="grid gap-2">
-        <div className="flex items-center">
-          <Label htmlFor="password">Password</Label>
-          <Link href="#" className="ml-auto inline-block text-sm underline">
-            Forgot your password?
-          </Link>
-        </div>
-
-        <Input
-          id="password"
-          type="password"
-          placeholder="password"
-          autoComplete="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-        />
-      </div>
-
-      <div className="flex items-center gap-2">
-        <Checkbox
-          id="remember"
-          onClick={() => {
-            setRememberMe(!rememberMe);
-          }}
-        />
-        <Label htmlFor="remember">Remember me</Label>
-      </div>
-
-      <Button
-        type="submit"
-        className="w-full"
-        disabled={loading}
-        onClick={async () => {
-          await signIn.email(
-            {
-              email,
-              password,
-            },
-            {
-              onRequest: (_ctx) => {
-                setLoading(true);
-              },
-              onResponse: (_ctx) => {
-                setLoading(false);
-              },
-            }
-          );
-        }}
-      >
-        {loading ? (
-          <Loader2 size={16} className="animate-spin" />
-        ) : (
-          <p> Login </p>
-        )}
-      </Button>
-
+          <div className="flex items-center gap-2">
+            <Checkbox
+              id="remember"
+              onClick={() => {
+                setRememberMe(!rememberMe);
+              }}
+            />
+            <Label htmlFor="remember">Remember me</Label>
+          </div>
+          {apiError && (
+            <FormMessage>
+              {apiError.message || "Something went wrong"}
+            </FormMessage>
+          )}
+          <Button type="submit" className="w-full" disabled={loading}>
+            {loading ? (
+              <Loader2 size={16} className="animate-spin" />
+            ) : (
+              <p> Login </p>
+            )}
+          </Button>
+        </form>
+      </Form>
       <div
         className={cn(
           "w-full gap-2 flex items-center",

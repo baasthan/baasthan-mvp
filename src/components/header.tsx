@@ -1,6 +1,7 @@
 import { APP_CONFIG } from "@/config";
 import Image from "next/image";
 import Link from "next/link";
+import { Suspense } from "react";
 import AuthButtons from "./auth-buttons";
 import { Button } from "./ui/button";
 
@@ -23,14 +24,16 @@ const Header = () => {
         </h3>
       </Link>
 
-      <div>
+      <div className="flex flex-row">
         <Button variant={"link"} asChild>
           <Link href="/blogs">Blogs</Link>
         </Button>
         <Button variant={"link"} asChild>
           <Link href={"/about-us"}>About Us</Link>
         </Button>
-        <AuthButtons />
+        <Suspense>
+          <AuthButtons />
+        </Suspense>
       </div>
     </header>
   );
