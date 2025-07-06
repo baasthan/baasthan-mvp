@@ -1,6 +1,5 @@
 const AUTH_CONFIG = {
-  APP_NAME: process.env.APP_NAME || "Baasthan",
-  BASE_URL: process.env.BASE_URL,
+  SIGN_IN_URL: `${process.env.BASE_URL}?sign-in-prompt=true`,
   EMAIL_PASSWORD: {
     enabled: process.env.EMAIL_PASSWORD_ENABLED === "true" || false,
     minLength: 8,
