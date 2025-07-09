@@ -125,4 +125,7 @@
     @apply bg-background text-foreground;
     /* background: linear-gradient(313.26deg, #4c4ddc -3.22%, #ffffff 100%); */
   }
+  .full-screen-section {
+    @apply min-h-[calc(100svh-52px)];
+  }
 }

@@ -30,13 +30,11 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} flex flex-col antialiased bg-linear-to-br from-[#4c4ddc]/30 to-[transparent] w-screen h-screen overflow-hidden`}
+        className={`${geistSans.variable} ${geistMono.variable} flex flex-col antialiased bg-linear-to-tr from-[#4c4ddc]/30 to-[transparent]`}
       >
         <Header />
         <Toaster />
-        <main className="overflow-y-scroll max-h-[calc(100svh-52px)] py-2 flex flex-1">
-          {children}
-        </main>
+        <main className="py-2 flex flex-1">{children}</main>
         <footer></footer>
       </body>
     </html>
