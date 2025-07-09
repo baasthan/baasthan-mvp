@@ -13,7 +13,7 @@ const Header = () => {
         className="flex flex-row items-center gap-2 px-2 py-1 rounded-full"
       >
         <Image
-          src="logo.svg"
+          src="/logo.svg"
           width={24}
           height={24}
           alt={`${APP_CONFIG.NAME} Logo`}

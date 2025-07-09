@@ -1,5 +1,6 @@
 const AUTH_CONFIG = {
   SIGN_IN_URL: `${process.env.BASE_URL}?sign-in-prompt=true`,
+  SIGN_IN_PROMPT:'sign-in-prompt',
   EMAIL_PASSWORD: {
     enabled: process.env.EMAIL_PASSWORD_ENABLED === "true" || false,
     minLength: 8,

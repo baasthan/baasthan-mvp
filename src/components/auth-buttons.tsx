@@ -3,6 +3,7 @@
 import { signOut, useSession } from "@/lib/auth-client";
 import getInitials from "@/utils/getInitials";
 
+import { APP_CONFIG, AUTH_CONFIG } from "@/config";
 import { DropdownMenuGroup } from "@radix-ui/react-dropdown-menu";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -30,7 +31,7 @@ const AuthButtons = () => {
   const searchParams = useSearchParams();
   const router = useRouter();
   const [openDialog, setOpenDialog] = useState<boolean>(
-    searchParams.get("sign-in-prompt") === "true" || false
+    searchParams.get(AUTH_CONFIG.SIGN_IN_PROMPT) === "true" || false
   );
 
   const { data, isPending } = useSession();
@@ -39,12 +40,24 @@ const AuthButtons = () => {
     const params = new URLSearchParams(searchParams.toString());
     if (data && data.user) {
       setOpenDialog(false);
-      if (searchParams.get("sign-in-prompt") === "true") {
+      if (searchParams.get(AUTH_CONFIG.SIGN_IN_PROMPT) === "true") {
         params.delete("sign-in-prompt");
         router.replace(`?${params.toString()}`);
       }
     }
-  }, [data, isPending, router, searchParams]);
+  }, [data]);
+
+  const handleSignOut = async () => {
+    const currentUrl = window.location.href;
+    const searchParams = new URLSearchParams();
+    searchParams.set(AUTH_CONFIG.SIGN_IN_PROMPT, "true");
+    searchParams.set("redirect", currentUrl);
+
+    await signOut();
+
+    setOpenDialog(true);
+    router.push(`${APP_CONFIG.BASE_URL}/?${searchParams.toString()}`);
+  };
 
   if (isPending) {
     return (
@@ -94,7 +107,7 @@ const AuthButtons = () => {
           <Button
             variant="destructive"
             className="w-full"
-            onClick={() => signOut()}
+            onClick={handleSignOut}
           >
             Sign out
           </Button>
