@@ -156,24 +156,24 @@ model Location {
 model PropertyInfo {
   id                String              @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   hostId            String
-  organizationId    String
   title             String
-  startingPrice     Int
+  startingPrice     BigInt
   rera_registered   String?
   year_built        Int?
   status            String?
-  floor             String?
+  floor             Int?
   address           String?
-  rating            String?
-  rating_count      String?
+  rating            Int?
+  rating_count      Int?
   created_at        DateTime            @default(now())
   PropertyAmenities PropertyAmenities[]
   PropertyImages    PropertyImages[]
   Reviews           Reviews[]
   Unit              Unit[]
   host              User                @relation(fields: [hostId], references: [id])
-  organization      Organization        @relation(fields: [organizationId], references: [id], onDelete: Cascade)
   Location          Location?
+  Organization      Organization?       @relation(fields: [organizationId], references: [id])
+  organizationId    String?
 }
 
 enum UnitTypeEnum {

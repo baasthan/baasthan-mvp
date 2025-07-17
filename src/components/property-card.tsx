@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Heart, MapPin, Share2, Star } from "lucide-react";
 
-interface PropertyCardProps {
+export interface PropertyCardProps {
   id: number;
   name: string;
   location: string;

@@ -2,6 +2,7 @@ import { APP_CONFIG, AUTH_CONFIG } from "@/config";
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
+import AccessDenied from "../access-denied/page";
 
 const Page = async () => {
   const session = await auth.api.getSession({
@@ -14,9 +15,19 @@ const Page = async () => {
     redirect(`${APP_CONFIG.BASE_URL}/?${AUTH_CONFIG.SIGN_IN_PROMPT}=true`);
   }
 
-  if (session && session.user) {
-    return <div>Dashboard</div>;
+  const { error, success } = await auth.api.userHasPermission({
+    body: {
+      permissions: {
+        appDashBoard: ["view"],
+      },
+    },
+  });
+
+  if (!success || error) {
+    return AccessDenied();
   }
+
+  return <div>Dashboard</div>;
 };
 
 export default Page;
