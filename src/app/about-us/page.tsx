@@ -146,7 +146,7 @@ export default function AboutUsPage() {
                 We aim to go beyond housing by integrating essential lifestyle
                 services like cloud kitchen and laundry, making Baasthan a
                 complete digital living solution all under one platform. To
-                become India's most trusted digital living platform by
+                become India&apos;s most trusted digital living platform by
                 redefining how people book and manage their accommodation with
                 zero brokerage at its core. We envision a future where every
                 student and professional can access verified, affordable housing
