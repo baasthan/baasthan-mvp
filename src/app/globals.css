@@ -122,7 +122,7 @@
     @apply border-border outline-ring/50;
   }
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground overflow-x-hidden min-h-svh;
     /* background: linear-gradient(313.26deg, #4c4ddc -3.22%, #ffffff 100%); */
   }
   .full-screen-section {
