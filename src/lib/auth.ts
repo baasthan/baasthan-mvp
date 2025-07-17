@@ -6,8 +6,21 @@ import { APP_CONFIG, AUTH_CONFIG } from "@/config";
 // If your Prisma file is located elsewhere, you can change the path
 
 import { nextCookies } from "better-auth/next-js";
-import { haveIBeenPwned } from "better-auth/plugins";
+import { admin, haveIBeenPwned, organization } from "better-auth/plugins";
 import { PrismaClient } from "../../prisma/generated/prisma";
+import {
+  appAC,
+  contentAdminRole,
+  contentCreatorRole,
+  endUserRole,
+  hostUserRole,
+  superAdminRole,
+} from "./access-controls/app-access-control";
+import {
+  orgAcc,
+  ownerRole,
+  tenantRole,
+} from "./access-controls/org-access-control";
 
 const prisma = new PrismaClient();
 export const auth = betterAuth({
@@ -20,6 +33,34 @@ export const auth = betterAuth({
     haveIBeenPwned({
       customPasswordCompromisedMessage:
         "This password has been found in some data breaches. Please try any other password",
+    }),
+    admin({
+      ac: appAC,
+      impersonationSessionDuration: 0,
+      permitImpersonation: false,
+      defaultRole: "endUserRole",
+      roles: {
+        superAdminRole,
+        hostUserRole,
+        contentAdminRole,
+        contentCreatorRole,
+        endUserRole,
+      },
+    }),
+    organization({
+      ac: orgAcc,
+      roles: {
+        tenantRole,
+        ownerRole,
+      },
+
+      organizationCreation: { disabled: false },
+      organizationDeletion: { disabled: true },
+      allowUserToCreateOrganization: async (user) => {
+        // Need to implement check if the user has role
+        console.log("User===>", user);
+        return true;
+      },
     }),
   ],
   emailAndPassword: {
