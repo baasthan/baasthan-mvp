@@ -20,7 +20,7 @@ interface FeaturedPropertiesProps {
  * Example usage:
  *   <FeaturedProperties visibleCount={5} />
  */
-const FeaturedProperties: React.FC<FeaturedPropertiesProps> = ({ visibleCount = 3 }) => {
+const FeaturedProperties: React.FC<FeaturedPropertiesProps> = ({ visibleCount = 5 }) => {
   const featuredProperties = [
     {
       id: 1,
@@ -159,7 +159,7 @@ const FeaturedProperties: React.FC<FeaturedPropertiesProps> = ({ visibleCount = 
   const [scrollIndex, setScrollIndex] = useState(0);
 
   const cardWidth = 320; 
-  const maxIndex = featuredProperties.length - visibleCount;
+  const maxIndex = Math.max(0, Math.ceil(featuredProperties.length - visibleCount));
 
   const scrollToIndex = (index: number) => {
     if (scrollRef.current) {
@@ -182,11 +182,24 @@ const FeaturedProperties: React.FC<FeaturedPropertiesProps> = ({ visibleCount = 
     scrollToIndex(newIndex);
   };
 
+  // Optionally, update scrollIndex if user scrolls manually (for arrow disabling)
+  const handleScroll = () => {
+    if (scrollRef.current) {
+      const scrollLeft = scrollRef.current.scrollLeft;
+      const newIndex = Math.round(scrollLeft / cardWidth);
+      setScrollIndex(newIndex);
+    }
+  };
+
   // When "View All" is clicked, scroll to the start
   const handleViewAll = () => {
     setScrollIndex(0);
     scrollToIndex(0);
   };
+
+  // Responsive: show 4 in a column on mobile, carousel on desktop
+  const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
+  const mobileProperties = featuredProperties.slice(0, 4);
 
   return (
     <section className="py-16 bg-gray-50">
@@ -205,7 +218,16 @@ const FeaturedProperties: React.FC<FeaturedPropertiesProps> = ({ visibleCount = 
             <ArrowRight />
           </Button>
         </div>
-        <div className="relative">
+        {/* Mobile: vertical column, 4 properties */}
+        <div className="block md:hidden">
+          <div className="flex flex-col gap-6">
+            {mobileProperties.map((property) => (
+              <PropertyCards {...property} key={property.id} />
+            ))}
+          </div>
+        </div>
+        {/* Desktop: horizontal carousel */}
+        <div className="hidden md:block relative">
           <button
             className="absolute left-0 top-1/2 -translate-y-1/2 z-10 bg-white border rounded-full shadow p-2 disabled:opacity-30"
             onClick={handleLeft}
@@ -218,12 +240,13 @@ const FeaturedProperties: React.FC<FeaturedPropertiesProps> = ({ visibleCount = 
           <div
             ref={scrollRef}
             className="flex gap-6 overflow-x-auto scroll-smooth no-scrollbar"
-            style={{ scrollBehavior: "smooth" }}
+            style={{ scrollBehavior: "smooth", scrollSnapType: "x mandatory" }}
+            onScroll={handleScroll}
           >
             {featuredProperties.map((property, index) => (
               <div
                 key={property.id}
-                style={{ minWidth: cardWidth, maxWidth: cardWidth }}
+                style={{ minWidth: cardWidth, maxWidth: cardWidth, scrollSnapAlign: "center" }}
                 className="flex-shrink-0"
               >
                 <PropertyCards {...property} />
