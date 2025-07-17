@@ -1,11 +1,13 @@
 import { betterAuth } from "better-auth";
 import { prismaAdapter } from "better-auth/adapters/prisma";
-// If your Prisma file is located elsewhere, you can change the path
 
 import { APP_CONFIG, AUTH_CONFIG } from "@/config";
-import { PrismaClient } from "@/generated/prisma";
+
+// If your Prisma file is located elsewhere, you can change the path
+
 import { nextCookies } from "better-auth/next-js";
 import { haveIBeenPwned } from "better-auth/plugins";
+import { PrismaClient } from "../../prisma/generated/prisma";
 
 const prisma = new PrismaClient();
 export const auth = betterAuth({

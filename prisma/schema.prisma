@@ -1,12 +1,6 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
-  output   = "../src/generated/prisma"
+  output   = "generated/prisma"
 }
 
 datasource db {
@@ -18,22 +12,31 @@ datasource db {
 model User {
   id            String    @id
   name          String
-  email         String
+  email         String    @unique
   emailVerified Boolean
   image         String?
   createdAt     DateTime
   updatedAt     DateTime
-  sessions      Session[]
   accounts      Account[]
+  sessions      Session[]
 
-  @@unique([email])
+  members     Member[]
+  invitations Invitation[]
+
+  role         String?
+  banned       Boolean?
+  banReason    String?
+  banExpires   DateTime?
+  blog         blog[]
+  PropertyInfo PropertyInfo[]
+
   @@map("user")
 }
 
 model Session {
   id        String   @id
   expiresAt DateTime
-  token     String
+  token     String   @unique
   createdAt DateTime
   updatedAt DateTime
   ipAddress String?
@@ -41,7 +44,10 @@ model Session {
   userId    String
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  @@unique([token])
+  activeOrganizationId String?
+
+  impersonatedBy String?
+
   @@map("session")
 }
 
@@ -50,7 +56,6 @@ model Account {
   accountId             String
   providerId            String
   userId                String
-  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
   accessToken           String?
   refreshToken          String?
   idToken               String?
@@ -60,6 +65,7 @@ model Account {
   password              String?
   createdAt             DateTime
   updatedAt             DateTime
+  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@map("account")
 }
@@ -73,4 +79,148 @@ model Verification {
   updatedAt  DateTime?
 
   @@map("verification")
+}
+
+model Jwks {
+  id         String   @id
+  publicKey  String
+  privateKey String
+  createdAt  DateTime
+
+  @@map("jwks")
+}
+
+model Organization {
+  id           String         @id
+  name         String
+  slug         String?
+  logo         String?
+  createdAt    DateTime
+  metadata     String?
+  members      Member[]
+  invitations  Invitation[]
+  PropertyInfo PropertyInfo[]
+
+  @@unique([slug])
+  @@map("organization")
+}
+
+model Member {
+  id             String       @id
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  userId         String
+  user           User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  role           String
+  createdAt      DateTime
+
+  @@map("member")
+}
+
+model Invitation {
+  id             String       @id
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  email          String
+  role           String?
+  status         String
+  expiresAt      DateTime
+  inviterId      String
+  user           User         @relation(fields: [inviterId], references: [id], onDelete: Cascade)
+
+  @@map("invitation")
+}
+
+model blog {
+  id        BigInt   @id @default(autoincrement())
+  title     String   @unique
+  content   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  isLive    Boolean  @default(false)
+  authorId  String?
+  user      User?    @relation(fields: [authorId], references: [id], onDelete: SetNull)
+}
+
+model Location {
+  id            String       @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  propertyId    String       @unique @db.Uuid
+  city          String
+  state         String
+  pincode       String
+  landmark      String?
+  googleMapLink String?
+  PropertyInfo  PropertyInfo @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+}
+
+model PropertyInfo {
+  id                String              @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  hostId            String
+  organizationId    String
+  title             String
+  startingPrice     Int
+  rera_registered   String?
+  year_built        Int?
+  status            String?
+  floor             String?
+  address           String?
+  rating            String?
+  rating_count      String?
+  created_at        DateTime            @default(now())
+  PropertyAmenities PropertyAmenities[]
+  PropertyImages    PropertyImages[]
+  Reviews           Reviews[]
+  Unit              Unit[]
+  host              User                @relation(fields: [hostId], references: [id])
+  organization      Organization        @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  Location          Location?
+}
+
+enum UnitTypeEnum {
+  Bhk_1 @map("1BHK")
+  Bhk_2 @map("2BHK")
+  Bhk_3 @map("3BHK")
+}
+
+model Unit {
+  id            String       @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  propertyId    String       @db.Uuid
+  type          UnitTypeEnum
+  PropertyInfo  PropertyInfo @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+  bedrooms      Int?
+  bathrooms     Int?
+  covered_area  Float?
+  carpet_area   Float?
+  configuration String?
+  facing        String?
+  furnishing    String?
+}
+
+model PropertyAmenities {
+  id           String        @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  propertyId   String        @db.Uuid
+  amenityName  String[]
+  PropertyInfo PropertyInfo? @relation(fields: [propertyId], references: [id])
+}
+
+model PropertyImages {
+  id           Int           @id @default(autoincrement())
+  propertyId   String        @db.Uuid
+  url          String
+  isMain       Boolean       @default(false)
+  PropertyInfo PropertyInfo? @relation(fields: [propertyId], references: [id])
+}
+
+model Reviews {
+  id           Int           @id @default(autoincrement())
+  propertyId   String        @db.Uuid
+  userId       String
+  location     String
+  verified     Boolean
+  rating       Int
+  comment      String
+  helpful_yes  Boolean       @default(false)
+  helpful_no   Boolean       @default(false)
+  review_date  DateTime      @default(now())
+  PropertyInfo PropertyInfo? @relation(fields: [propertyId], references: [id], onDelete: Cascade)
 }

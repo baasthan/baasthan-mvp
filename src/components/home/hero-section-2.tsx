@@ -6,7 +6,7 @@ import Typography from "../ui/typography";
 
 const HeroSection2 = () => {
   return (
-    <section className="flex-1 flex flex-row items-center justify-between full-screen-section w-full">
+    <section className="flex-1 md:flex 2xl:hidden hidden flex-row items-center justify-between full-screen-section w-full">
       <div className="relative flex justify-center flex-1 ">
         <img
           src="/home-hero-2.png"

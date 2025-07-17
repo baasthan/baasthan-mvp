@@ -1,15 +1,32 @@
-import HeroSection1 from "@/components/home/hero-section-1";
-import HeroSection2 from "@/components/home/hero-section-2";
-import HeroSection3 from "@/components/home/hero-section-3";
+import Cta from "@/components/home/cta";
+import FeaturedProperties from "@/components/home/featured-properties";
+import HowItWorks from "@/components/home/how-it-works";
+import MainHero from "@/components/home/main-hero";
+import PopularCities from "@/components/home/popular-cities";
+import Testimonials from "@/components/home/testimonials";
+import WhyChooseUs from "@/components/home/why-choose-us";
 
-const Home = () => {
+export default function Page() {
   return (
-    <div className="flex flex-col flex-1 px-20 items-center justify-center">
-      <HeroSection1 />
-      <HeroSection2 />
-      <HeroSection3 />
+    <div className="">
+      {/* Hero Section */}
+      <MainHero />
+      {/* Popular Cities */}
+      <PopularCities />
+      {/* Featured Properties */}
+      <FeaturedProperties />
+
+      {/* How It Works */}
+      <HowItWorks />
+
+      {/* Why Choose Us */}
+      <WhyChooseUs />
+
+      {/* Testimonials */}
+      <Testimonials />
+
+      {/* CTA Section */}
+      <Cta />
     </div>
   );
-};
-
-export default Home;
+}
