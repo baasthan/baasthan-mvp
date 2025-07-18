@@ -4,6 +4,7 @@ import React, { useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, ArrowLeft } from "lucide-react";
 import PropertyCards from "../property-card";
+import Link from "next/link";
 
 interface FeaturedPropertiesProps {
   visibleCount?: number;
@@ -213,10 +214,12 @@ const FeaturedProperties: React.FC<FeaturedPropertiesProps> = ({ visibleCount = 
               Handpicked premium PG accommodations
             </p>
           </div>
-          <Button variant={"outline"} onClick={handleViewAll}>
-            View All
-            <ArrowRight />
-          </Button>
+          <Link href="/featured-properties">
+            <Button variant={"outline"}>
+              View All
+              <ArrowRight />
+            </Button>
+          </Link>
         </div>
         {/* Mobile: vertical column, 4 properties */}
         <div className="block md:hidden">
