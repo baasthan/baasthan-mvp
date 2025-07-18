@@ -2,14 +2,13 @@
 
 import { signOut, useSession } from "@/lib/auth-client";
 import getInitials from "@/utils/getInitials";
-
+import { cn } from "@/lib/utils";
 import { APP_CONFIG, AUTH_CONFIG } from "@/config";
 import { DropdownMenuGroup } from "@radix-ui/react-dropdown-menu";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
-import SignIn from "./sign-in";
-import SignUp from "./sign-up";
+import dynamic from 'next/dynamic';
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { Button } from "./ui/button";
 import {
@@ -20,6 +19,14 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "./ui/dialog";
+
+const SignIn = dynamic(() => import("./sign-in"), {
+  loading: () => <div className="flex justify-center p-4"><div className="animate-spin h-6 w-6 border-2 border-primary border-t-transparent rounded-full"></div></div>
+});
+
+const SignUp = dynamic(() => import("./sign-up"), {
+  loading: () => <div className="flex justify-center p-4"><div className="animate-spin h-6 w-6 border-2 border-primary border-t-transparent rounded-full"></div></div>
+});
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -27,12 +34,18 @@ import {
 } from "./ui/dropdown-menu";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "./ui/tabs";
 
-const AuthButtons = () => {
+interface AuthButtonsProps {
+  isMobile?: boolean;
+  onActionComplete?: () => void;
+}
+
+const AuthButtons = ({ isMobile = false, onActionComplete }: AuthButtonsProps) => {
   const searchParams = useSearchParams();
   const router = useRouter();
   const [openDialog, setOpenDialog] = useState<boolean>(
     searchParams.get(AUTH_CONFIG.SIGN_IN_PROMPT) === "true" || false
   );
+  const [activeTab, setActiveTab] = useState<"sign-in" | "sign-up">("sign-in");
 
   const { data, isPending } = useSession();
 
@@ -123,22 +136,34 @@ const AuthButtons = () => {
         open={openDialog}
         onOpenChange={(open) => {
           setOpenDialog(open);
+          if (!open && onActionComplete) {
+            onActionComplete();
+          }
         }}
       >
         <DialogTrigger asChild>
-          <Button>Sign In / Login</Button>
+          <Button 
+            variant="default"
+            className={cn(
+              "font-medium text-sm",
+              isMobile && "w-full justify-center"
+            )}
+            onClick={() => setOpenDialog(true)}
+          >
+            Sign In / Create Account
+          </Button>
         </DialogTrigger>
 
-        <Tabs defaultValue="sign-in">
+        <Tabs defaultValue={activeTab} value={activeTab} onValueChange={(value) => setActiveTab(value as "sign-in" | "sign-up")}>
           <DialogContent showCloseButton={false}>
             <DialogHeader>
               <DialogTitle className="flex flex-row justify-between">
-                <TabsList className=" border rounded-full">
+                <TabsList className="border rounded-full">
                   <TabsTrigger value="sign-in">Sign In</TabsTrigger>
                   <TabsTrigger value="sign-up">Sign Up</TabsTrigger>
                 </TabsList>
                 <DialogClose asChild>
-                  <Button variant={"ghost"}>X</Button>
+                  <Button variant={"ghost"} size="icon">✕</Button>
                 </DialogClose>
               </DialogTitle>
             </DialogHeader>
