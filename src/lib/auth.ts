@@ -22,6 +22,8 @@ import {
   tenantRole,
 } from "./access-controls/org-access-control";
 
+import { sendEmail } from "./send-email";
+import { verifyEmail } from "./emailTemplates/verifyEmail";
 const prisma = new PrismaClient();
 export const auth = betterAuth({
   appName: APP_CONFIG.APP_NAME,
@@ -63,6 +65,18 @@ export const auth = betterAuth({
       },
     }),
   ],
+  emailVerification: {
+    sendVerificationEmail: async ({ user, url }) => {
+      const { subject, html, text } = verifyEmail(url, user.name);
+      await sendEmail({
+        to: user.email,
+        subject,
+        html,
+        text,
+      });
+    },
+    sendOnSignUp: true,
+  },
   emailAndPassword: {
     enabled: AUTH_CONFIG.EMAIL_PASSWORD.enabled,
     autoSignIn: false,
