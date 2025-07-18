@@ -12,9 +12,9 @@ import signInSchema from "@/validation-schemas/sign-in-schema";
 import { Loader2 } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import z from "zod";
 import { toast } from "sonner";
-import validator from "validator"
+import validator from "validator";
+import z from "zod";
 import {
   Form,
   FormControl,
@@ -107,7 +107,11 @@ export default function SignIn() {
               {apiError.message || "Something went wrong"}
             </FormMessage>
           )}
-          <Button type="submit" className="w-full" disabled={loading || !form.formState.isValid}>
+          <Button
+            type="submit"
+            className="w-full"
+            disabled={loading || !form.formState.isValid}
+          >
             {loading ? (
               <Loader2 size={16} className="animate-spin" />
             ) : (

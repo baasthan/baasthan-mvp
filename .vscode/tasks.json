@@ -1,0 +1,13 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "Install and Start",
+			"type": "shell",
+			"command": "pnpm install; pnpm dev",
+			"problemMatcher": [],
+			"group": "build",
+			"isBackground": false
+		}
+	]
+}
