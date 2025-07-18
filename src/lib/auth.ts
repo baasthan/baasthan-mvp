@@ -22,8 +22,8 @@ import {
   tenantRole,
 } from "./access-controls/org-access-control";
 
-import { sendEmail } from "./send-email";
 import { verifyEmail } from "./emailTemplates/verifyEmail";
+import { sendEmail } from "./send-email";
 const prisma = new PrismaClient();
 export const auth = betterAuth({
   appName: APP_CONFIG.APP_NAME,
@@ -75,7 +75,9 @@ export const auth = betterAuth({
         text,
       });
     },
+
     sendOnSignUp: true,
+    autoSignInAfterVerification: true,
   },
   emailAndPassword: {
     enabled: AUTH_CONFIG.EMAIL_PASSWORD.enabled,
