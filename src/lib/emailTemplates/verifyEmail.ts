@@ -11,20 +11,18 @@ export function verifyEmail(url: string, userName?: string) {
             <p style="margin: 0 0 24px; font-size: 15px; color: #444;">
               Thanks for signing up. Please confirm your email address to get started.
             </p>
-            <form action="${url}" method="get">
-              <button type="submit" style="
-                padding: 12px 24px;
-                font-size: 15px;
-                font-weight: 500;
-                background: #4c4ddc;
-                color: white;
-                border: none;
-                border-radius: 26px;
-                cursor: pointer;
-              ">
-                Verify Email
-              </button>
-            </form>
+            <button type="submit" style="
+              padding: 12px 24px;
+              font-size: 15px;
+              font-weight: 500;
+              background: #4c4ddc;
+              color: white;
+              border: none;
+              border-radius: 26px;
+              cursor: pointer;
+            ">
+              <a href=${url} style="color: white; text-decoration: none;">Verify Email</a>
+            </button>
             <p style="margin: 30px 0 0; font-size: 13px; color: #777;">
               Didn’t request this? You can safely ignore this message.
             </p>
