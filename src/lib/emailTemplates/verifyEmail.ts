@@ -1,36 +1,42 @@
 export function verifyEmail(url: string, userName?: string) {
   return {
-    subject: "🔐 Verify Your Email Address",
+    subject: "Confirm Your Email Address",
     html: `
       <div style="font-family: 'Segoe UI', Roboto, sans-serif; background-color: #f4f4f7; padding: 40px 0;">
-        <div style="max-width: 600px; margin: 0 auto; background: white; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); overflow: hidden;">
-          <div style="padding: 30px 40px;">
-            <h1 style="margin: 0 0 16px; font-size: 24px; color: #333;">Welcome${userName ? `, ${userName}` : ""} 👋</h1>
-            <p style="margin: 0 0 24px; font-size: 16px; color: #555;">
-              Please verify your email address to activate your account.
+        <div style="max-width: 600px; margin: 0 auto; background: #fff; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.07); overflow: hidden;">
+          <div style="padding: 32px 40px;">
+            <h1 style="margin: 0 0 20px; font-size: 22px; color: #333; font-weight: 600;">
+              ${userName ? `Hi ${userName},` : "Welcome,"}
+            </h1>
+            <p style="margin: 0 0 24px; font-size: 15px; color: #444;">
+              Thanks for signing up. Please confirm your email address to get started.
             </p>
-            <a href="${url}" target="_blank" style="
-              display: inline-block;
-              padding: 12px 24px;
-              font-size: 16px;
-              background-color: #0070f3;
-              color: white;
-              text-decoration: none;
-              border-radius: 6px;
-              font-weight: 500;
-            ">
-              ✅ Verify Email
-            </a>
-            <p style="margin: 32px 0 0; font-size: 14px; color: #888;">
-              If you didn't create an account, you can safely ignore this email.
+            <form action="${url}" method="get">
+              <button type="submit" style="
+                padding: 12px 24px;
+                font-size: 15px;
+                font-weight: 500;
+                background: #4c4ddc;
+                color: white;
+                border: none;
+                border-radius: 26px;
+                cursor: pointer;
+              ">
+                Verify Email
+              </button>
+            </form>
+            <p style="margin: 30px 0 0; font-size: 13px; color: #777;">
+              Didn’t request this? You can safely ignore this message.
             </p>
           </div>
-          <div style="background-color: #f0f0f0; padding: 16px 40px; text-align: center; font-size: 13px; color: #999;">
+          <div style="background: #f0f0f0; padding: 14px 40px; text-align: center; font-size: 12px; color: #999;">
             © ${new Date().getFullYear()} Baasthana. All rights reserved.
           </div>
         </div>
       </div>
     `,
-    text: `Welcome${userName ? `, ${userName}` : ""}!\n\nPlease verify your email by clicking the following link:\n${url}\n\nIf you didn’t create an account, you can ignore this email.`,
+    text: `${
+      userName ? `Hi ${userName},` : "Welcome,"
+    }\n\nPlease confirm your email to activate your account:\n${url}\n\nIf you didn’t request this, feel free to ignore this message.`,
   };
 }
