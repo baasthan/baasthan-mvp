@@ -1,8 +1,18 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { useSearchParams } from "next/navigation";
+import DesktopFilter from "@/components/filters/desktop-filter";
 import PropertyCards from "@/components/property-card";
+import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Input } from "@/components/ui/input";
+
+import { ListFilter, Search } from "lucide-react";
+import { useSearchParams } from "next/navigation";
+import { useEffect, useState } from "react";
 
 const featuredProperties = [
   {
@@ -138,9 +148,13 @@ const featuredProperties = [
 ];
 
 // Extract unique filter options
-const locations = Array.from(new Set(featuredProperties.map(p => p.location)));
-const types = Array.from(new Set(featuredProperties.map(p => p.type)));
-const allAmenities = Array.from(new Set(featuredProperties.flatMap(p => p.amenities)));
+const locations = Array.from(
+  new Set(featuredProperties.map((p) => p.location))
+);
+const types = Array.from(new Set(featuredProperties.map((p) => p.type)));
+const allAmenities = Array.from(
+  new Set(featuredProperties.flatMap((p) => p.amenities))
+);
 
 export default function FeaturedPropertiesPage() {
   const searchParams = useSearchParams();
@@ -160,22 +174,36 @@ export default function FeaturedPropertiesPage() {
   }, [searchParams]);
 
   // Filtering
-  let filtered = featuredProperties.filter(p => {
+  let filtered = featuredProperties.filter((p) => {
     const priceNum = parseInt(p.price.replace(/[^\d]/g, ""));
     return (
-      (!location || p.location.toLowerCase().includes(location.toLowerCase())) &&
+      (!location ||
+        p.location.toLowerCase().includes(location.toLowerCase())) &&
       (!type || p.type === type) &&
       (!verified || p.verified) &&
-      (amenities.length === 0 || amenities.every(a => p.amenities.includes(a))) &&
+      (amenities.length === 0 ||
+        amenities.every((a) => p.amenities.includes(a))) &&
       (!budget || priceNum <= parseInt(budget))
     );
   });
 
   // Sorting
   if (sort === "price-asc") {
-    filtered = filtered.slice().sort((a, b) => parseInt(a.price.replace(/[^\d]/g, "")) - parseInt(b.price.replace(/[^\d]/g, "")));
+    filtered = filtered
+      .slice()
+      .sort(
+        (a, b) =>
+          parseInt(a.price.replace(/[^\d]/g, "")) -
+          parseInt(b.price.replace(/[^\d]/g, ""))
+      );
   } else if (sort === "price-desc") {
-    filtered = filtered.slice().sort((a, b) => parseInt(b.price.replace(/[^\d]/g, "")) - parseInt(a.price.replace(/[^\d]/g, "")));
+    filtered = filtered
+      .slice()
+      .sort(
+        (a, b) =>
+          parseInt(b.price.replace(/[^\d]/g, "")) -
+          parseInt(a.price.replace(/[^\d]/g, ""))
+      );
   } else if (sort === "rating-desc") {
     filtered = filtered.slice().sort((a, b) => b.rating - a.rating);
   } else if (sort === "reviews-desc") {
@@ -184,36 +212,80 @@ export default function FeaturedPropertiesPage() {
 
   // Handlers
   const handleAmenityChange = (amenity: string) => {
-    setAmenities(prev => prev.includes(amenity) ? prev.filter(a => a !== amenity) : [...prev, amenity]);
+    setAmenities((prev) =>
+      prev.includes(amenity)
+        ? prev.filter((a) => a !== amenity)
+        : [...prev, amenity]
+    );
   };
 
   return (
     <section className="py-16 bg-gray-50 min-h-screen">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <h1 className="text-3xl font-bold text-gray-900 mb-8">All Featured Properties</h1>
+        <h1 className="text-3xl font-bold text-gray-900 mb-8">
+          All Featured Properties
+        </h1>
+        <div className="flex flex-row gap-4 ">
+          <div className="flex-4/5">
+            <Input
+              icon={Search}
+              iconPosition="right"
+              placeholder="Select a location"
+            />
+          </div>
+          <div className="flex-1/5">
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button className="w-full">
+                  <ListFilter />
+                  Filter
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DesktopFilter />
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
+        </div>
         {/* Filters & Sort */}
         <div className="flex flex-wrap gap-4 mb-8 items-end">
           {/* Location */}
           <div>
             <label className="block text-sm font-medium mb-1">Location</label>
-            <select value={location} onChange={e => setLocation(e.target.value)} className="border rounded px-2 py-1">
+            <select
+              value={location}
+              onChange={(e) => setLocation(e.target.value)}
+              className="border rounded px-2 py-1"
+            >
               <option value="">All</option>
-              {locations.map(loc => <option key={loc} value={loc}>{loc}</option>)}
+              {locations.map((loc) => (
+                <option key={loc} value={loc}>
+                  {loc}
+                </option>
+              ))}
             </select>
           </div>
           {/* Type */}
           <div>
             <label className="block text-sm font-medium mb-1">Type</label>
-            <select value={type} onChange={e => setType(e.target.value)} className="border rounded px-2 py-1">
+            <select
+              value={type}
+              onChange={(e) => setType(e.target.value)}
+              className="border rounded px-2 py-1"
+            >
               <option value="">All</option>
-              {types.map(t => <option key={t} value={t}>{t}</option>)}
+              {types.map((t) => (
+                <option key={t} value={t}>
+                  {t}
+                </option>
+              ))}
             </select>
           </div>
           {/* Amenities */}
           <div>
             <label className="block text-sm font-medium mb-1">Amenities</label>
             <div className="flex flex-wrap gap-2">
-              {allAmenities.map(a => (
+              {allAmenities.map((a) => (
                 <label key={a} className="flex items-center gap-1 text-xs">
                   <input
                     type="checkbox"
@@ -227,8 +299,15 @@ export default function FeaturedPropertiesPage() {
           </div>
           {/* Verified */}
           <div className="flex items-center gap-2">
-            <input type="checkbox" id="verified" checked={verified} onChange={e => setVerified(e.target.checked)} />
-            <label htmlFor="verified" className="text-sm font-medium">Verified Only</label>
+            <input
+              type="checkbox"
+              id="verified"
+              checked={verified}
+              onChange={(e) => setVerified(e.target.checked)}
+            />
+            <label htmlFor="verified" className="text-sm font-medium">
+              Verified Only
+            </label>
           </div>
           {/* Budget */}
           <div>
@@ -236,7 +315,7 @@ export default function FeaturedPropertiesPage() {
             <input
               type="number"
               value={budget}
-              onChange={e => setBudget(e.target.value)}
+              onChange={(e) => setBudget(e.target.value)}
               className="border rounded px-2 py-1 w-24"
               placeholder="e.g. 15000"
             />
@@ -244,7 +323,11 @@ export default function FeaturedPropertiesPage() {
           {/* Sort */}
           <div>
             <label className="block text-sm font-medium mb-1">Sort By</label>
-            <select value={sort} onChange={e => setSort(e.target.value)} className="border rounded px-2 py-1">
+            <select
+              value={sort}
+              onChange={(e) => setSort(e.target.value)}
+              className="border rounded px-2 py-1"
+            >
               <option value="">Default</option>
               <option value="price-asc">Price: Low to High</option>
               <option value="price-desc">Price: High to Low</option>
@@ -256,7 +339,9 @@ export default function FeaturedPropertiesPage() {
         {/* Properties Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
           {filtered.length === 0 ? (
-            <div className="col-span-full text-center text-gray-500">No properties found.</div>
+            <div className="col-span-full text-center text-gray-500">
+              No properties found.
+            </div>
           ) : (
             filtered.map((property) => (
               <PropertyCards {...property} key={property.id} />
@@ -266,4 +351,4 @@ export default function FeaturedPropertiesPage() {
       </div>
     </section>
   );
-} 
+}
