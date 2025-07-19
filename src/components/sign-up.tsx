@@ -9,6 +9,7 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
+import validator from "validator";
 
 export default function SignUp() {
   const [firstName, setFirstName] = useState("");
@@ -31,6 +32,48 @@ export default function SignUp() {
       };
       reader.readAsDataURL(file);
     }
+  };
+
+  const submitForm = async () => {
+    if (validator.isEmpty(firstName) || validator.isEmpty(lastName)) {
+      toast.error("First name and last name are required.");
+      return;
+    }
+    if (!validator.isEmail(email)) {
+      toast.error("Please enter a valid email address.");
+      return;
+    }
+    await signUp.email({
+      email,
+      password,
+      name: `${firstName} ${lastName}`,
+      image: image ? await convertImageToBase64(image) : "",
+      callbackURL: "/dashboard",
+      fetchOptions: {
+        onResponse: () => {
+          setLoading(false);
+        },
+        onRequest: () => {
+          setLoading(true);
+        },
+        onError: (ctx) => {
+          toast.error(ctx.error.message);
+        },
+        onSuccess: async () => {
+          router.push("/dashboard");
+        },
+      },
+    });
+  };
+
+  const isFormValid = () => {
+    return (
+      !validator.isEmpty(firstName.trim()) &&
+      !validator.isEmpty(lastName.trim()) &&
+      validator.isEmail(email) &&
+      !validator.isEmpty(password) &&
+      password === passwordConfirmation
+    );
   };
 
   return (
@@ -96,6 +139,11 @@ export default function SignUp() {
           placeholder="Confirm Password"
         />
       </div>
+      {password &&
+        passwordConfirmation &&
+        password !== passwordConfirmation && (
+          <p className="text-sm text-red-500 mt-1">Passwords do not match</p>
+        )}
       <div className="grid gap-2">
         <Label htmlFor="image">Profile Image (optional)</Label>
         <div className="flex items-end gap-4">
@@ -132,30 +180,8 @@ export default function SignUp() {
       <Button
         type="submit"
         className="w-full"
-        disabled={loading}
-        onClick={async () => {
-          await signUp.email({
-            email,
-            password,
-            name: `${firstName} ${lastName}`,
-            image: image ? await convertImageToBase64(image) : "",
-            callbackURL: "/dashboard",
-            fetchOptions: {
-              onResponse: () => {
-                setLoading(false);
-              },
-              onRequest: () => {
-                setLoading(true);
-              },
-              onError: (ctx) => {
-                toast.error(ctx.error.message);
-              },
-              onSuccess: async () => {
-                router.push("/dashboard");
-              },
-            },
-          });
-        }}
+        disabled={loading || !isFormValid()}
+        onClick={submitForm}
       >
         {loading ? (
           <Loader2 size={16} className="animate-spin" />
