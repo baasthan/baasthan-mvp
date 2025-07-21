@@ -96,6 +96,10 @@ const filtersConfigs: FilterConfig[] = [
         id: "gym",
         displayName: "In-House Gym",
       },
+      {
+        id: "food",
+        displayName: "Food Available",
+      },
     ],
     filterType: "MULTI_SELECT",
   },
@@ -176,7 +180,7 @@ const DesktopFilter = () => {
         }
       }
       if (filterType === "SINGLE_SELECT") {
-        if (updatedFilters[filterId]) {
+        if (updatedFilters[filterId][0] === filterOptionId) {
           delete updatedFilters[filterId];
         } else {
           updatedFilters[filterId] = [filterOptionId];
@@ -189,6 +193,7 @@ const DesktopFilter = () => {
   const handleRangeChange = (filterId: string, value: number[]) => {
     const updatedFilters = { ...currentSelection };
     updatedFilters[filterId] = value.map((v) => v.toString());
+    setCurrentSelection(updatedFilters);
   };
 
   const handleFilterReset = () => {
@@ -200,14 +205,6 @@ const DesktopFilter = () => {
     const currentFilterOptionsSelected =
       currentSelection[currentFilter.filterId] ?? [];
 
-    const getCurrentValue = () => {
-      if (currentFilter.filterType === "RANGE") {
-        return currentSelection[currentFilter.filterId]
-          ? currentSelection[currentFilter.filterId].map((v) => parseInt(v))
-          : [currentFilter.minValue];
-      }
-    };
-
     if (
       currentFilter.filterType === "MULTI_SELECT" ||
       currentFilter.filterType === "SINGLE_SELECT"
@@ -215,7 +212,7 @@ const DesktopFilter = () => {
       return currentFilter.filterOptions.map((filterOption) => (
         <Button
           key={filterOption.id}
-          variant={"ghost"}
+          variant={"secondary-ghost"}
           onClick={() => {
             handleFilterSelect(
               currentFilter.filterId,
@@ -223,11 +220,11 @@ const DesktopFilter = () => {
               currentFilter.filterType
             );
           }}
-          className={
+          className={`${
             currentFilterOptionsSelected.includes(filterOption.id)
-              ? "bg-accent"
+              ? " bg-secondary font-semibold"
               : ""
-          }
+          }  justify-start`}
         >
           {filterOption.displayName}
         </Button>
@@ -235,18 +232,27 @@ const DesktopFilter = () => {
     }
     if (currentFilter.filterType === "RANGE") {
       return (
-        <div className="flex flex-col justify-center items-center">
+        <div className="flex-1 flex flex-col justify-center items-center">
           <Slider
             max={currentFilter.maxValue}
             min={currentFilter.minValue}
+            defaultValue={
+              currentSelection[currentFilter.filterId]?.map((v) =>
+                parseInt(v)
+              ) ?? [currentFilter.minValue]
+            }
             onValueChange={(v) => {
               handleRangeChange(currentFilter.filterId, v);
             }}
           />
           <div className="w-full flex flex-row justify-between">
-            <p>₹{currentFilter.minValue}</p>
-            <p>{currentSelection[currentFilter.filterId]}</p>
-            <p>₹{currentFilter.maxValue}</p>
+            <p className="text-muted-foreground">₹{currentFilter.minValue}</p>
+            {currentSelection[currentFilter.filterId] && (
+              <p className="font-semibold">
+                ₹{currentSelection[currentFilter.filterId]}
+              </p>
+            )}
+            <p className="text-muted-foreground">₹{currentFilter.maxValue}</p>
           </div>
         </div>
       );
@@ -254,15 +260,17 @@ const DesktopFilter = () => {
   };
 
   return (
-    <div className="flex flex-col gap-2">
-      <div className="flex flex-row gap-2 min-w-sm">
-        <div className="flex flex-col p-2 outline rounded-2xl">
+    <div className="flex flex-col gap-2 w-md">
+      <div className="flex flex-row gap-2 ">
+        <div className="flex flex-col p-2 outline rounded-2xl gap-2">
           {filtersConfigs.map((filter, index) => (
             <Button
-              variant={"ghost"}
+              variant={"secondary-ghost"}
               key={filter.filterId}
               onClick={() => setCurrentFilterIndex(index)}
-              className={`${index === currentFilterIndex ? "bg-accent" : ""}`}
+              className={`${
+                index === currentFilterIndex ? "bg-secondary" : ""
+              } justify-start`}
             >
               {`${filter.filterDisplayName} ${
                 currentSelection[filter.filterId] &&
@@ -275,7 +283,7 @@ const DesktopFilter = () => {
         </div>
         <div
           id="price"
-          className=" flex-1 flex flex-col p-2 outline rounded-2xl"
+          className="h-96 overflow-y-auto scroll-m-3 flex-1 flex flex-col p-2 outline rounded-2xl"
         >
           {renderFilterOptions(filtersConfigs[currentFilterIndex])}
         </div>
