@@ -3,10 +3,12 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { IndianRupee, Search } from "lucide-react";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 const MainHero = () => {
   const [searchLocation, setSearchLocation] = useState("");
   const [budget, setBudget] = useState("");
+  const router = useRouter();
 
   const handleLocationChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchLocation(e.target.value);
@@ -15,6 +17,14 @@ const MainHero = () => {
   const handleBudgetChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setBudget(e.target.value);
   };
+
+  const handleSearch = () => {
+    const params = new URLSearchParams();
+    if (searchLocation) params.set("location", searchLocation);
+    if (budget) params.set("budget", budget);
+    router.push(`/featured-properties?${params.toString()}`);
+  };
+
   return (
     <section className="bg-gradient-to-br from-blue-50 to-white py-16 lg:py-24">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -52,7 +62,7 @@ const MainHero = () => {
                     onChange={handleBudgetChange}
                   />
                 </div>
-                <Button>
+                <Button onClick={handleSearch}>
                   <Search />
                   Search
                 </Button>
