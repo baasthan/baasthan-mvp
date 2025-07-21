@@ -221,7 +221,7 @@ export default function FeaturedPropertiesPage() {
 
   return (
     <section className="py-16 bg-gray-50 min-h-screen">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="flex flex-col container mx-auto px-4 sm:px-6 lg:px-8 gap-8  ">
         <h1 className="text-3xl font-bold text-gray-900 mb-8">
           All Featured Properties
         </h1>
@@ -247,95 +247,7 @@ export default function FeaturedPropertiesPage() {
             </DropdownMenu>
           </div>
         </div>
-        {/* Filters & Sort */}
-        <div className="flex flex-wrap gap-4 mb-8 items-end">
-          {/* Location */}
-          <div>
-            <label className="block text-sm font-medium mb-1">Location</label>
-            <select
-              value={location}
-              onChange={(e) => setLocation(e.target.value)}
-              className="border rounded px-2 py-1"
-            >
-              <option value="">All</option>
-              {locations.map((loc) => (
-                <option key={loc} value={loc}>
-                  {loc}
-                </option>
-              ))}
-            </select>
-          </div>
-          {/* Type */}
-          <div>
-            <label className="block text-sm font-medium mb-1">Type</label>
-            <select
-              value={type}
-              onChange={(e) => setType(e.target.value)}
-              className="border rounded px-2 py-1"
-            >
-              <option value="">All</option>
-              {types.map((t) => (
-                <option key={t} value={t}>
-                  {t}
-                </option>
-              ))}
-            </select>
-          </div>
-          {/* Amenities */}
-          <div>
-            <label className="block text-sm font-medium mb-1">Amenities</label>
-            <div className="flex flex-wrap gap-2">
-              {allAmenities.map((a) => (
-                <label key={a} className="flex items-center gap-1 text-xs">
-                  <input
-                    type="checkbox"
-                    checked={amenities.includes(a)}
-                    onChange={() => handleAmenityChange(a)}
-                  />
-                  {a}
-                </label>
-              ))}
-            </div>
-          </div>
-          {/* Verified */}
-          <div className="flex items-center gap-2">
-            <input
-              type="checkbox"
-              id="verified"
-              checked={verified}
-              onChange={(e) => setVerified(e.target.checked)}
-            />
-            <label htmlFor="verified" className="text-sm font-medium">
-              Verified Only
-            </label>
-          </div>
-          {/* Budget */}
-          <div>
-            <label className="block text-sm font-medium mb-1">Max Budget</label>
-            <input
-              type="number"
-              value={budget}
-              onChange={(e) => setBudget(e.target.value)}
-              className="border rounded px-2 py-1 w-24"
-              placeholder="e.g. 15000"
-            />
-          </div>
-          {/* Sort */}
-          <div>
-            <label className="block text-sm font-medium mb-1">Sort By</label>
-            <select
-              value={sort}
-              onChange={(e) => setSort(e.target.value)}
-              className="border rounded px-2 py-1"
-            >
-              <option value="">Default</option>
-              <option value="price-asc">Price: Low to High</option>
-              <option value="price-desc">Price: High to Low</option>
-              <option value="rating-desc">Rating: High to Low</option>
-              <option value="reviews-desc">Most Reviewed</option>
-            </select>
-          </div>
-        </div>
+
         {/* Properties Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
           {filtered.length === 0 ? (
