@@ -3,6 +3,15 @@
 import { useState, useEffect } from "react";
 import { useSearchParams } from "next/navigation";
 import PropertyCards from "@/components/property-card";
+import { Input } from "@/components/ui/input";
+import { Checkbox } from "@/components/ui/checkbox";
+import {
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+  DropdownMenuItem,
+} from "@/components/ui/dropdown-menu";
+import { Button } from "@/components/ui/button";
 
 const featuredProperties = [
   {
@@ -138,13 +147,11 @@ const featuredProperties = [
 ];
 
 // Extract unique filter options
-const locations = Array.from(new Set(featuredProperties.map(p => p.location)));
 const types = Array.from(new Set(featuredProperties.map(p => p.type)));
 const allAmenities = Array.from(new Set(featuredProperties.flatMap(p => p.amenities)));
 
 export default function FeaturedPropertiesPage() {
   const searchParams = useSearchParams();
-  const [location, setLocation] = useState("");
   const [type, setType] = useState("");
   const [amenities, setAmenities] = useState<string[]>([]);
   const [verified, setVerified] = useState(false);
@@ -153,9 +160,7 @@ export default function FeaturedPropertiesPage() {
 
   // On mount, set filters from query params
   useEffect(() => {
-    const loc = searchParams.get("location") || "";
     const bud = searchParams.get("budget") || "";
-    setLocation(loc);
     setBudget(bud);
   }, [searchParams]);
 
@@ -163,7 +168,6 @@ export default function FeaturedPropertiesPage() {
   let filtered = featuredProperties.filter(p => {
     const priceNum = parseInt(p.price.replace(/[^\d]/g, ""));
     return (
-      (!location || p.location.toLowerCase().includes(location.toLowerCase())) &&
       (!type || p.type === type) &&
       (!verified || p.verified) &&
       (amenities.length === 0 || amenities.every(a => p.amenities.includes(a))) &&
@@ -187,79 +191,121 @@ export default function FeaturedPropertiesPage() {
     setAmenities(prev => prev.includes(amenity) ? prev.filter(a => a !== amenity) : [...prev, amenity]);
   };
 
+  // Add a reset filters handler
+  const handleResetFilters = () => {
+    setType("");
+    setAmenities([]);
+    setVerified(false);
+    setSort("");
+    setBudget("");
+  };
+
   return (
-    <section className="py-16 bg-gray-50 min-h-screen">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <h1 className="text-3xl font-bold text-gray-900 mb-8">All Featured Properties</h1>
-        {/* Filters & Sort */}
-        <div className="flex flex-wrap gap-4 mb-8 items-end">
-          {/* Location */}
-          <div>
-            <label className="block text-sm font-medium mb-1">Location</label>
-            <select value={location} onChange={e => setLocation(e.target.value)} className="border rounded px-2 py-1">
-              <option value="">All</option>
-              {locations.map(loc => <option key={loc} value={loc}>{loc}</option>)}
-            </select>
+    <section className="py-20 min-h-screen bg-gradient-to-br from-blue-200 via-blue-50 to-blue-100">
+      <div className="max-w-7xl mx-auto px-4 sm:px-8 lg:px-16">
+        <div className="mb-8">
+          <h1 className="text-4xl font-extrabold text-gray-900 tracking-tight drop-shadow-sm text-center">
+            All Featured Properties
+          </h1>
+          <div className="flex justify-center mt-2 mb-2">
+            <span className="block h-1 w-24 rounded-full bg-primary" />
           </div>
+          <p className="text-lg text-gray-500 text-center">Browse and filter our handpicked premium PG accommodations.</p>
+        </div>
+        {/* Filters & Sort */}
+        <div className="flex flex-col md:flex-row flex-wrap gap-4 mb-12 items-stretch md:items-end bg-white/80 backdrop-blur-md p-6 rounded-2xl shadow-2xl border border-gray-200">
           {/* Type */}
-          <div>
+          <div className="min-w-[150px]">
             <label className="block text-sm font-medium mb-1">Type</label>
-            <select value={type} onChange={e => setType(e.target.value)} className="border rounded px-2 py-1">
-              <option value="">All</option>
-              {types.map(t => <option key={t} value={t}>{t}</option>)}
-            </select>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <button className="w-full border rounded px-2 py-2 text-left bg-white">
+                  {type ? type : "All"}
+                </button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent className="w-full min-w-[150px]">
+                <DropdownMenuItem onClick={() => setType("")}>All</DropdownMenuItem>
+                {types.map(t => (
+                  <DropdownMenuItem key={t} onClick={() => setType(t)}>{t}</DropdownMenuItem>
+                ))}
+              </DropdownMenuContent>
+            </DropdownMenu>
           </div>
           {/* Amenities */}
-          <div>
+          <div className="min-w-[200px]">
             <label className="block text-sm font-medium mb-1">Amenities</label>
             <div className="flex flex-wrap gap-2">
               {allAmenities.map(a => (
                 <label key={a} className="flex items-center gap-1 text-xs">
-                  <input
-                    type="checkbox"
+                  <Checkbox
                     checked={amenities.includes(a)}
-                    onChange={() => handleAmenityChange(a)}
+                    onCheckedChange={() => handleAmenityChange(a)}
+                    id={`amenity-${a}`}
                   />
-                  {a}
+                  <span>{a}</span>
                 </label>
               ))}
             </div>
           </div>
           {/* Verified */}
-          <div className="flex items-center gap-2">
-            <input type="checkbox" id="verified" checked={verified} onChange={e => setVerified(e.target.checked)} />
+          <div className="flex items-center gap-2 min-w-[120px] mt-6">
+            <Checkbox id="verified" checked={verified} onCheckedChange={checked => setVerified(!!checked)} />
             <label htmlFor="verified" className="text-sm font-medium">Verified Only</label>
           </div>
           {/* Budget */}
-          <div>
+          <div className="min-w-[120px]">
             <label className="block text-sm font-medium mb-1">Max Budget</label>
-            <input
+            <Input
               type="number"
               value={budget}
               onChange={e => setBudget(e.target.value)}
-              className="border rounded px-2 py-1 w-24"
+              className="w-full"
               placeholder="e.g. 15000"
             />
           </div>
           {/* Sort */}
-          <div>
+          <div className="min-w-[150px]">
             <label className="block text-sm font-medium mb-1">Sort By</label>
-            <select value={sort} onChange={e => setSort(e.target.value)} className="border rounded px-2 py-1">
-              <option value="">Default</option>
-              <option value="price-asc">Price: Low to High</option>
-              <option value="price-desc">Price: High to Low</option>
-              <option value="rating-desc">Rating: High to Low</option>
-              <option value="reviews-desc">Most Reviewed</option>
-            </select>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <button className="w-full border rounded px-2 py-2 text-left bg-white">
+                  {(() => {
+                    if (sort === "price-asc") return "Price: Low to High";
+                    if (sort === "price-desc") return "Price: High to Low";
+                    if (sort === "rating-desc") return "Rating: High to Low";
+                    if (sort === "reviews-desc") return "Most Reviewed";
+                    return "Default";
+                  })()}
+                </button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent className="w-full min-w-[150px]">
+                <DropdownMenuItem onClick={() => setSort("")}>Default</DropdownMenuItem>
+                <DropdownMenuItem onClick={() => setSort("price-asc")}>Price: Low to High</DropdownMenuItem>
+                <DropdownMenuItem onClick={() => setSort("price-desc")}>Price: High to Low</DropdownMenuItem>
+                <DropdownMenuItem onClick={() => setSort("rating-desc")}>Rating: High to Low</DropdownMenuItem>
+                <DropdownMenuItem onClick={() => setSort("reviews-desc")}>Most Reviewed</DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
+          {/* Reset Filters Button */}
+          <div className="flex items-end min-w-[140px] mt-6">
+            <Button variant="secondary" className="w-full shadow-md hover:scale-105 transition-transform" onClick={handleResetFilters}>
+              Reset Filters
+            </Button>
           </div>
         </div>
         {/* Properties Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-10">
           {filtered.length === 0 ? (
             <div className="col-span-full text-center text-gray-500">No properties found.</div>
           ) : (
             filtered.map((property) => (
-              <PropertyCards {...property} key={property.id} />
+              <div
+                key={property.id}
+                className="transition-all duration-200 hover:scale-[1.04] hover:shadow-2xl hover:border-primary/60 rounded-2xl shadow-lg border border-gray-200 bg-white/95 group"
+              >
+                <PropertyCards {...property} />
+              </div>
             ))
           )}
         </div>
