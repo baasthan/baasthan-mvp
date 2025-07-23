@@ -1,162 +1,36 @@
 "use client";
-import { useState } from "react";
+import { FilterConfig, FilterSelection } from "@/types/filters";
+import { ListFilter } from "lucide-react";
+import { useSearchParams } from "next/navigation";
+import { useEffect, useState } from "react";
 import { Button } from "../ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuTrigger,
+} from "../ui/dropdown-menu";
 import { Slider } from "../ui/slider";
-
-interface FilterOptions {
-  id: string;
-  displayName: string;
+import { Location } from "./location";
+interface DesktopFilterProps {
+  filters: FilterConfig[];
 }
 
-interface SELECT_FilterConfig {
-  filterId: string;
-  filterDisplayName: string;
-  filterType: "SINGLE_SELECT" | "MULTI_SELECT";
-  filterOptions: FilterOptions[];
-}
+const DesktopFilter = ({ filters }: DesktopFilterProps) => {
+  const searchParams = useSearchParams();
 
-interface RANGE_FilterConfig {
-  filterId: string;
-  filterDisplayName: string;
-  filterType: "RANGE";
-  minValue: number;
-  maxValue: number;
-}
-
-type FilterConfig = SELECT_FilterConfig | RANGE_FilterConfig;
-
-interface FilterSelection {
-  [key: string]: string[];
-}
-
-const filtersConfigs: FilterConfig[] = [
-  {
-    filterId: "status",
-    filterDisplayName: "Status",
-    filterType: "MULTI_SELECT",
-    filterOptions: [
-      {
-        id: "featured",
-        displayName: "Featured",
-      },
-      {
-        id: "mostViewed",
-        displayName: "Most Viewed",
-      },
-      {
-        id: "mostFavourite",
-        displayName: "Most Favourite",
-      },
-    ],
-  },
-  {
-    filterId: "city",
-    filterDisplayName: "City",
-    filterType: "SINGLE_SELECT",
-    filterOptions: [
-      {
-        id: "bangalore",
-        displayName: "Bangalore",
-      },
-      {
-        id: "majitar",
-        displayName: "Majitar",
-      },
-    ],
-  },
-  {
-    filterId: "amenities",
-    filterDisplayName: "Amenities",
-    filterOptions: [
-      {
-        id: "wifi",
-        displayName: "High Speed Wi-Fi",
-      },
-      {
-        id: "ac",
-        displayName: "Air Conditioning",
-      },
-      {
-        id: "bikeParking",
-        displayName: "Bike Parking",
-      },
-      {
-        id: "carParking",
-        displayName: "Car Parking",
-      },
-      {
-        id: "laundary",
-        displayName: "Laundary",
-      },
-      {
-        id: "security",
-        displayName: "24x7 Security",
-      },
-      {
-        id: "gym",
-        displayName: "In-House Gym",
-      },
-      {
-        id: "food",
-        displayName: "Food Available",
-      },
-    ],
-    filterType: "MULTI_SELECT",
-  },
-  {
-    filterId: "occupancyType",
-    filterDisplayName: "Occupancy Type",
-    filterType: "MULTI_SELECT",
-    filterOptions: [
-      {
-        id: "singleSharing",
-        displayName: "Single Sharing",
-      },
-      {
-        id: "doubleSharing",
-        displayName: "Double Sharing",
-      },
-      {
-        id: "Tripple Sharing",
-        displayName: "Tripple Sharing",
-      },
-    ],
-  },
-  {
-    filterId: "sort",
-    filterDisplayName: "Sort By",
-    filterType: "SINGLE_SELECT",
-    filterOptions: [
-      {
-        id: "price-asc",
-        displayName: "Price (Low to High)",
-      },
-      {
-        id: "price-dsc",
-        displayName: "Price (High to Low)",
-      },
-      {
-        id: "rating-dsc",
-        displayName: "Ratings (High to Low)",
-      },
-      {
-        id: "reviews-dsc",
-        displayName: "Reviews",
-      },
-    ],
-  },
-  {
-    filterId: "price",
-    filterDisplayName: "Budget",
-    filterType: "RANGE",
-    maxValue: 50000,
-    minValue: 1000,
-  },
-];
-
-const DesktopFilter = () => {
   const [currentFilterIndex, setCurrentFilterIndex] = useState<number>(0);
   const [currentSelection, setCurrentSelection] = useState<FilterSelection>({});
+
+  useEffect(() => {
+    const appliedFilters = searchParams
+      .entries()
+      .reduce((updatedFilter, [key, value]) => {
+        updatedFilter[key] = value.split(",");
+        return updatedFilter;
+      }, {} as FilterSelection);
+
+    setCurrentSelection(appliedFilters);
+  }, [searchParams]);
 
   const handleFilterSelect = (
     filterId: string,
@@ -259,40 +133,73 @@ const DesktopFilter = () => {
     }
   };
 
+  const applyFilter = () => {
+    const queryParams = new URLSearchParams();
+
+    Object.entries(currentSelection).forEach(([key, values]) => {
+      if (values.length > 0) {
+        queryParams.set(key, values.join(","));
+      }
+    });
+
+    const newUrl = `${window.location.pathname}?${queryParams.toString()}`;
+    window.history.replaceState(null, "", newUrl);
+  };
+
   return (
-    <div className="flex flex-col gap-2 w-md">
-      <div className="flex flex-row gap-2 ">
-        <div className="flex flex-col p-2 outline rounded-2xl gap-2">
-          {filtersConfigs.map((filter, index) => (
-            <Button
-              variant={"secondary-ghost"}
-              key={filter.filterId}
-              onClick={() => setCurrentFilterIndex(index)}
-              className={`${
-                index === currentFilterIndex ? "bg-secondary" : ""
-              } justify-start`}
-            >
-              {`${filter.filterDisplayName} ${
-                currentSelection[filter.filterId] &&
-                currentSelection[filter.filterId].length !== 0
-                  ? `(${currentSelection[filter.filterId].length})`
-                  : ""
-              }`}
-            </Button>
-          ))}
-        </div>
-        <div
-          id="price"
-          className="h-96 overflow-y-auto scroll-m-3 flex-1 flex flex-col p-2 outline rounded-2xl"
-        >
-          {renderFilterOptions(filtersConfigs[currentFilterIndex])}
-        </div>
+    <div className="flex flex-row gap-4 ">
+      <div className="flex-4/5">
+        <Location />
       </div>
-      <div className="flex flex-row gap-2 justify-end">
-        <Button variant={"secondary"} onClick={() => handleFilterReset()}>
-          Reset
-        </Button>
-        <Button>Apply</Button>
+      <div className="flex-1/5">
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button className="w-full">
+              <ListFilter />
+              Filter
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent>
+            <div className="flex flex-col gap-2 w-md">
+              <div className="flex flex-row gap-2 ">
+                <div className="flex flex-col p-2 outline rounded-2xl gap-2">
+                  {filters.map((filter, index) => (
+                    <Button
+                      variant={"secondary-ghost"}
+                      key={filter.filterId}
+                      onClick={() => setCurrentFilterIndex(index)}
+                      className={`${
+                        index === currentFilterIndex ? "bg-secondary" : ""
+                      } justify-start`}
+                    >
+                      {`${filter.filterDisplayName} ${
+                        currentSelection[filter.filterId] &&
+                        currentSelection[filter.filterId].length !== 0
+                          ? `(${currentSelection[filter.filterId].length})`
+                          : ""
+                      }`}
+                    </Button>
+                  ))}
+                </div>
+                <div
+                  id="price"
+                  className="h-96 overflow-y-auto scroll-m-3 flex-1 flex flex-col p-2 outline rounded-2xl gap-2"
+                >
+                  {renderFilterOptions(filters[currentFilterIndex])}
+                </div>
+              </div>
+              <div className="flex flex-row gap-2 justify-end">
+                <Button
+                  variant={"secondary"}
+                  onClick={() => handleFilterReset()}
+                >
+                  Reset
+                </Button>
+                <Button onClick={applyFilter}>Apply</Button>
+              </div>
+            </div>
+          </DropdownMenuContent>
+        </DropdownMenu>
       </div>
     </div>
   );
