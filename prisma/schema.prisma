@@ -153,6 +153,13 @@ model Location {
   PropertyInfo  PropertyInfo @relation(fields: [propertyId], references: [id], onDelete: Cascade)
 }
 
+
+enum GenderPreferedEnum {
+  Male
+  Female
+  CoEd   @map("Co-Ed")
+}
+
 model PropertyInfo {
   id                String              @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   hostId            String
@@ -174,6 +181,10 @@ model PropertyInfo {
   Location          Location?
   Organization      Organization?       @relation(fields: [organizationId], references: [id])
   organizationId    String?
+  commercialInfos   commercial_info[]
+  residentialInfos  residential_info[]
+  pgInfos           pgInfo[]
+  propertySearchResult propertySearchResults?
 }
 
 enum UnitTypeEnum {
@@ -223,4 +234,89 @@ model Reviews {
   helpful_no   Boolean       @default(false)
   review_date  DateTime      @default(now())
   PropertyInfo PropertyInfo? @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+}
+
+
+ 
+// new
+ 
+enum PropertyType {
+  Bhk1 @map("1 Bhk")
+  Bhk2 @map("2 Bhk")
+  Bhk3 @map("3 Bhk")
+}
+ 
+model commercial_info {
+  id             Int   @id
+  propertyId     String @db.Uuid
+  locality       String
+  property       PropertyType
+  budget         Int
+  configuration  Int
+  area           Int
+  furnishing     String
+  postedBy       String
+  availableFrom  String
+  reraRegistered Boolean
+  registered     Boolean
+  propertyInfo   PropertyInfo @relation(fields: [propertyId], references: [id], map: "commercial_info_propertyId_to_propertyinfo_fkey")
+  propertySearchResult propertySearchResults @relation(fields: [propertyId], references: [propertyId], map: "commercial_info_propertyId_to_searchresults_fkey")
+}
+ 
+model residential_info {
+  id             Int   @id
+  propertyId     String @db.Uuid
+  locality         String
+  property_type    String
+  budget           Int
+  configuration    Int
+  bathroom         Int
+  area             Int
+  furnishing       String
+  postedBy         String
+  available_from   String
+  tenantsPreferred String
+  rera_registered  Boolean
+  propertyInfo     PropertyInfo @relation(fields: [propertyId], references: [id], map: "residential_info_propertyId_to_propertyinfo_fkey")
+  propertySearchResult propertySearchResults @relation(fields: [propertyId], references: [propertyId], map: "residential_info_propertyId_to_searchresults_fkey")
+}
+ 
+enum OccupancyTypeEnum {
+  singleSharing @map("Single Sharing")
+  doubleSharing @map("Double Sharing")
+  TripleSharing @map("Triple Sharing")
+  QuadSharing   @map("Quadra Sharing")
+}
+ 
+model pgInfo {
+  id                 Int   @id
+  propertyId         String @db.Uuid
+  locality           String
+  budget             Int
+  occupancyType      OccupancyTypeEnum[]
+  tenantsPreferred   String
+  genderPrefered     GenderPreferedEnum
+  food_provided      Boolean
+  amenities          String
+  postedBy           String
+  propertyType       String
+  floor              Int
+  reraRegistered     Boolean
+  reraRegistrationId String?
+  propertyInfo       PropertyInfo @relation(fields: [propertyId], references: [id], map: "pginfo_propertyId_to_propertyinfo_fkey")
+  propertySearchResult propertySearchResults @relation(fields: [propertyId], references: [propertyId], map: "pginfo_propertyId_to_searchresults_fkey")
+}
+
+model propertySearchResults {
+  propertyId   String   @id @unique @map("property_id") @db.Uuid
+  propertyTitle String
+  locality      String
+  montlyRent    Int
+  bed           Int
+  bath          Int
+  balcony       Int
+  property      PropertyInfo @relation(fields: [propertyId], references: [id])
+  pgInfos           pgInfo[]
+  commercialInfos   commercial_info[]
+  residentialInfos  residential_info[]
 }
