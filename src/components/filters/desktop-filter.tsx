@@ -10,7 +10,7 @@ import {
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
 import { Slider } from "../ui/slider";
-import { Location } from "./location";
+import { Location } from "./location-autocomplete";
 interface DesktopFilterProps {
   filters: FilterConfig[];
 }
@@ -75,6 +75,19 @@ const DesktopFilter = ({ filters }: DesktopFilterProps) => {
     setCurrentFilterIndex(0);
   };
 
+  const handleApplyFilter = () => {
+    const queryParams = new URLSearchParams();
+
+    Object.entries(currentSelection).forEach(([key, values]) => {
+      if (values.length > 0) {
+        queryParams.set(key, values.join(","));
+      }
+    });
+
+    const newUrl = `${window.location.pathname}?${queryParams.toString()}`;
+    window.history.replaceState(null, "", newUrl);
+  };
+
   const renderFilterOptions = (currentFilter: FilterConfig) => {
     const currentFilterOptionsSelected =
       currentSelection[currentFilter.filterId] ?? [];
@@ -133,19 +146,6 @@ const DesktopFilter = ({ filters }: DesktopFilterProps) => {
     }
   };
 
-  const applyFilter = () => {
-    const queryParams = new URLSearchParams();
-
-    Object.entries(currentSelection).forEach(([key, values]) => {
-      if (values.length > 0) {
-        queryParams.set(key, values.join(","));
-      }
-    });
-
-    const newUrl = `${window.location.pathname}?${queryParams.toString()}`;
-    window.history.replaceState(null, "", newUrl);
-  };
-
   return (
     <div className="flex flex-row gap-4 ">
       <div className="flex-4/5">
@@ -195,7 +195,7 @@ const DesktopFilter = ({ filters }: DesktopFilterProps) => {
                 >
                   Reset
                 </Button>
-                <Button onClick={applyFilter}>Apply</Button>
+                <Button onClick={handleApplyFilter}>Apply</Button>
               </div>
             </div>
           </DropdownMenuContent>
