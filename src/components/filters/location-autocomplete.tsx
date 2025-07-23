@@ -1,42 +1,54 @@
+"use client";
 import { Search } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Input } from "../ui/input";
 
+interface Coordinate {
+  x: number;
+  y: number;
+}
 interface LocationOption {
   id: string;
+  coordinates?: Coordinate;
   locationTag: string[];
   locationDisplay: string;
   city?: string;
 }
 
+//This will be sorted by Location Display from Backend API
 const mockLocations: LocationOption[] = [
   {
-    id:
+    id: "uuid1",
     locationTag: ["varthurRoad", "varthur"],
     locationDisplay: "Varthur Road",
     city: "Bangalore",
   },
   {
+    id: "uuid2",
     locationTag: ["bNarayanPura", "b", "narayan", "narayanpura"],
     locationDisplay: "B Narayan Pura",
     city: "Bangalore",
   },
   {
+    id: "uuid3",
     locationTag: ["mahadevpura"],
     locationDisplay: "Mahadevpura",
     city: "Bangalore",
   },
   {
+    id: "uuid4",
     locationTag: ["electronicCityPhase1", "electronic", "city", "phase", "1"],
     locationDisplay: "Electronic City Phase 1",
     city: "Bangalore",
   },
   {
+    id: "uuid5",
     locationTag: ["nagavara", "elements mall"],
     locationDisplay: "Nagavara",
     city: "Bangalore",
   },
   {
+    id: "uuid6",
     locationTag: ["marathalli", "spice garden"],
     locationDisplay: "Marathali",
     city: "Bangalore",
@@ -60,8 +72,14 @@ const Location = () => {
   }, [query]);
 
   const handleSelect = (location: LocationOption) => {
-    setQuery(location.id);
+    setQuery(location.locationDisplay);
     setShowSuggestions(false);
+    const locationQueryParam = new URLSearchParams(window.location.search);
+    locationQueryParam.set("location", location.id);
+    const newUrl = `${
+      window.location.pathname
+    }?${locationQueryParam.toString()}`;
+    window.history.replaceState(null, "", newUrl);
   };
 
   return (
