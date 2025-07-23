@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient } from "../../../../../prisma/generated/prisma";
 
 const prisma = new PrismaClient();
 
@@ -27,7 +27,10 @@ export async function GET(req: Request) {
   const type = searchParams.get("type");
 
   if (!type) {
-    return NextResponse.json({ error: "Missing 'type' parameter (pg, residential, commercial)" }, { status: 400 });
+    return NextResponse.json(
+      { error: "Missing 'type' parameter (pg, residential, commercial)" },
+      { status: 400 }
+    );
   }
 
   let allowedFields: string[] = [];
@@ -37,33 +40,81 @@ export async function GET(req: Request) {
     switch (type) {
       case "pg": {
         allowedFields = [
-          "id", "locality", "budget", "occupancyType", "tenantsPreferred", "genderPrefered", "food_provided", "amenities", "postedBy", "propertyType", "floor", "reraRegistered", "reraRegistrationId"
+          "id",
+          "locality",
+          "budget",
+          "occupancyType",
+          "tenantsPreferred",
+          "genderPrefered",
+          "food_provided",
+          "amenities",
+          "postedBy",
+          "propertyType",
+          "floor",
+          "reraRegistered",
+          "reraRegistrationId",
         ];
         const filter = buildFilter(searchParams, allowedFields);
-        const results = await prisma.pgInfo.findMany({ where: filter, select: { propertyId: true } });
+        const results = await prisma.pgInfo.findMany({
+          where: filter,
+          select: { propertyId: true },
+        });
         propertyIds = results.map((r: any) => r.propertyId);
         break;
       }
       case "residential": {
         allowedFields = [
-          "id", "locality", "property_type", "budget", "configuration", "bathroom", "area", "furnishing", "postedBy", "available_from", "tenantsPreferred", "rera_registered"
+          "id",
+          "locality",
+          "property_type",
+          "budget",
+          "configuration",
+          "bathroom",
+          "area",
+          "furnishing",
+          "postedBy",
+          "available_from",
+          "tenantsPreferred",
+          "rera_registered",
         ];
         const filter = buildFilter(searchParams, allowedFields);
-        const results = await prisma.residential_info.findMany({ where: filter, select: { propertyId: true } });
+        const results = await prisma.residential_info.findMany({
+          where: filter,
+          select: { propertyId: true },
+        });
         propertyIds = results.map((r: any) => r.propertyId);
         break;
       }
       case "commercial": {
         allowedFields = [
-          "id", "locality", "property", "budget", "configuration", "area", "furnishing", "postedBy", "availableFrom", "reraRegistered", "registered"
+          "id",
+          "locality",
+          "property",
+          "budget",
+          "configuration",
+          "area",
+          "furnishing",
+          "postedBy",
+          "availableFrom",
+          "reraRegistered",
+          "registered",
         ];
         const filter = buildFilter(searchParams, allowedFields);
-        const results = await prisma.commercial_info.findMany({ where: filter, select: { propertyId: true } });
+        const results = await prisma.commercial_info.findMany({
+          where: filter,
+          select: { propertyId: true },
+        });
         propertyIds = results.map((r: any) => r.propertyId);
         break;
       }
       default:
-        return NextResponse.json({ error: "Invalid 'type' parameter. Must be one of: pg, residential, commercial" }, { status: 400 });
+        return NextResponse.json(
+          {
+            error:
+              "Invalid 'type' parameter. Must be one of: pg, residential, commercial",
+          },
+          { status: 400 }
+        );
     }
 
     if (propertyIds.length === 0) {
@@ -86,6 +137,9 @@ export async function GET(req: Request) {
 
     return NextResponse.json({ results: details });
   } catch (error) {
-    return NextResponse.json({ error: "Database error", details: String(error) }, { status: 500 });
+    return NextResponse.json(
+      { error: "Database error", details: String(error) },
+      { status: 500 }
+    );
   }
 }
