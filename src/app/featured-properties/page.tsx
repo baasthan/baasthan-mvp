@@ -1,265 +1,159 @@
-"use client";
-
 import DesktopFilter from "@/components/filters/desktop-filter";
-import PropertyCards from "@/components/property-card";
-import { Button } from "@/components/ui/button";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { Input } from "@/components/ui/input";
+import PayingGuestList from "@/components/paying-guest/paying-guest-list";
+import { FilterConfig } from "@/types/filters";
 
-import { ListFilter, Search } from "lucide-react";
-import { useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { Suspense } from "react";
 
-const featuredProperties = [
+const filters: FilterConfig[] = [
   {
-    id: 1,
-    name: "Elite Residency",
-    location: "Koramangala, Bangalore",
-    price: "₹12,000",
-    rating: 4.8,
-    reviews: 124,
-    image: "/pg-images/elite.png?height=200&width=300",
-    amenities: ["WiFi", "AC", "Parking", "Food"],
-    type: "Single Room",
-    verified: true,
-    liked: false,
+    filterId: "status",
+    filterDisplayName: "Status",
+    filterType: "MULTI_SELECT",
+    filterOptions: [
+      {
+        id: "featured",
+        displayName: "Featured",
+      },
+      {
+        id: "mostViewed",
+        displayName: "Most Viewed",
+      },
+      {
+        id: "mostFavourite",
+        displayName: "Most Favourite",
+      },
+    ],
   },
   {
-    id: 2,
-    name: "Urban Nest",
-    location: "Gurgaon, Delhi NCR",
-    price: "₹15,000",
-    rating: 4.6,
-    reviews: 89,
-    image: "/pg-images/urban.png?height=200&width=300",
-    amenities: ["WiFi", "Gym", "Food", "Laundry"],
-    type: "Shared Room",
-    verified: true,
-    liked: true,
+    filterId: "city",
+    filterDisplayName: "City",
+    filterType: "SINGLE_SELECT",
+    filterOptions: [
+      {
+        id: "bangalore",
+        displayName: "Bangalore",
+      },
+      {
+        id: "majitar",
+        displayName: "Majitar",
+      },
+    ],
   },
   {
-    id: 3,
-    name: "Comfort Zone",
-    location: "Bandra, Mumbai",
-    price: "₹18,000",
-    rating: 4.9,
-    reviews: 156,
-    image: "/pg-images/comfort.png",
-    amenities: ["WiFi", "AC", "Food", "Security"],
-    type: "Single Room",
-    verified: true,
-    liked: false,
+    filterId: "amenities",
+    filterDisplayName: "Amenities",
+    filterOptions: [
+      {
+        id: "wifi",
+        displayName: "High Speed Wi-Fi",
+      },
+      {
+        id: "ac",
+        displayName: "Air Conditioning",
+      },
+      {
+        id: "bikeParking",
+        displayName: "Bike Parking",
+      },
+      {
+        id: "carParking",
+        displayName: "Car Parking",
+      },
+      {
+        id: "laundary",
+        displayName: "Laundary",
+      },
+      {
+        id: "security",
+        displayName: "24x7 Security",
+      },
+      {
+        id: "gym",
+        displayName: "In-House Gym",
+      },
+      {
+        id: "food",
+        displayName: "Food Available",
+      },
+    ],
+    filterType: "MULTI_SELECT",
   },
   {
-    id: 4,
-    name: "Student Hub",
-    location: "Anna Nagar, Chennai",
-    price: "₹10,000",
-    rating: 4.5,
-    reviews: 67,
-    image: "/pg-images/sikkim.png",
-    amenities: ["WiFi", "Study Room", "Food", "AC"],
-    type: "Shared Room",
-    verified: true,
-    liked: false,
+    filterId: "occupancyType",
+    filterDisplayName: "Occupancy Type",
+    filterType: "MULTI_SELECT",
+    filterOptions: [
+      {
+        id: "singleSharing",
+        displayName: "Single Sharing",
+      },
+      {
+        id: "doubleSharing",
+        displayName: "Double Sharing",
+      },
+      {
+        id: "trippleSharing",
+        displayName: "Tripple Sharing",
+      },
+    ],
   },
   {
-    id: 5,
-    name: "Green Acres",
-    location: "Salt Lake, Kolkata",
-    price: "₹13,500",
-    rating: 4.7,
-    reviews: 102,
-    image: "/pg-images/elite.png?height=200&width=300",
-    amenities: ["WiFi", "AC", "Parking", "Food"],
-    type: "Single Room",
-    verified: true,
-    liked: false,
+    filterId: "sort",
+    filterDisplayName: "Sort By",
+    filterType: "SINGLE_SELECT",
+    filterOptions: [
+      {
+        id: "price-asc",
+        displayName: "Price (Low to High)",
+      },
+      {
+        id: "price-dsc",
+        displayName: "Price (High to Low)",
+      },
+      {
+        id: "rating-dsc",
+        displayName: "Ratings (High to Low)",
+      },
+      {
+        id: "reviews-dsc",
+        displayName: "Reviews",
+      },
+    ],
   },
   {
-    id: 6,
-    name: "Metro Heights",
-    location: "Hitech City, Hyderabad",
-    price: "₹16,000",
-    rating: 4.8,
-    reviews: 98,
-    image: "/pg-images/urban.png?height=200&width=300",
-    amenities: ["WiFi", "Gym", "Food", "Laundry"],
-    type: "Shared Room",
-    verified: true,
-    liked: true,
-  },
-  {
-    id: 7,
-    name: "Sunrise Villa",
-    location: "Viman Nagar, Pune",
-    price: "₹14,000",
-    rating: 4.6,
-    reviews: 110,
-    image: "/pg-images/comfort.png",
-    amenities: ["WiFi", "AC", "Food", "Security"],
-    type: "Single Room",
-    verified: true,
-    liked: false,
-  },
-  {
-    id: 8,
-    name: "Cityscape PG",
-    location: "Sector 62, Noida",
-    price: "₹11,500",
-    rating: 4.4,
-    reviews: 75,
-    image: "/pg-images/sikkim.png",
-    amenities: ["WiFi", "Study Room", "Food", "AC"],
-    type: "Shared Room",
-    verified: true,
-    liked: false,
-  },
-  {
-    id: 9,
-    name: "Lakeview Residency",
-    location: "Powai, Mumbai",
-    price: "₹19,000",
-    rating: 4.9,
-    reviews: 160,
-    image: "/pg-images/elite.png?height=200&width=300",
-    amenities: ["WiFi", "AC", "Parking", "Food"],
-    type: "Single Room",
-    verified: true,
-    liked: true,
-  },
-  {
-    id: 10,
-    name: "Royal Stay",
-    location: "Jayanagar, Bangalore",
-    price: "₹17,000",
-    rating: 4.7,
-    reviews: 120,
-    image: "/pg-images/urban.png?height=200&width=300",
-    amenities: ["WiFi", "Gym", "Food", "Laundry"],
-    type: "Shared Room",
-    verified: true,
-    liked: false,
+    filterId: "price",
+    filterDisplayName: "Budget",
+    filterType: "RANGE",
+    maxValue: 50000,
+    minValue: 1000,
   },
 ];
 
 // Extract unique filter options
-const locations = Array.from(
-  new Set(featuredProperties.map((p) => p.location))
-);
-const types = Array.from(new Set(featuredProperties.map((p) => p.type)));
-const allAmenities = Array.from(
-  new Set(featuredProperties.flatMap((p) => p.amenities))
-);
+// const locations = Array.from(
+//   new Set(featuredProperties.map((p) => p.location))
+// );
+// const types = Array.from(new Set(featuredProperties.map((p) => p.type)));
+// const allAmenities = Array.from(
+//   new Set(featuredProperties.flatMap((p) => p.amenities))
+// );
 
-export default function FeaturedPropertiesPage() {
-  const searchParams = useSearchParams();
-  const [location, setLocation] = useState("");
-  const [type, setType] = useState("");
-  const [amenities, setAmenities] = useState<string[]>([]);
-  const [verified, setVerified] = useState(false);
-  const [sort, setSort] = useState("");
-  const [budget, setBudget] = useState("");
-
-  // On mount, set filters from query params
-  useEffect(() => {
-    const loc = searchParams.get("location") || "";
-    const bud = searchParams.get("budget") || "";
-    setLocation(loc);
-    setBudget(bud);
-  }, [searchParams]);
-
-  // Filtering
-  let filtered = featuredProperties.filter((p) => {
-    const priceNum = parseInt(p.price.replace(/[^\d]/g, ""));
-    return (
-      (!location ||
-        p.location.toLowerCase().includes(location.toLowerCase())) &&
-      (!type || p.type === type) &&
-      (!verified || p.verified) &&
-      (amenities.length === 0 ||
-        amenities.every((a) => p.amenities.includes(a))) &&
-      (!budget || priceNum <= parseInt(budget))
-    );
-  });
-
-  // Sorting
-  if (sort === "price-asc") {
-    filtered = filtered
-      .slice()
-      .sort(
-        (a, b) =>
-          parseInt(a.price.replace(/[^\d]/g, "")) -
-          parseInt(b.price.replace(/[^\d]/g, ""))
-      );
-  } else if (sort === "price-desc") {
-    filtered = filtered
-      .slice()
-      .sort(
-        (a, b) =>
-          parseInt(b.price.replace(/[^\d]/g, "")) -
-          parseInt(a.price.replace(/[^\d]/g, ""))
-      );
-  } else if (sort === "rating-desc") {
-    filtered = filtered.slice().sort((a, b) => b.rating - a.rating);
-  } else if (sort === "reviews-desc") {
-    filtered = filtered.slice().sort((a, b) => b.reviews - a.reviews);
-  }
-
-  // Handlers
-  const handleAmenityChange = (amenity: string) => {
-    setAmenities((prev) =>
-      prev.includes(amenity)
-        ? prev.filter((a) => a !== amenity)
-        : [...prev, amenity]
-    );
-  };
-
+export default function Page() {
+  // const filters = await getPayingGuestFiltersConfig();
   return (
     <section className="py-16 bg-gray-50 min-h-screen">
       <div className="flex flex-col container mx-auto px-4 sm:px-6 lg:px-8 gap-8  ">
         <h1 className="text-3xl font-bold text-gray-900 mb-8">
           All Featured Properties
         </h1>
-        <div className="flex flex-row gap-4 ">
-          <div className="flex-4/5">
-            <Input
-              icon={Search}
-              iconPosition="right"
-              placeholder="Select a location"
-            />
-          </div>
-          <div className="flex-1/5">
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button className="w-full">
-                  <ListFilter />
-                  Filter
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end">
-                <DesktopFilter />
-              </DropdownMenuContent>
-            </DropdownMenu>
-          </div>
-        </div>
+        <Suspense>
+          <DesktopFilter filters={filters} />
+        </Suspense>
 
         {/* Properties Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-          {filtered.length === 0 ? (
-            <div className="col-span-full text-center text-gray-500">
-              No properties found.
-            </div>
-          ) : (
-            filtered.map((property) => (
-              <PropertyCards {...property} key={property.id} />
-            ))
-          )}
-        </div>
+        <Suspense>
+          <PayingGuestList />
+        </Suspense>
       </div>
     </section>
   );
