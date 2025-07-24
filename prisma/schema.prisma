@@ -23,12 +23,12 @@ model User {
   members     Member[]
   invitations Invitation[]
 
-  role         String?
-  banned       Boolean?
-  banReason    String?
-  banExpires   DateTime?
-  blog         blog[]
-  PropertyInfo PropertyInfo[]
+  role            String?
+  banned          Boolean?
+  banReason       String?
+  banExpires      DateTime?
+  blog            blog[]
+  payingGuestInfo PayingGuestInfo[]
 
   @@map("user")
 }
@@ -91,15 +91,14 @@ model Jwks {
 }
 
 model Organization {
-  id           String         @id
-  name         String
-  slug         String?
-  logo         String?
-  createdAt    DateTime
-  metadata     String?
-  members      Member[]
-  invitations  Invitation[]
-  PropertyInfo PropertyInfo[]
+  id          String       @id
+  name        String
+  slug        String?
+  logo        String?
+  createdAt   DateTime
+  metadata    String?
+  members     Member[]
+  invitations Invitation[]
 
   @@unique([slug])
   @@map("organization")
@@ -142,85 +141,86 @@ model blog {
   user      User?    @relation(fields: [authorId], references: [id], onDelete: SetNull)
 }
 
+// NEW PROPERTIES DB 
+
+enum PGOccupancyTypeEnum {
+  singleSharing @map("Single Sharing")
+  doubleSharing @map("Double Sharing")
+  tripleSharing @map("Triple Sharing")
+}
+
+enum PGGenderPolicyEnum {
+  male   @map("Male")
+  female @map("Female")
+  coEd   @map("Co-Ed")
+}
+
+enum PGPreferedTenantsEnum {
+  students             @map("Students")
+  workingProfessionals @map("Working Professionals")
+}
+
+enum PGFoodTypeEnum {
+  veg       @map("Veg")
+  nonVeg    @map("Non-Veg")
+  vegNonVeg @map("Veg/Non Veg")
+}
+
+enum PGAmenitiesEnum {
+  wifi        @map("High Speed Wifi")
+  ac          @map("Air Conditioning")
+  bikeParking @map("Bike Parking")
+  carParking  @map("Car Parking")
+  laundary    @map("Laundary")
+  security    @map("24x7 Security")
+  gym         @map("In-House Gym")
+  food        @map("Food Available")
+  powerBackup @map("Power Backup")
+}
+
+enum PGWashroomEnum {
+  common   @map("Common")
+  attached @map("Attached")
+}
+
+enum PGMealsEnum {
+  onlyDinner @map("Only Dinner")
+  twoMeals   @map("Two Meals (Lunch & Dinner)")
+  threeMeals @map("Three Meals (Lunch, Dinner and Breakfast)")
+}
+
+model PayingGuestInfo {
+  id           String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  propertyName String
+  hostId       String
+  user         User   @relation(fields: [hostId], references: [id], onDelete: NoAction)
+
+  availableOccupancyType PGOccupancyTypeEnum[]
+  genderPolicy           PGGenderPolicyEnum      @default(coEd)
+  startingPrice          Decimal                 @db.Decimal(10, 2)
+  baasthanVerified       Boolean                 @default(false)
+  reraRegistered         Boolean                 @default(false)
+  reraRegistrationNumber String?
+  amenities              PGAmenitiesEnum[]
+  preferedTenants        PGPreferedTenantsEnum[] @default([students])
+  washroomType           PGWashroomEnum
+  floors                 Int
+  operatingSince         Int                     @db.SmallInt
+  meals                  PGMealsEnum
+  noticePeriodInDays     Int                     @db.SmallInt
+
+  addressLine1 String
+  addressLine2 String?
+  locality     String
+  city         String
+  district     String
+  state        String
+  country      String
+  pincode      String
+}
+
 model Location {
-  id            String       @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  propertyId    String       @unique @db.Uuid
-  city          String
-  state         String
-  pincode       String
-  landmark      String?
-  googleMapLink String?
-  PropertyInfo  PropertyInfo @relation(fields: [propertyId], references: [id], onDelete: Cascade)
-}
-
-model PropertyInfo {
-  id                String              @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  hostId            String
-  title             String
-  startingPrice     BigInt
-  rera_registered   String?
-  year_built        Int?
-  status            String?
-  floor             Int?
-  address           String?
-  rating            Int?
-  rating_count      Int?
-  created_at        DateTime            @default(now())
-  PropertyAmenities PropertyAmenities[]
-  PropertyImages    PropertyImages[]
-  Reviews           Reviews[]
-  Unit              Unit[]
-  host              User                @relation(fields: [hostId], references: [id])
-  Location          Location?
-  Organization      Organization?       @relation(fields: [organizationId], references: [id])
-  organizationId    String?
-}
-
-enum UnitTypeEnum {
-  Bhk_1 @map("1BHK")
-  Bhk_2 @map("2BHK")
-  Bhk_3 @map("3BHK")
-}
-
-model Unit {
-  id            String       @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  propertyId    String       @db.Uuid
-  type          UnitTypeEnum
-  PropertyInfo  PropertyInfo @relation(fields: [propertyId], references: [id], onDelete: Cascade)
-  bedrooms      Int?
-  bathrooms     Int?
-  covered_area  Float?
-  carpet_area   Float?
-  configuration String?
-  facing        String?
-  furnishing    String?
-}
-
-model PropertyAmenities {
-  id           String        @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  propertyId   String        @db.Uuid
-  amenityName  String[]
-  PropertyInfo PropertyInfo? @relation(fields: [propertyId], references: [id])
-}
-
-model PropertyImages {
-  id           Int           @id @default(autoincrement())
-  propertyId   String        @db.Uuid
-  url          String
-  isMain       Boolean       @default(false)
-  PropertyInfo PropertyInfo? @relation(fields: [propertyId], references: [id])
-}
-
-model Reviews {
-  id           Int           @id @default(autoincrement())
-  propertyId   String        @db.Uuid
-  userId       String
-  location     String
-  verified     Boolean
-  rating       Int
-  comment      String
-  helpful_yes  Boolean       @default(false)
-  helpful_no   Boolean       @default(false)
-  review_date  DateTime      @default(now())
-  PropertyInfo PropertyInfo? @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+  id              String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  locality        String
+  relatedLocality String[]
 }
