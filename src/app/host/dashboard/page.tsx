@@ -1,9 +1,9 @@
 import AccessDenied from "@/app/access-denied/page";
 import { auth } from "@/lib/auth";
-import {
-  getPropertiesByUserId,
-  PropertyInfoSelected,
-} from "@/repository/properties";
+// import {
+//   getPropertiesByUserId,
+//   PropertyInfoSelected,
+// } from "@/repository/properties";
 import { headers } from "next/headers";
 
 const page = async () => {
@@ -22,10 +22,10 @@ const page = async () => {
     return AccessDenied();
   }
 
-  const ownProperties: PropertyInfoSelected[] = await getPropertiesByUserId(
-    session.user.id
-  );
-  console.log("ownProperties===>", ownProperties);
+  // const ownProperties: PropertyInfoSelected[] = await getPropertiesByUserId(
+  //   session.user.id
+  // );
+  // console.log("ownProperties===>", ownProperties);
 
   return (
     <div className="container flex flex-1 flex-col py-8">
