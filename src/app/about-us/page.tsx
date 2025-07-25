@@ -1,15 +1,15 @@
-import Image from "next/image"
+import Footer from "@/components/footer";
 import {
-  PlayIcon,
-  UsersIcon,
-  TargetIcon,
   AwardIcon,
-  FlagIcon,
-  EyeIcon,
   CheckCircleIcon,
+  EyeIcon,
+  FlagIcon,
   HeartHandshakeIcon,
-} from "lucide-react"
-import Footer from "@/components/footer"
+  PlayIcon,
+  TargetIcon,
+  UsersIcon,
+} from "lucide-react";
+import Image from "next/image";
 
 export default function AboutUsPage() {
   return (
@@ -40,8 +40,9 @@ export default function AboutUsPage() {
               About us
             </h1>
             <p className="mx-auto mt-8 max-w-4xl text-xl text-blue-700 md:text-2xl leading-relaxed font-light animate-fade-in-up delay-200">
-              Baasthan is a smart digital housing platform designed to help students and working professionals find
-              affordable and verified PGs and rental accommodations with ease.
+              Baasthan is a smart digital housing platform designed to help
+              students and working professionals find affordable and verified
+              PGs and rental accommodations with ease.
             </p>
           </div>
         </section>
@@ -87,14 +88,17 @@ export default function AboutUsPage() {
         <section className="bg-white py-12">
           <div className="container mx-auto px-6 grid md:grid-cols-2 gap-10 items-start">
             <p className="text-lg text-gray-700 leading-relaxed animate-fade-in-up">
-              With zero brokerage and no hidden fees, Baasthan simplifies the process of finding a place you can call
-              home. Through our user-friendly app, users can browse, compare and book accommodations in just a few
-              clicks - all with complete transparency.
+              With zero brokerage and no hidden fees, Baasthan simplifies the
+              process of finding a place you can call home. Through our
+              user-friendly app, users can browse, compare and book
+              accommodations in just a few clicks - all with complete
+              transparency.
             </p>
             <p className="text-lg text-gray-700 leading-relaxed animate-fade-in-up delay-100">
-              At the same time, Baasthan empowers property owners by helping them efficiently manage, list and operate
-              their properties through a dedicated dashboard ensuring better occupancy, visibility and operational
-              control.
+              At the same time, Baasthan empowers property owners by helping
+              them efficiently manage, list and operate their properties through
+              a dedicated dashboard ensuring better occupancy, visibility and
+              operational control.
             </p>
           </div>
         </section>
@@ -109,13 +113,15 @@ export default function AboutUsPage() {
                 <span className="absolute bottom-0 left-0 w-24 h-1 bg-blue-500 rounded-full" />
               </h2>
               <p className="text-lg text-gray-700 leading-relaxed mb-6">
-                To build a tech enabled, brokerage free housing ecosystem that simplifies accommodation for students and
-                working professionals, while empowering property owners to manage and monetize their spaces
-                effortlessly.
+                To build a tech enabled, brokerage free housing ecosystem that
+                simplifies accommodation for students and working professionals,
+                while empowering property owners to manage and monetize their
+                spaces effortlessly.
               </p>
               <p className="text-lg text-gray-700 leading-relaxed">
-                We aim to go beyond housing by integrating essential lifestyle services like cloud kitchen and laundry,
-                making Baasthan a complete digital living solution all under one platform.
+                We aim to go beyond housing by integrating essential lifestyle
+                services like cloud kitchen and laundry, making Baasthan a
+                complete digital living solution all under one platform.
               </p>
             </div>
             <div className="relative w-full h-96 rounded-2xl overflow-hidden shadow-2xl animate-slide-in-right">
@@ -158,9 +164,11 @@ export default function AboutUsPage() {
                 <span className="absolute bottom-0 left-0 w-24 h-1 bg-blue-500 rounded-full" />
               </h2>
               <p className="text-lg text-gray-700 leading-relaxed">
-                To become India's most trusted digital living platform by redefining how people book and manage their
-                accommodation with zero brokerage at its core. We envision a future where every student and professional
-                can access verified, affordable housing and essential services like healthy tasty meals and laundry
+                To become India&apos;s most trusted digital living platform by
+                redefining how people book and manage their accommodation with
+                zero brokerage at its core. We envision a future where every
+                student and professional can access verified, affordable housing
+                and essential services like healthy tasty meals and laundry
                 through one smart, verified platform.
               </p>
             </div>
@@ -191,12 +199,16 @@ export default function AboutUsPage() {
               </div>
               <div className="animate-slide-in-right">
                 <p className="text-lg text-gray-700 leading-relaxed">
-                  Our goals include simplifying the housing search for students and working professionals with verified,
-                  affordable listings; eliminating hidden costs and brokerage fees to make the rental process
-                  transparent and fair; empowering property owners with easy tools to manage and rent out their spaces
-                  hassle-free; offering essential services like food (cloud kitchen) and laundry—all from a single app;
-                  creating a trusted digital ecosystem that supports stress-free, long-term living solutions; and
-                  building a community based on safety, comfort, and support where we uplift and offer shelter.
+                  Our goals include simplifying the housing search for students
+                  and working professionals with verified, affordable listings;
+                  eliminating hidden costs and brokerage fees to make the rental
+                  process transparent and fair; empowering property owners with
+                  easy tools to manage and rent out their spaces hassle-free;
+                  offering essential services like food (cloud kitchen) and
+                  laundry—all from a single app; creating a trusted digital
+                  ecosystem that supports stress-free, long-term living
+                  solutions; and building a community based on safety, comfort,
+                  and support where we uplift and offer shelter.
                 </p>
               </div>
             </div>
@@ -215,11 +227,14 @@ export default function AboutUsPage() {
               <span className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-24 h-1 bg-blue-500 rounded-full" />
             </h2>
             <p className="mx-auto mt-6 max-w-5xl text-xl text-gray-700 leading-relaxed animate-fade-in-up delay-200">
-              At Baasthan, we believe in keeping things simple, honest and impactful. We stand for transparency - no
-              hidden fees, no middlemen. Our goal is to make housing affordable and accessible especially for students
-              and working professionals. We operate on trust, with verified listings and real support. Every feature
-              built is user friendly designed for ease and reliability. And as we grow we remain committed to innovation
-              and inclusivity, reaching regions and people that others overlook.
+              At Baasthan, we believe in keeping things simple, honest and
+              impactful. We stand for transparency - no hidden fees, no
+              middlemen. Our goal is to make housing affordable and accessible
+              especially for students and working professionals. We operate on
+              trust, with verified listings and real support. Every feature
+              built is user friendly designed for ease and reliability. And as
+              we grow we remain committed to innovation and inclusivity,
+              reaching regions and people that others overlook.
             </p>
             {/* Feature Icons with staggered animations */}
             <div className="mt-20 grid grid-cols-1 md:grid-cols-3 gap-12">
@@ -227,27 +242,36 @@ export default function AboutUsPage() {
                 <div className="w-24 h-24 rounded-full bg-blue-500 flex items-center justify-center mb-6 shadow-xl group-hover:scale-110 transition-transform duration-300">
                   <UsersIcon className="h-12 w-12 text-white" />
                 </div>
-                <h3 className="text-2xl font-bold text-gray-900 mb-3">Professional Team</h3>
+                <h3 className="text-2xl font-bold text-gray-900 mb-3">
+                  Professional Team
+                </h3>
                 <p className="text-lg text-gray-700 leading-relaxed">
-                  Our team is dedicated to providing expert support and guidance throughout your housing journey.
+                  Our team is dedicated to providing expert support and guidance
+                  throughout your housing journey.
                 </p>
               </div>
               <div className="flex flex-col items-center text-center group p-6 rounded-xl hover:bg-white transition-all duration-300 shadow-lg hover:shadow-2xl transform hover:-translate-y-2 animate-fade-in-up delay-400">
                 <div className="w-24 h-24 rounded-full bg-blue-500 flex items-center justify-center mb-6 shadow-xl group-hover:scale-110 transition-transform duration-300">
                   <TargetIcon className="h-12 w-12 text-white" />
                 </div>
-                <h3 className="text-2xl font-bold text-gray-900 mb-3">Target Oriented</h3>
+                <h3 className="text-2xl font-bold text-gray-900 mb-3">
+                  Target Oriented
+                </h3>
                 <p className="text-lg text-gray-700 leading-relaxed">
-                  We focus on delivering solutions that meet your specific needs, ensuring a seamless experience.
+                  We focus on delivering solutions that meet your specific
+                  needs, ensuring a seamless experience.
                 </p>
               </div>
               <div className="flex flex-col items-center text-center group p-6 rounded-xl hover:bg-white transition-all duration-300 shadow-lg hover:shadow-2xl transform hover:-translate-y-2 animate-fade-in-up delay-500">
                 <div className="w-24 h-24 rounded-full bg-blue-500 flex items-center justify-center mb-6 shadow-xl group-hover:scale-110 transition-transform duration-300">
                   <AwardIcon className="h-12 w-12 text-white" />
                 </div>
-                <h3 className="text-2xl font-bold text-gray-900 mb-3">Success Guarantee</h3>
+                <h3 className="text-2xl font-bold text-gray-900 mb-3">
+                  Success Guarantee
+                </h3>
                 <p className="text-lg text-gray-700 leading-relaxed">
-                  We are committed to your satisfaction, ensuring you find the perfect accommodation with confidence.
+                  We are committed to your satisfaction, ensuring you find the
+                  perfect accommodation with confidence.
                 </p>
               </div>
             </div>
@@ -256,5 +280,5 @@ export default function AboutUsPage() {
       </main>
       <Footer />
     </div>
-  )
+  );
 }
