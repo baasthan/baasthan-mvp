@@ -223,4 +223,5 @@ model Location {
   id              String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   locality        String
   relatedLocality String[]
+  pincode         String
 }

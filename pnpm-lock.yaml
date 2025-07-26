@@ -83,9 +83,12 @@ importers:
       tailwind-merge:
         specifier: ^3.3.1
         version: 3.3.1
+<<<<<<< HEAD
       validator:
         specifier: ^13.15.15
         version: 13.15.15
+=======
+>>>>>>> 9c85817 (feat(properties-filters): update filtering logic)
       zod:
         specifier: ^3.25.74
         version: 3.25.74
@@ -120,9 +123,12 @@ importers:
       '@types/react-dom':
         specifier: ^19
         version: 19.1.6(@types/react@19.1.8)
+<<<<<<< HEAD
       '@types/validator':
         specifier: ^13.15.2
         version: 13.15.2
+=======
+>>>>>>> 9c85817 (feat(properties-filters): update filtering logic)
       eslint:
         specifier: ^9
         version: 9.30.1(jiti@2.4.2)
@@ -1126,9 +1132,12 @@ packages:
   '@types/react@19.1.8':
     resolution: {integrity: sha512-AwAfQ2Wa5bCx9WP8nZL2uMZWod7J7/JSplxbTmBQ5ms6QpqNYm672H0Vu9ZVKVngQ+ii4R/byguVEUZQyeg44g==}
 
+<<<<<<< HEAD
   '@types/validator@13.15.2':
     resolution: {integrity: sha512-y7pa/oEJJ4iGYBxOpfAKn5b9+xuihvzDVnC/OSvlVnGxVg0pOqmjiMafiJ1KVNQEaPZf9HsEp5icEwGg8uIe5Q==}
 
+=======
+>>>>>>> 9c85817 (feat(properties-filters): update filtering logic)
   '@typescript-eslint/eslint-plugin@8.35.1':
     resolution: {integrity: sha512-9XNTlo7P7RJxbVeICaIIIEipqxLKguyh+3UbXuT2XQuFp6d8VOeDEGuz5IiX0dgZo8CiI6aOFLg4e8cF71SFVg==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
@@ -2875,10 +2884,13 @@ packages:
     peerDependencies:
       react: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
 
+<<<<<<< HEAD
   validator@13.15.15:
     resolution: {integrity: sha512-BgWVbCI72aIQy937xbawcs+hrVaN/CZ2UwutgaJ36hGqRrLNM+f5LUT/YPRbo8IV/ASeFzXszezV+y2+rq3l8A==}
     engines: {node: '>= 0.10'}
 
+=======
+>>>>>>> 9c85817 (feat(properties-filters): update filtering logic)
   which-boxed-primitive@1.1.1:
     resolution: {integrity: sha512-TbX3mj8n0odCBFVlY8AxkqcHASw3L60jIuF8jFP78az3C2YhmGvqbHBpAjTRH2/xqYunrJ9g1jSyjCjpoWzIAA==}
     engines: {node: '>= 0.4'}
@@ -3925,8 +3937,11 @@ snapshots:
     dependencies:
       csstype: 3.1.3
 
+<<<<<<< HEAD
   '@types/validator@13.15.2': {}
 
+=======
+>>>>>>> 9c85817 (feat(properties-filters): update filtering logic)
   '@typescript-eslint/eslint-plugin@8.35.1(@typescript-eslint/parser@8.35.1(eslint@9.30.1(jiti@2.4.2))(typescript@5.8.3))(eslint@9.30.1(jiti@2.4.2))(typescript@5.8.3)':
     dependencies:
       '@eslint-community/regexpp': 4.12.1
@@ -5886,8 +5901,11 @@ snapshots:
     dependencies:
       react: 19.1.0
 
+<<<<<<< HEAD
   validator@13.15.15: {}
 
+=======
+>>>>>>> 9c85817 (feat(properties-filters): update filtering logic)
   which-boxed-primitive@1.1.1:
     dependencies:
       is-bigint: 1.1.0
