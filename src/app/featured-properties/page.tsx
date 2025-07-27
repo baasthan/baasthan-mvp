@@ -1,11 +1,8 @@
-import DesktopFilter from "@/components/filters/desktop-filter";
 import { getAppliedPayingGuestFiltersByParams } from "@/lib/filters/paying-guest-filters";
 import {
   getPayingGuestFilters,
   getPayingGuestInfoByFilters,
 } from "@/repository/paying-guest";
-
-import { Suspense } from "react";
 
 export default async function Page({
   searchParams,
@@ -25,9 +22,7 @@ export default async function Page({
         <h1 className="text-3xl font-bold text-gray-900 mb-8">
           All Featured Properties
         </h1>
-        <Suspense>
-          <DesktopFilter filters={filters} />
-        </Suspense>
+
         {JSON.stringify(payingGuestInfo)}
       </div>
     </section>

@@ -228,8 +228,15 @@ model PayingGuestImages {
 }
 
 model Location {
-  id              String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  id              String            @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   locality        String
-  relatedLocality String[]
   pincode         String
+  RelatedLocality RelatedLocality[]
+}
+
+model RelatedLocality {
+  id         String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name       String
+  locationId String   @db.Uuid
+  location   Location @relation(fields: [locationId], references: [id], onDelete: Cascade)
 }

@@ -1,4 +1,4 @@
-import DesktopFilter from "@/components/filters/desktop-filter";
+import Filter from "@/components/filters/filter";
 import PayingGuestCard from "@/components/paying-guest/paying-guest-card";
 import { APP_CONFIG } from "@/config";
 import { getAppliedPayingGuestFiltersByParams } from "@/lib/filters/paying-guest-filters";
@@ -29,7 +29,7 @@ export default async function Page({
           <h1 className="text-primary font-bold">@{APP_CONFIG.APP_NAME}</h1>
         </div>
         <Suspense>
-          <DesktopFilter filters={filters} />
+          <Filter filters={filters} />
         </Suspense>
         <div className="flex flex-row flex-wrap gap-4">
           {payingGuestInfo &&

@@ -15,12 +15,13 @@ import {
 import { Label } from "../ui/label";
 import { RadioGroup, RadioGroupItem } from "../ui/radio-group";
 import { Slider } from "../ui/slider";
-import { Location } from "./location-autocomplete";
-interface DesktopFilterProps {
+import { LocationAutoComplete } from "./location-autocomplete";
+
+interface FilterProps {
   filters: FilterConfig[];
 }
 
-const DesktopFilter = ({ filters }: DesktopFilterProps) => {
+const Filter = ({ filters }: FilterProps) => {
   const router = useRouter();
   const searchParams = useSearchParams();
 
@@ -207,10 +208,10 @@ const DesktopFilter = ({ filters }: DesktopFilterProps) => {
 
   return (
     <div className="flex flex-col md:flex-row gap-4 ">
-      <div className="flex-1/2 md:flex-4/5">
-        <Location />
+      <div className="w-full">
+        <LocationAutoComplete />
       </div>
-      <div className="flex flex-row gap-2 overflow-auto">
+      <div className="flex flex-row  gap-2">
         <Button
           variant={"outline"}
           className={`${
@@ -238,7 +239,7 @@ const DesktopFilter = ({ filters }: DesktopFilterProps) => {
           {searchParams.get("reraRegistered") === "true" && <X />}
         </Button>
       </div>
-      <div className="flex-1/5 hidden md:flex">
+      <div className="hidden md:flex">
         <DropdownMenu open={dropdownOpen} onOpenChange={setDropdownOpen}>
           <DropdownMenuTrigger asChild>
             <Button className="w-full">
@@ -281,7 +282,7 @@ const DesktopFilter = ({ filters }: DesktopFilterProps) => {
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
-      <div className="flex-1/2 md:hidden">
+      <div className="md:hidden">
         <Drawer open={drawerOpen} onOpenChange={setDrawerOpen}>
           <DrawerTrigger asChild>
             <Button className="w-full">
@@ -331,4 +332,4 @@ const DesktopFilter = ({ filters }: DesktopFilterProps) => {
   );
 };
 
-export default DesktopFilter;
+export default Filter;
