@@ -40,21 +40,21 @@ export const getPayingGuestFilters = async () => {
     maxValue: 100000,
   });
 
-  /** baasthanVerified */
-  publicFilters.push({
-    filterId: Prisma.PayingGuestInfoScalarFieldEnum.baasthanVerified,
-    filterDisplayName: "Baasthan Verified",
-    filterType: "BOOLEAN",
-    defaultValue: true,
-  });
+  // /** baasthanVerified */
+  // publicFilters.push({
+  //   filterId: Prisma.PayingGuestInfoScalarFieldEnum.baasthanVerified,
+  //   filterDisplayName: "Baasthan Verified",
+  //   filterType: "BOOLEAN",
+  //   defaultValue: true,
+  // });
 
-  /** reraRegistered */
-  publicFilters.push({
-    filterId: Prisma.PayingGuestInfoScalarFieldEnum.reraRegistered,
-    filterDisplayName: "RERA Registered",
-    filterType: "BOOLEAN",
-    defaultValue: true,
-  });
+  // /** reraRegistered */
+  // publicFilters.push({
+  //   filterId: Prisma.PayingGuestInfoScalarFieldEnum.reraRegistered,
+  //   filterDisplayName: "RERA Registered",
+  //   filterType: "BOOLEAN",
+  //   defaultValue: true,
+  // });
 
   /** Amenities */
   publicFilters.push({

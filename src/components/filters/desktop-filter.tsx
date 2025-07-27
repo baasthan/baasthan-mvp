@@ -103,13 +103,24 @@ const DesktopFilter = ({ filters }: DesktopFilterProps) => {
     setDrawerOpen(false);
   };
 
-  const handleBaasthanVerified = () => {
+  const handleBaasthanVerifiedToggle = () => {
     const queryParams = new URLSearchParams(searchParams);
     console.log(queryParams.toString());
     if (queryParams.get("baasthanVerified")) {
       queryParams.delete("baasthanVerified");
     } else {
       queryParams.set("baasthanVerified", "true");
+    }
+    router.push(`?${queryParams.toString()}`);
+  };
+
+  const handleReraRegisteredToggle = () => {
+    const queryParams = new URLSearchParams(searchParams);
+    console.log(queryParams.toString());
+    if (queryParams.get("reraRegistered")) {
+      queryParams.delete("reraRegistered");
+    } else {
+      queryParams.set("reraRegistered", "true");
     }
     router.push(`?${queryParams.toString()}`);
   };
@@ -199,18 +210,34 @@ const DesktopFilter = ({ filters }: DesktopFilterProps) => {
       <div className="flex-1/2 md:flex-4/5">
         <Location />
       </div>
-      <Button
-        variant={"outline"}
-        className={`${
-          searchParams.get("baasthanVerified") === "true" ? "bg-primary/15" : ""
-        } w-fit`}
-        onClick={() => {
-          handleBaasthanVerified();
-        }}
-      >
-        Baasthan Verified
-        {searchParams.get("baasthanVerified") === "true" && <X />}
-      </Button>
+      <div className="flex flex-row gap-2 overflow-auto">
+        <Button
+          variant={"outline"}
+          className={`${
+            searchParams.get("baasthanVerified") === "true"
+              ? "bg-primary/15"
+              : ""
+          } w-fit`}
+          onClick={() => {
+            handleBaasthanVerifiedToggle();
+          }}
+        >
+          Baasthan Verified
+          {searchParams.get("baasthanVerified") === "true" && <X />}
+        </Button>
+        <Button
+          variant={"outline"}
+          className={`${
+            searchParams.get("reraRegistered") === "true" ? "bg-primary/15" : ""
+          } w-fit`}
+          onClick={() => {
+            handleReraRegisteredToggle();
+          }}
+        >
+          RERA Registered
+          {searchParams.get("reraRegistered") === "true" && <X />}
+        </Button>
+      </div>
       <div className="flex-1/5 hidden md:flex">
         <DropdownMenu open={dropdownOpen} onOpenChange={setDropdownOpen}>
           <DropdownMenuTrigger asChild>
