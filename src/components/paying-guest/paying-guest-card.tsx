@@ -1,3 +1,4 @@
+import { PGAmenitiesEnumMap } from "@/constants/PGAmenitiesType";
 import { PGOccupancyTypeEnumMap } from "@/constants/PGOccupancyType";
 import { PayingGuestInfoWithPublicUser } from "@/types/paying-guest";
 import { Heart, MapPin, Share2, Star } from "lucide-react";
@@ -100,7 +101,7 @@ const PayingGuestCard = ({
                 key={index}
                 className="bg-gray-100 text-gray-800 px-2 py-1 rounded-md text-xs font-medium"
               >
-                {amenity}
+                {PGAmenitiesEnumMap[amenity]}
               </span>
             ))}
             {amenities.length > 3 && (

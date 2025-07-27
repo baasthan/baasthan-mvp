@@ -1,7 +1,8 @@
 "use client";
 import { Button } from "@/components/ui/button";
-import { APP_CONFIG, AUTH_CONFIG } from "@/config";
+import { APP_CONFIG } from "@/config";
 import { signOut, useSession } from "@/lib/auth-client";
+import getInitials from "@/utils/getInitials";
 import { Menu, X } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -9,7 +10,6 @@ import { useRouter } from "next/navigation";
 import { Suspense, useState } from "react";
 import AuthButtons from "./auth-buttons";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
-import getInitials from "@/utils/getInitials";
 
 const Header = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -32,7 +32,9 @@ const Header = () => {
                 alt="Baasthan Logo"
               />
               {/* </div> */}
-              <p className="text-primary font-bold text-3xl">Baasthan</p>
+              <p className="text-primary font-bold text-3xl">
+                {APP_CONFIG.APP_NAME}
+              </p>
             </div>
           </Link>
 
@@ -68,35 +70,35 @@ const Header = () => {
           <div className="md:hidden py-4 border-t">
             <div className="flex flex-col space-y-0.5 px-2">
               {/* Common Links for all users */}
-              <Link 
+              <Link
                 href="/"
                 className="flex items-center text-sm text-muted-foreground hover:text-primary font-medium rounded-md px-3 py-2.5 hover:bg-accent/50"
                 onClick={() => setMobileMenuOpen(false)}
               >
                 Home
               </Link>
-              <Link 
+              <Link
                 href="/properties"
                 className="flex items-center text-sm text-muted-foreground hover:text-primary font-medium rounded-md px-3 py-2.5 hover:bg-accent/50"
                 onClick={() => setMobileMenuOpen(false)}
               >
                 Properties
               </Link>
-              <Link 
+              <Link
                 href="/about-us"
                 className="flex items-center text-sm text-muted-foreground hover:text-primary font-medium rounded-md px-3 py-2.5 hover:bg-accent/50"
                 onClick={() => setMobileMenuOpen(false)}
               >
                 About Us
               </Link>
-              <Link 
+              <Link
                 href="/contact"
                 className="flex items-center text-sm text-muted-foreground hover:text-primary font-medium rounded-md px-3 py-2.5 hover:bg-accent/50"
                 onClick={() => setMobileMenuOpen(false)}
               >
                 Contact Us
               </Link>
-              
+
               {/* Authentication Section */}
               <div className="pt-2 pb-2 border-t border-border/50">
                 {session?.user ? (
@@ -106,10 +108,13 @@ const Header = () => {
                       <div className="flex-shrink-0">
                         <Avatar className="h-11 w-11 border-2 border-border">
                           {session.user.image ? (
-                            <AvatarImage src={session.user.image} className="object-cover" />
+                            <AvatarImage
+                              src={session.user.image}
+                              className="object-cover"
+                            />
                           ) : (
                             <AvatarFallback className="bg-primary text-primary-foreground text-base font-medium">
-                              {getInitials(session.user.name || '')}
+                              {getInitials(session.user.name || "")}
                             </AvatarFallback>
                           )}
                         </Avatar>
@@ -123,25 +128,53 @@ const Header = () => {
                         </p>
                       </div>
                     </div>
-                    
+
                     {/* User Navigation */}
-                    <Link 
+                    <Link
                       href="/dashboard"
                       className="flex items-center text-sm text-muted-foreground hover:text-primary font-medium rounded-md px-3 py-2.5 hover:bg-accent/50"
                       onClick={() => setMobileMenuOpen(false)}
                     >
                       <span className="mr-2">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect width="7" height="9" x="3" y="3" rx="1"/><rect width="7" height="5" x="14" y="3" rx="1"/><rect width="7" height="9" x="14" y="12" rx="1"/><rect width="7" height="5" x="3" y="16" rx="1"/></svg>
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="16"
+                          height="16"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="2"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        >
+                          <rect width="7" height="9" x="3" y="3" rx="1" />
+                          <rect width="7" height="5" x="14" y="3" rx="1" />
+                          <rect width="7" height="9" x="14" y="12" rx="1" />
+                          <rect width="7" height="5" x="3" y="16" rx="1" />
+                        </svg>
                       </span>
                       Dashboard
                     </Link>
-                    <Link 
+                    <Link
                       href="/profile"
                       className="flex items-center text-sm text-muted-foreground hover:text-primary font-medium rounded-md px-3 py-2.5 hover:bg-accent/50"
                       onClick={() => setMobileMenuOpen(false)}
                     >
                       <span className="mr-2">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="16"
+                          height="16"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="2"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        >
+                          <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" />
+                          <circle cx="12" cy="7" r="4" />
+                        </svg>
                       </span>
                       Profile
                     </Link>
@@ -154,7 +187,21 @@ const Header = () => {
                       }}
                     >
                       <span className="mr-2">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="16"
+                          height="16"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="2"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        >
+                          <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+                          <polyline points="16 17 21 12 16 7" />
+                          <line x1="21" y1="12" x2="9" y2="12" />
+                        </svg>
                       </span>
                       Sign Out
                     </Button>
@@ -163,7 +210,10 @@ const Header = () => {
                   <div className="pt-2 px-2">
                     <Suspense>
                       <div className="flex md:hidden">
-                        <AuthButtons isMobile={true} onActionComplete={() => setMobileMenuOpen(false)} />
+                        <AuthButtons
+                          isMobile={true}
+                          onActionComplete={() => setMobileMenuOpen(false)}
+                        />
                       </div>
                     </Suspense>
                   </div>
@@ -173,13 +223,26 @@ const Header = () => {
               {/* Action button - List Property - Only shown when logged in */}
               {session?.user && (
                 <div className="pb-2">
-                  <Link 
+                  <Link
                     href="/host/property/new"
                     className="flex items-center justify-center w-full text-sm text-primary border border-primary/75 hover:border-primary bg-transparent rounded-md font-medium px-3 py-2.5 transition-colors hover:bg-primary/5"
                     onClick={() => setMobileMenuOpen(false)}
                   >
                     <span className="mr-2">
-                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 3v18h18"/><path d="m19 9-5 5-4-4-3 3"/></svg>
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="16"
+                        height="16"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      >
+                        <path d="M3 3v18h18" />
+                        <path d="m19 9-5 5-4-4-3 3" />
+                      </svg>
                     </span>
                     List Property
                   </Link>
