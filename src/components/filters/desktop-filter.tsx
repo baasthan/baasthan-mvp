@@ -122,7 +122,7 @@ const DesktopFilter = ({ filters }: DesktopFilterProps) => {
       return (
         <RadioGroup>
           {currentFilter.filterOptions.map((filterOption) => (
-            <Label>
+            <Label key={filterOption.id}>
               <RadioGroupItem
                 key={filterOption.id}
                 onClick={() => {
@@ -146,7 +146,7 @@ const DesktopFilter = ({ filters }: DesktopFilterProps) => {
       return (
         <div className=" flex flex-col gap-3">
           {currentFilter.filterOptions.map((filterOption) => (
-            <Label>
+            <Label key={filterOption.id}>
               <Checkbox
                 value={filterOption.id}
                 onClick={() => {
