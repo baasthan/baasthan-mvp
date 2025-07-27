@@ -27,10 +27,9 @@ const DesktopFilter = ({ filters }: DesktopFilterProps) => {
     const appliedFilters = searchParams
       .entries()
       .reduce((updatedFilter, [key, value]) => {
-        updatedFilter[key] = value.split(",");
+        updatedFilter[key] = [...(updatedFilter[key] ?? []), value];
         return updatedFilter;
       }, {} as FilterSelection);
-
     setCurrentSelection(appliedFilters);
   }, [searchParams]);
 
@@ -85,9 +84,6 @@ const DesktopFilter = ({ filters }: DesktopFilterProps) => {
         queryParams.append(key, value);
       });
     });
-
-    // const newUrl = `${window.location.pathname}?${queryParams.toString()}`;
-    // window.history.replaceState(null, "", newUrl);
 
     router.push(`?${queryParams.toString()}`);
   };

@@ -3,6 +3,7 @@ import { PGGenderPolicyEnumMap } from "@/constants/PGGenderPolicyType";
 import { PGMealsEnumMap } from "@/constants/PGMeals";
 import { PGOccupancyTypeEnumMap } from "@/constants/PGOccupancyType";
 import { PGPreferedTenantsEnumMap } from "@/constants/PGPreferedTenantsType";
+import { PGWashroomEnumMap } from "@/constants/PGWashroomType";
 import { FilterConfig } from "@/types/filters";
 import { PayingGuestInfoWithPublicUser } from "@/types/paying-guest";
 import { Prisma, PrismaClient } from "../../prisma/generated/prisma";
@@ -81,7 +82,7 @@ export const getPayingGuestFilters = async () => {
     filterId: Prisma.PayingGuestInfoScalarFieldEnum.washroomType,
     filterDisplayName: "Washroom Type",
     filterType: "SINGLE_SELECT",
-    filterOptions: Object.entries(PGAmenitiesEnumMap).map(([key, value]) => ({
+    filterOptions: Object.entries(PGWashroomEnumMap).map(([key, value]) => ({
       id: key,
       displayName: value,
     })),
