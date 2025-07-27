@@ -209,14 +209,22 @@ model PayingGuestInfo {
   meals                  PGMealsEnum
   noticePeriodInDays     Int                     @db.SmallInt
 
-  addressLine1 String
-  addressLine2 String?
-  locality     String
-  city         String
-  district     String
-  state        String
-  country      String
-  pincode      String
+  addressLine1      String
+  addressLine2      String?
+  locality          String
+  city              String
+  district          String
+  state             String
+  country           String
+  pincode           String
+  PayingGuestImages PayingGuestImages[]
+}
+
+model PayingGuestImages {
+  id            BigInt          @id @default(autoincrement())
+  url           String
+  payingGuestId String          @db.Uuid
+  payingGuest   PayingGuestInfo @relation(fields: [payingGuestId], references: [id], onDelete: Cascade)
 }
 
 model Location {

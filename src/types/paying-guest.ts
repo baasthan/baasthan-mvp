@@ -8,5 +8,11 @@ export type PayingGuestInfoWithPublicUser = Prisma.PayingGuestInfoGetPayload<{
         name: true;
       };
     };
+    PayingGuestImages: {
+      select: {
+        id: true;
+        url: true;
+      };
+    };
   };
 }>;

@@ -2,6 +2,7 @@ import { PGOccupancyTypeEnumMap } from "@/constants/PGOccupancyType";
 import { PayingGuestInfoWithPublicUser } from "@/types/paying-guest";
 import { Heart, MapPin, Share2, Star } from "lucide-react";
 import { Button } from "../ui/button";
+import PayingGuestImageCarosel from "./paying-guest-image-carosel";
 
 const PayingGuestCard = ({
   propertyName,
@@ -10,20 +11,18 @@ const PayingGuestCard = ({
   locality,
   amenities,
   availableOccupancyType,
+  user,
+  PayingGuestImages,
 }: PayingGuestInfoWithPublicUser) => {
   const liked = false;
   const rating = 5.0;
   const reviews = 10;
 
   return (
-    <div className="bg-white rounded-lg shadow-md border-0 hover:shadow-xl transition-all duration-300 overflow-hidden cursor-pointer group flex flex-col justify-between pb-4 min-w-sm">
+    <div className="bg-white rounded-lg shadow-md border-0 hover:shadow-xl transition-all duration-300 overflow-hidden cursor-pointer group flex flex-col justify-between pb-4 w-sm">
       <div className="flex flex-col gap-4 ">
         <div className="relative">
-          <img
-            // src={image || "/placeholder.svg"}
-            alt={propertyName}
-            className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
-          />
+          <PayingGuestImageCarosel images={PayingGuestImages} />
           <div className="absolute top-3 left-3">
             {baasthanVerified && (
               <span className="bg-green-500 text-white px-2 py-1 rounded-md text-xs font-medium flex items-center">

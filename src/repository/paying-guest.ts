@@ -118,6 +118,12 @@ export const getPayingGuestInfoByFilters = async (
             name: true,
           },
         },
+        PayingGuestImages: {
+          select: {
+            id: true,
+            url: true,
+          },
+        },
       },
     });
 
