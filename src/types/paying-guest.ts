@@ -1,0 +1,12 @@
+import { Prisma } from "../../prisma/generated/prisma";
+
+export type PayingGuestInfoWithPublicUser = Prisma.PayingGuestInfoGetPayload<{
+  include: {
+    user: {
+      select: {
+        image: true;
+        name: true;
+      };
+    };
+  };
+}>;

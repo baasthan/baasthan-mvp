@@ -1,7 +1,8 @@
 "use client";
 import { FilterConfig, FilterSelection } from "@/types/filters";
 import { ListFilter } from "lucide-react";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
+
 import { useEffect, useState } from "react";
 import { Button } from "../ui/button";
 import {
@@ -16,6 +17,7 @@ interface DesktopFilterProps {
 }
 
 const DesktopFilter = ({ filters }: DesktopFilterProps) => {
+  const router = useRouter();
   const searchParams = useSearchParams();
 
   const [currentFilterIndex, setCurrentFilterIndex] = useState<number>(0);
@@ -79,13 +81,15 @@ const DesktopFilter = ({ filters }: DesktopFilterProps) => {
     const queryParams = new URLSearchParams();
 
     Object.entries(currentSelection).forEach(([key, values]) => {
-      if (values.length > 0) {
-        queryParams.set(key, values.join(","));
-      }
+      values.forEach((value) => {
+        queryParams.append(key, value);
+      });
     });
 
-    const newUrl = `${window.location.pathname}?${queryParams.toString()}`;
-    window.history.replaceState(null, "", newUrl);
+    // const newUrl = `${window.location.pathname}?${queryParams.toString()}`;
+    // window.history.replaceState(null, "", newUrl);
+
+    router.push(`?${queryParams.toString()}`);
   };
 
   const renderFilterOptions = (currentFilter: FilterConfig) => {
@@ -159,10 +163,10 @@ const DesktopFilter = ({ filters }: DesktopFilterProps) => {
               Filter
             </Button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent>
-            <div className="flex flex-col gap-2 w-md">
+          <DropdownMenuContent align="end">
+            <div className="flex flex-col gap-2 w-lg">
               <div className="flex flex-row gap-2 ">
-                <div className="flex flex-col p-2 outline rounded-2xl gap-2">
+                <div className="h-96 overflow-y-auto flex flex-col p-2 outline rounded-2xl gap-2">
                   {filters.map((filter, index) => (
                     <Button
                       variant={"secondary-ghost"}
@@ -181,10 +185,7 @@ const DesktopFilter = ({ filters }: DesktopFilterProps) => {
                     </Button>
                   ))}
                 </div>
-                <div
-                  id="price"
-                  className="h-96 overflow-y-auto scroll-m-3 flex-1 flex flex-col p-2 outline rounded-2xl gap-2"
-                >
+                <div className="h-96 overflow-y-auto scroll-m-3 flex-1 flex flex-col p-2 outline rounded-2xl gap-2">
                   {renderFilterOptions(filters[currentFilterIndex])}
                 </div>
               </div>

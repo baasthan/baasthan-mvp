@@ -10,6 +10,13 @@ interface SELECT_FilterConfig {
   filterOptions: FilterOptions[];
 }
 
+interface BOOLEAN_FilterConfig {
+  filterId: string;
+  filterDisplayName: string;
+  filterType: "BOOLEAN";
+  defaultValue: boolean;
+}
+
 interface RANGE_FilterConfig {
   filterId: string;
   filterDisplayName: string;
@@ -18,7 +25,10 @@ interface RANGE_FilterConfig {
   maxValue: number;
 }
 
-type FilterConfig = SELECT_FilterConfig | RANGE_FilterConfig;
+type FilterConfig =
+  | SELECT_FilterConfig
+  | RANGE_FilterConfig
+  | BOOLEAN_FilterConfig;
 
 interface FilterSelection {
   [key: string]: string[];
