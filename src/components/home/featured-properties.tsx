@@ -1,13 +1,15 @@
 "use client";
 
-import React, { useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, ArrowLeft } from "lucide-react";
-import PropertyCards from "../property-card";
+import { PayingGuestInfoWithPublicUser } from "@/types/paying-guest";
+import { ArrowLeft, ArrowRight } from "lucide-react";
 import Link from "next/link";
+import React, { useRef, useState } from "react";
+import PayingGuestCard from "../paying-guest/paying-guest-card";
 
 interface FeaturedPropertiesProps {
   visibleCount?: number;
+  payingGuestInfo?: PayingGuestInfoWithPublicUser[];
 }
 
 /**
@@ -21,7 +23,10 @@ interface FeaturedPropertiesProps {
  * Example usage:
  *   <FeaturedProperties visibleCount={5} />
  */
-const FeaturedProperties: React.FC<FeaturedPropertiesProps> = ({ visibleCount = 5 }) => {
+const FeaturedProperties: React.FC<FeaturedPropertiesProps> = ({
+  visibleCount = 5,
+  payingGuestInfo = [],
+}) => {
   const featuredProperties = [
     {
       id: 1,
@@ -159,8 +164,11 @@ const FeaturedProperties: React.FC<FeaturedPropertiesProps> = ({ visibleCount = 
   const scrollRef = useRef<HTMLDivElement>(null);
   const [scrollIndex, setScrollIndex] = useState(0);
 
-  const cardWidth = 320; 
-  const maxIndex = Math.max(0, Math.ceil(featuredProperties.length - visibleCount));
+  const cardWidth = 320;
+  const maxIndex = Math.max(
+    0,
+    Math.ceil(featuredProperties.length - visibleCount)
+  );
 
   const scrollToIndex = (index: number) => {
     if (scrollRef.current) {
@@ -199,8 +207,8 @@ const FeaturedProperties: React.FC<FeaturedPropertiesProps> = ({ visibleCount = 
   };
 
   // Responsive: show 4 in a column on mobile, carousel on desktop
-  const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
-  const mobileProperties = featuredProperties.slice(0, 4);
+  const isMobile = typeof window !== "undefined" && window.innerWidth < 768;
+  const mobileProperties = payingGuestInfo.slice(0, 4);
 
   return (
     <section className="py-16 bg-gray-50">
@@ -225,7 +233,7 @@ const FeaturedProperties: React.FC<FeaturedPropertiesProps> = ({ visibleCount = 
         <div className="block md:hidden">
           <div className="flex flex-col gap-6">
             {mobileProperties.map((property) => (
-              <PropertyCards {...property} key={property.id} />
+              <PayingGuestCard {...property} key={property.id} />
             ))}
           </div>
         </div>
@@ -246,13 +254,17 @@ const FeaturedProperties: React.FC<FeaturedPropertiesProps> = ({ visibleCount = 
             style={{ scrollBehavior: "smooth", scrollSnapType: "x mandatory" }}
             onScroll={handleScroll}
           >
-            {featuredProperties.map((property, index) => (
+            {payingGuestInfo.map((property, index) => (
               <div
                 key={property.id}
-                style={{ minWidth: cardWidth, maxWidth: cardWidth, scrollSnapAlign: "center" }}
+                style={{
+                  minWidth: cardWidth,
+                  maxWidth: cardWidth,
+                  scrollSnapAlign: "center",
+                }}
                 className="flex-shrink-0"
               >
-                <PropertyCards {...property} />
+                <PayingGuestCard {...property} />
               </div>
             ))}
           </div>

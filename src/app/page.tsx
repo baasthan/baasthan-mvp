@@ -5,8 +5,10 @@ import MainHero from "@/components/home/main-hero";
 import PopularCities from "@/components/home/popular-cities";
 import Testimonials from "@/components/home/testimonials";
 import WhyChooseUs from "@/components/home/why-choose-us";
+import { getPayingGuestInfoByFilters } from "@/repository/paying-guest";
 
-export default function Page() {
+export default async function Page() {
+  const payingGuestInfo = await getPayingGuestInfoByFilters({});
   return (
     <div className="">
       {/* Hero Section */}
@@ -14,7 +16,9 @@ export default function Page() {
       {/* Popular Cities */}
       <PopularCities />
       {/* Featured Properties */}
-      <FeaturedProperties />
+      {payingGuestInfo && (
+        <FeaturedProperties payingGuestInfo={payingGuestInfo} />
+      )}
 
       {/* How It Works */}
       <HowItWorks />
