@@ -52,7 +52,7 @@ const ListYourPG = () => {
         </p>
         <Dialog>
           <DialogTrigger asChild>
-            <Button>Share Details</Button>
+            <Button className="w-full md:w-fit">Share Details</Button>
           </DialogTrigger>
           <DialogContent>
             <DialogHeader>

@@ -31,7 +31,7 @@ export default async function Page({
         <Suspense>
           <Filter filters={filters} />
         </Suspense>
-        <div className="flex flex-row flex-wrap gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {payingGuestInfo &&
             payingGuestInfo.length > 0 &&
             payingGuestInfo.map((pgInfo) => (

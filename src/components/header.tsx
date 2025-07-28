@@ -6,14 +6,13 @@ import getInitials from "@/utils/getInitials";
 import { Menu, X } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { Suspense, useState } from "react";
 import AuthButtons from "./auth-buttons";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 
 const Header = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const router = useRouter();
+
   const { data: session } = useSession();
 
   return (
@@ -79,11 +78,11 @@ const Header = () => {
                 Home
               </Link>
               <Link
-                href="/properties"
+                href="/paying-guest"
                 className="flex items-center text-sm text-muted-foreground hover:text-primary font-medium rounded-md px-3 py-2.5 hover:bg-accent/50"
                 onClick={() => setMobileMenuOpen(false)}
               >
-                Properties
+                Paying Guest
               </Link>
               <Link
                 href="/about-us"

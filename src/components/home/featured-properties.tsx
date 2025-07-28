@@ -96,14 +96,19 @@ const FeaturedProperties: React.FC<FeaturedPropertiesProps> = ({
           </Link>
         </div>
         {/* Mobile: vertical column, 4 properties */}
-        <div className="block md:hidden">
+        {/* <div className="block md:hidden">
           <div className="flex flex-col gap-6">
             {mobileProperties.map((property) => (
               <PayingGuestCard {...property} key={property.id} />
             ))}
           </div>
-        </div>
+        </div> */}
         {/* Desktop: horizontal carousel */}
+        <div className="md:hidden flex flex-col gap-4">
+          {payingGuestInfo.slice(0, 4).map((property) => (
+            <PayingGuestCard {...property} key={property.id} />
+          ))}
+        </div>
         <div className="hidden md:block relative">
           <button
             className="absolute left-0 top-1/2 -translate-y-1/2 z-10 bg-white border rounded-full shadow p-2 disabled:opacity-30"
@@ -116,22 +121,12 @@ const FeaturedProperties: React.FC<FeaturedPropertiesProps> = ({
           </button>
           <div
             ref={scrollRef}
-            className="flex gap-6 overflow-x-auto scroll-smooth no-scrollbar"
+            className="flex gap-6 overflow-x-auto scroll-smooth no-scrollbar p-4"
             style={{ scrollBehavior: "smooth", scrollSnapType: "x mandatory" }}
             onScroll={handleScroll}
           >
-            {payingGuestInfo.map((property, index) => (
-              <div
-                key={property.id}
-                style={{
-                  minWidth: cardWidth,
-                  maxWidth: cardWidth,
-                  scrollSnapAlign: "center",
-                }}
-                className="flex-shrink-0"
-              >
-                <PayingGuestCard {...property} />
-              </div>
+            {payingGuestInfo.map((property) => (
+              <PayingGuestCard {...property} key={property.id} />
             ))}
           </div>
           <button

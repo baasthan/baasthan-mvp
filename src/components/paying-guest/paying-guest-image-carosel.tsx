@@ -16,12 +16,12 @@ const PayingGuestImageCarosel = ({ images }: PayingGuestImageCaroselProps) => {
   }, []);
 
   return (
-    <div className="relative w-sm h-48 overflow-hidden">
+    <div className="relative aspect-square overflow-hidden">
       {images.map((image, index) => (
         <img
           key={image.id}
           src={image.url}
-          className={`absolute w-full h-full object-cover object-center transition-opacity group-hover:scale-105 duration-200 ${
+          className={` absolute object-cover object-center transition-opacity group-hover:scale-105 duration-200 ${
             currentImageIndex !== index ? "opacity-0 -z-10" : "opacity-100"
           }`}
           alt={""}

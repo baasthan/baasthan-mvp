@@ -20,7 +20,7 @@ const PayingGuestCard = ({
   const reviews = 10;
 
   return (
-    <div className="bg-white rounded-lg shadow-md border-0 hover:shadow-xl transition-all duration-300 overflow-hidden cursor-pointer group flex flex-col justify-between pb-4 w-sm">
+    <div className="bg-white rounded-lg shadow-md border-0 hover:shadow-lg transition-all duration-300 overflow-hidden cursor-pointer group flex flex-col justify-between pb-4 min-w-xs">
       <div className="flex flex-col gap-4 ">
         <div className="relative">
           <PayingGuestImageCarosel images={PayingGuestImages} />
