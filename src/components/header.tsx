@@ -42,10 +42,11 @@ const Header = () => {
           <nav className="hidden md:flex items-center space-x-8">
             <Button variant={"link"} asChild>
               <Link
-                href="/properties"
+                href="/paying-guest?baasthanVerified=true"
+                prefetch
                 // className="text-gray-700 hover:text-primary font-medium transition-colors"
               >
-                Properties
+                Paying Guests
               </Link>
             </Button>
             <Suspense>

@@ -10,6 +10,7 @@ import { signIn } from "@/lib/auth-client";
 import { cn } from "@/lib/utils";
 import signInSchema from "@/validation-schemas/sign-in-schema";
 import { Loader2 } from "lucide-react";
+import { useSearchParams } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -25,6 +26,8 @@ import {
 } from "./ui/form";
 
 export default function SignIn() {
+  const searchParams = useSearchParams();
+  const redirectUrl = searchParams.get("redirect");
   const form = useForm<z.infer<typeof signInSchema>>({
     resolver: zodResolver(signInSchema),
     defaultValues: {
@@ -49,6 +52,7 @@ export default function SignIn() {
     const { data, error } = await signIn.email({
       email,
       password,
+      callbackURL: redirectUrl ?? "/",
     });
     if (error) {
       setApiError(error);
@@ -86,7 +90,7 @@ export default function SignIn() {
               <FormItem className="grid gap-2">
                 <FormLabel>Password</FormLabel>
                 <FormControl>
-                  <Input placeholder="Password" {...field} />
+                  <Input placeholder="Password" {...field} type="password" />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -134,7 +138,7 @@ export default function SignIn() {
             await signIn.social(
               {
                 provider: "google",
-                callbackURL: "/dashboard",
+                callbackURL: redirectUrl ?? "/",
               },
               {
                 onRequest: (_) => {

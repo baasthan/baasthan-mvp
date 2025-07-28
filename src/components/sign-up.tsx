@@ -6,12 +6,14 @@ import { Label } from "@/components/ui/label";
 import { signUp } from "@/lib/auth-client";
 import { Loader2, X } from "lucide-react";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
 import validator from "validator";
 
 export default function SignUp() {
+  const searchParams = useSearchParams();
+  const redirectUrl = searchParams.get("redirect");
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
@@ -48,7 +50,7 @@ export default function SignUp() {
       password,
       name: `${firstName} ${lastName}`,
       image: image ? await convertImageToBase64(image) : "",
-      callbackURL: "/dashboard",
+      callbackURL: redirectUrl ?? "/",
       fetchOptions: {
         onResponse: () => {
           setLoading(false);
