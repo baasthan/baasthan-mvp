@@ -15,6 +15,9 @@ const useLocationService = () => {
       `${GET_LOCATION_AUTOCOMPLETE}?locationHint=${locationHint}`,
       {
         cache: "force-cache",
+        headers: {
+          "Cache-Control": "max-age=3600",
+        },
       }
     );
     if (!response.ok) {
