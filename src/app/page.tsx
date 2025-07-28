@@ -6,6 +6,7 @@ import PopularCities from "@/components/home/popular-cities";
 import Testimonials from "@/components/home/testimonials";
 import WhyChooseUs from "@/components/home/why-choose-us";
 import { getPayingGuestInfoByFilters } from "@/repository/paying-guest";
+import ListYourPG from "@/components/home/list-your-pg";
 
 export default async function Page() {
   const payingGuestInfo = await getPayingGuestInfoByFilters({});
@@ -31,6 +32,9 @@ export default async function Page() {
 
       {/* CTA Section */}
       <Cta />
+
+      {/* List your PG */}
+      <ListYourPG />
     </div>
   );
 }

@@ -13,7 +13,6 @@ const Cta = () => {
         </p>
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
           <Button className="">Start Searching</Button>
-          <Button variant={"outline"}>List Your Property</Button>
         </div>
       </div>
     </section>
