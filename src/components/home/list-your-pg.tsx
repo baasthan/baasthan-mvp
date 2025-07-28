@@ -2,7 +2,9 @@
 
 import useInterestedPGHostsService from "@/hooks/client-hooks/useInterestedPGHostsService";
 import { useSession } from "@/lib/auth-client";
+import { LoaderCircle } from "lucide-react";
 import { useEffect, useState } from "react";
+import z from "zod";
 import { Button } from "../ui/button";
 import {
   Dialog,
@@ -80,13 +82,36 @@ const ListYourPG = () => {
                 type="tel"
               />
             </div>
-            <DialogFooter>
-              <DialogClose asChild>
-                <Button variant="outline">Cancel</Button>
-              </DialogClose>
-              <Button onClick={() => execute({ email, mobileNumber })}>
-                Save changes
-              </Button>
+            <DialogFooter className="flex flex-col gap-4">
+              <div
+                className={`${
+                  response?.success ? "text-green-500" : "text-destructive"
+                }`}
+              >
+                {response?.message ?? ""}
+              </div>
+
+              <div className="flex flex-row gap-4">
+                <DialogClose asChild>
+                  <Button variant="outline">Cancel</Button>
+                </DialogClose>
+                <Button
+                  onClick={() => {
+                    execute({ email, mobileNumber });
+                  }}
+                  disabled={
+                    isLoading ||
+                    !z.string().email().safeParse(email).success ||
+                    !z
+                      .string()
+                      .regex(/^[6-9]\d{9}$/)
+                      .safeParse(mobileNumber).success
+                  }
+                >
+                  {isLoading && <LoaderCircle />}
+                  Share Contact
+                </Button>
+              </div>
             </DialogFooter>
           </DialogContent>
         </Dialog>
