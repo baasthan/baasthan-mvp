@@ -241,10 +241,11 @@ model RelatedLocality {
   location   Location @relation(fields: [locationId], references: [id], onDelete: Cascade)
 }
 
-model PgOwner {
-  id         String   @id @default(cuid())
-  email      String   @unique
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
+model PGHostInterested {
+  id             String   @id @default(cuid())
+  email          String   @unique
+  mobileNumber   String   @unique @db.Char(10)
+  emailTriggered Boolean  @default(false)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
 }
-

@@ -1,83 +1,95 @@
 "use client";
 
-import { useState } from "react";
+import useInterestedPGHostsService from "@/hooks/client-hooks/useInterestedPGHostsService";
+import { useSession } from "@/lib/auth-client";
+import { useEffect, useState } from "react";
+import { Button } from "../ui/button";
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "../ui/dialog";
+import { Input } from "../ui/input";
+import { Label } from "../ui/label";
 
 const ListYourPG = () => {
-  const [email, setEmail] = useState("");
-  const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
-  const [message, setMessage] = useState("");
+  const { data, isPending } = useSession();
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setStatus("loading");
-    setMessage("");
+  const [email, setEmail] = useState<string>("");
+  const [disableEmailFiled, setDisableEmailField] = useState<boolean>(false);
+  const [mobileNumber, setMobileNumber] = useState<string>("");
 
-    try {
-      const res = await fetch("/api/pg-owner", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email }),
-      });
+  const {
+    data: response,
+    execute,
+    isSuccess,
+    isLoading,
+    error,
+  } = useInterestedPGHostsService();
 
-      const data = await res.json();
-
-      if (!res.ok) {
-        setStatus("error");
-        setMessage(data.message || "Something went wrong.");
-        return;
-      }
-
-      setStatus("success");
-      setMessage(data.message || "We will contact you soon.");
-      setEmail("");
-    } catch (err: unknown) {
-      setStatus("error");
-      setMessage("An unexpected error occurred. Please try again later.");
+  useEffect(() => {
+    if (!isPending && data && data.user) {
+      setEmail(data.user.email);
+      setDisableEmailField(true);
     }
-  };
+  }, [isPending, data]);
 
   return (
     <section className="py-16">
       <div className="max-w-2xl mx-auto text-center px-4">
-        <h2 className="text-3xl font-bold text-primary mb-4">List Your PG with Us</h2>
+        <h2 className="text-3xl font-bold text-primary mb-4">
+          List Your PG with Us
+        </h2>
         <p className="text-gray-600 text-lg mb-6">
-          Share your contact email and our executive will reach out to you shortly.
+          Share your contact email and our executive will reach out to you
+          shortly.
         </p>
+        <Dialog>
+          <DialogTrigger asChild>
+            <Button>Share Details</Button>
+          </DialogTrigger>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Share your contact details</DialogTitle>
+            </DialogHeader>
+            <div className=" grid gap-2">
+              <Label>Email</Label>
 
-        <form
-          onSubmit={handleSubmit}
-          className="flex flex-col sm:flex-row items-center justify-center gap-4"
-        >
-          <input
-            type="email"
-            required
-            placeholder="Enter your email"
-            className="w-full sm:w-auto px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          />
-          <button
-            type="submit"
-            className={`px-6 py-2 rounded-lg text-white transition ${
-              status === "loading"
-                ? "bg-primary/80 cursor-not-allowed"
-                : "bg-primary hover:bg-primary/90"
-            }`}
-            disabled={status === "loading"}
-          >
-            {status === "loading" ? "Submitting..." : "Submit"}
-          </button>
-        </form>
-
-        {message && (
-          <p
-            className={`mt-4 font-medium ${
-              status === "success" ? "text-green-600" : "text-red-600"
-            }`}
-          >
-            {message}
-          </p>
-        )}
+              <Input
+                value={email}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                  setEmail(e.target.value)
+                }
+                placeholder="Enter Email Address"
+                type="email"
+                disabled={disableEmailFiled}
+              />
+            </div>
+            <div className=" grid gap-2">
+              <Label>Mobile Number</Label>
+              <Input
+                value={mobileNumber}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                  setMobileNumber(e.target.value)
+                }
+                placeholder="Enter Mobile Number"
+                type="tel"
+              />
+            </div>
+            <DialogFooter>
+              <DialogClose asChild>
+                <Button variant="outline">Cancel</Button>
+              </DialogClose>
+              <Button onClick={() => execute({ email, mobileNumber })}>
+                Save changes
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
       </div>
     </section>
   );

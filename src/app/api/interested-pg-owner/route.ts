@@ -5,17 +5,32 @@ import { PrismaClient } from "../../../../prisma/generated/prisma";
 export async function POST(req: NextRequest) {
   try {
     const prisma = new PrismaClient();
-    const { email } = await req.json();
+    const { email, mobileNumber } = await req.json();
 
-    if (!email || typeof email !== "string") {
+    if (
+      !email ||
+      typeof email !== "string" ||
+      !mobileNumber ||
+      typeof mobileNumber !== "string" ||
+      mobileNumber.length !== 10
+    ) {
       return NextResponse.json(
-        { success: false, message: "Email is required." },
+        { success: false, message: "Bad Requests" },
         { status: 400 }
       );
     }
 
-    const existingOwner = await prisma.pgOwner.findUnique({
-      where: { email },
+    const existingOwner = await prisma.pGHostInterested.findFirst({
+      where: {
+        OR: [
+          {
+            email: {
+              equals: email,
+            },
+          },
+          { mobileNumber: { equals: mobileNumber } },
+        ],
+      },
     });
 
     if (existingOwner) {
@@ -28,8 +43,8 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    await prisma.pgOwner.create({
-      data: { email },
+    await prisma.pGHostInterested.create({
+      data: { email, mobileNumber },
     });
 
     return NextResponse.json(
@@ -37,7 +52,7 @@ export async function POST(req: NextRequest) {
         success: true,
         message: "Thank you! We'll contact you soon.",
       },
-      { status: 201 }
+      { status: 200 }
     );
   } catch (error) {
     console.error("PG Owner API Error:", error);

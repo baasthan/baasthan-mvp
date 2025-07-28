@@ -35,7 +35,11 @@ export default async function Page({
           {payingGuestInfo &&
             payingGuestInfo.length > 0 &&
             payingGuestInfo.map((pgInfo) => (
-              <PayingGuestCard key={pgInfo.id} {...pgInfo} />
+              <PayingGuestCard
+                key={pgInfo.id}
+                {...pgInfo}
+                startingPrice={pgInfo.startingPrice.toNumber()}
+              />
             ))}
         </div>
       </div>

@@ -16,3 +16,10 @@ export type PayingGuestInfoWithPublicUser = Prisma.PayingGuestInfoGetPayload<{
     };
   };
 }>;
+
+export type SeriliazedPayingGuestInfoWithPublicUser = Omit<
+  PayingGuestInfoWithPublicUser,
+  "startingPrice"
+> & {
+  startingPrice: number;
+};

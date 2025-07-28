@@ -1,6 +1,6 @@
 import { PGAmenitiesEnumMap } from "@/constants/PGAmenitiesType";
 import { PGOccupancyTypeEnumMap } from "@/constants/PGOccupancyType";
-import { PayingGuestInfoWithPublicUser } from "@/types/paying-guest";
+import { SeriliazedPayingGuestInfoWithPublicUser } from "@/types/paying-guest";
 import { Heart, MapPin, Share2, Star } from "lucide-react";
 import { Button } from "../ui/button";
 import PayingGuestImageCarosel from "./paying-guest-image-carosel";
@@ -14,7 +14,7 @@ const PayingGuestCard = ({
   availableOccupancyType,
   user,
   PayingGuestImages,
-}: PayingGuestInfoWithPublicUser) => {
+}: SeriliazedPayingGuestInfoWithPublicUser) => {
   const liked = false;
   const rating = 5.0;
   const reviews = 10;

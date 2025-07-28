@@ -1,15 +1,22 @@
 import Cta from "@/components/home/cta";
 import FeaturedProperties from "@/components/home/featured-properties";
 import HowItWorks from "@/components/home/how-it-works";
+import ListYourPG from "@/components/home/list-your-pg";
 import MainHero from "@/components/home/main-hero";
 import PopularCities from "@/components/home/popular-cities";
 import Testimonials from "@/components/home/testimonials";
 import WhyChooseUs from "@/components/home/why-choose-us";
 import { getPayingGuestInfoByFilters } from "@/repository/paying-guest";
-import ListYourPG from "@/components/home/list-your-pg";
 
 export default async function Page() {
   const payingGuestInfo = await getPayingGuestInfoByFilters({});
+  const serealizedPGInfo =
+    payingGuestInfo && payingGuestInfo.length !== 0
+      ? payingGuestInfo.map((d) => ({
+          ...d,
+          startingPrice: d.startingPrice.toNumber(),
+        }))
+      : [];
   return (
     <div className="">
       {/* Hero Section */}
@@ -18,7 +25,7 @@ export default async function Page() {
       <PopularCities />
       {/* Featured Properties */}
       {payingGuestInfo && (
-        <FeaturedProperties payingGuestInfo={payingGuestInfo} />
+        <FeaturedProperties payingGuestInfo={serealizedPGInfo} />
       )}
 
       {/* How It Works */}
