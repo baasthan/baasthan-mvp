@@ -92,6 +92,9 @@ const LocationAutoComplete = () => {
                   execute(value);
                 }, 500); // 300ms debounce delay
               }
+              if (value === "") {
+                setShowSuggestions(false);
+              }
             }}
           />
         )}
