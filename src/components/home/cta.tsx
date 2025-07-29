@@ -1,4 +1,5 @@
 import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
 const Cta = () => {
   return (
@@ -12,7 +13,9 @@ const Cta = () => {
           accommodation through our platform
         </p>
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
-          <Button className="">Start Searching</Button>
+          <Button>
+            <Link href="/paying-guest">Start Searching</Link>
+          </Button>
         </div>
       </div>
     </section>

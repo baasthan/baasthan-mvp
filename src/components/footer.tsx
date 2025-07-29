@@ -1,6 +1,10 @@
 "use client";
 
+import Link from "next/link";
 import Brand from "./brand";
+import { Button } from "./ui/button";
+
+import { Facebook, Instagram, Linkedin } from "lucide-react";
 
 export default function Footer() {
   return (
@@ -21,15 +25,40 @@ export default function Footer() {
               across India.
             </p>
             <div className="flex space-x-4">
-              <div className="w-8 h-8 bg-gray-800 rounded-full flex items-center justify-center hover:bg-primary transition-colors cursor-pointer">
+              {/* <div className="w-8 h-8 bg-gray-800 rounded-full flex items-center justify-center hover:bg-primary transition-colors cursor-pointer">
                 <span className="text-sm">f</span>
-              </div>
-              <div className="w-8 h-8 bg-gray-800 rounded-full flex items-center justify-center hover:bg-primary transition-colors cursor-pointer">
-                <span className="text-sm">t</span>
-              </div>
-              <div className="w-8 h-8 bg-gray-800 rounded-full flex items-center justify-center hover:bg-primary transition-colors cursor-pointer">
-                <span className="text-sm">in</span>
-              </div>
+              </div> */}
+              <Button
+                size={"icon"}
+                className="w-8 h-8"
+                variant={"ghost"}
+                asChild
+              >
+                <a
+                  href={
+                    "https://www.facebook.com/people/Baasthan/61577294258728/"
+                  }
+                  target="_blank"
+                >
+                  <Facebook className=" text-primary" />
+                </a>
+              </Button>
+              <Button size={"icon"} className="w-8 h-8" variant={"ghost"}>
+                <a
+                  href={"https://www.instagram.com/baasthanindia/"}
+                  target="_blank"
+                >
+                  <Instagram className=" text-primary" />
+                </a>
+              </Button>
+              <Button size={"icon"} className="w-8 h-8" variant={"ghost"}>
+                <a
+                  href="https://www.linkedin.com/company/baasthan"
+                  target="_blank"
+                >
+                  <Linkedin className=" text-primary" />
+                </a>
+              </Button>
             </div>
           </div>
 
@@ -37,9 +66,12 @@ export default function Footer() {
             <h3 className="font-semibold mb-4">Quick Links</h3>
             <ul className="space-y-2 text-gray-400">
               <li>
-                <a href="#" className="hover:text-white transition-colors">
-                  Properties
-                </a>
+                <Link
+                  href="/paying-guest?baasthanVerified=true"
+                  className="hover:text-white transition-colors"
+                >
+                  Paying Guest
+                </Link>
               </li>
               <li>
                 <a
