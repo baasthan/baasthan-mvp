@@ -1,8 +1,7 @@
-import { APP_CONFIG } from "@/config";
 import useService from "../useService";
 
 const useInterestedPGHostsService = () => {
-  const SAVE_INTERESTED_PG_OWNER_API = `${APP_CONFIG.BASE_URL}/api/interested-pg-owner`;
+  const SAVE_INTERESTED_PG_OWNER_API = `/api/interested-pg-owner`;
   const saveInterestedPGOwner = async (email: string, mobileNumber: string) => {
     const response = await fetch(SAVE_INTERESTED_PG_OWNER_API, {
       method: "POST",

@@ -1,9 +1,8 @@
-import { APP_CONFIG } from "@/config";
 import { LocationInfo } from "@/types/location";
 import useService from "../useService";
 
 const useLocationService = () => {
-  const GET_LOCATION_AUTOCOMPLETE = `${APP_CONFIG.BASE_URL}/api/location`;
+  const GET_LOCATION_AUTOCOMPLETE = `/api/location`;
   const { execute, data, error, isLoading, isSuccess, resetService } =
     useService({
       callback: (locationHint?: string) =>
