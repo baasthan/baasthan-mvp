@@ -2,7 +2,6 @@
 
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
 import {
   Form,
   FormField,
@@ -41,44 +40,15 @@ import { PGWashroomEnumMap } from "@/constants/PGWashroomType";
 import { PGMealsEnumMap } from "@/constants/PGMeals";
 import { PGAmenitiesEnumMap } from "@/constants/PGAmenitiesType";
 import { PGPreferedTenantsEnumMap } from "@/constants/PGPreferedTenantsType";
+import { PGFormData, pgSchema } from "@/constants/PgTypes";
+import usePGRegistarationService from "@/hooks/client-hooks/usePgRegistrationService";
 
-const pgSchema = z.object({
-  propertyName: z
-    .string()
-    .min(3, "Property name must be at least 3 characters"),
-  availableOccupancyType: z
-    .array(z.nativeEnum(PGOccupancyTypeEnum))
-    .nonempty("At least one occupancy type is required"),
-  genderPolicy: z.nativeEnum(PGGenderPolicyEnum),
-  startingPrice: z.coerce.number().min(0, "Price must be greater than 0"),
-  baasthanVerified: z.boolean(),
-  reraRegistered: z.boolean(),
-  reraRegistrationNumber: z.string().optional(),
-  amenities: z.array(z.nativeEnum(PGAmenitiesEnum)),
-  preferedTenants: z.array(z.nativeEnum(PGPreferedTenantsEnum)),
-  washroomType: z.nativeEnum(PGWashroomEnum),
-  floors: z.coerce.number().min(1, "Must have at least 1 floor"),
-  operatingSince: z.coerce.number().gte(1900, "Invalid year"),
-  meals: z.nativeEnum(PGMealsEnum),
-  noticePeriodInDays: z.coerce
-    .number()
-    .min(0, "Notice period cannot be negative"),
-  addressLine1: z.string().min(1, "Address line 1 is required"),
-  addressLine2: z.string().optional(),
-  locality: z.string().min(1, "Locality is required"),
-  city: z.string().min(1, "City is required"),
-  district: z.string().min(1, "District is required"),
-  state: z.string().min(1, "State is required"),
-  country: z.string().min(1, "Country is required"),
-  pincode: z.string().min(6, "Valid pincode is required"),
-  images: z.any(),
-});
-
-type PGFormData = z.infer<typeof pgSchema>;
+import {toast} from "react-toastify";
 
 export default function PGRegisterPage() {
   const form = useForm<PGFormData>({
     resolver: zodResolver(pgSchema),
+    mode: "onChange",
     defaultValues: {
       baasthanVerified: false,
       reraRegistered: false,
@@ -87,35 +57,21 @@ export default function PGRegisterPage() {
       availableOccupancyType: [],
     },
   });
+  const {
+    data: response,
+    execute,
+    isSuccess,
+    isLoading,
+    error,
+  } = usePGRegistarationService();
 
   const onSubmit = async (data: PGFormData) => {
-    const formData = new FormData();
-    for (const key in data) {
-      if (key !== "images") {
-        const value = data[key as keyof PGFormData];
-        if (Array.isArray(value)) {
-          value.forEach((element) => {
-            formData.append(key, element);
-          });
-        } else {
-          formData.append(key, String(value));
-        }
-      }
+    await execute(data);
+    if (!isSuccess) {
+      toast.error(error);
     }
-
-    if (data?.images && data.images.length > 0) {
-        for (const file of data.images) {
-          formData.append("images", file);
-        }
-    }
-
-    const res = await fetch("/api/pg/register", {
-      method: "POST",
-      body: formData, // ✅ not JSON
-    });
-
-    const result = await res.json();
-    console.log("Server response:", result);
+    toast.success(response && (response?.message || "Pg has been registered successfully"));
+    console.log("Server response:", response);
   };
 
   const renderCheckboxGroup = <T extends string>(
@@ -846,7 +802,7 @@ export default function PGRegisterPage() {
               <Button
                 type="submit"
                 size="lg"
-                className="w-full max-w-md h-14 text-base font-semibold bg-primary hover:bg-blue-700 shadow-lg hover:shadow-xl transition-all duration-200 disabled:red"
+                className="w-full max-w-md h-14 text-base font-semibold bg-primary hover:bg-blue-700 shadow-lg hover:shadow-xl transition-all duration-200 disabled:opacity-80 disabled:cursor-not-allowed"
                 disabled={!form.formState.isValid}
               >
                 Register PG Property

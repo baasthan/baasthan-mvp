@@ -17,16 +17,14 @@ export async function POST(req: Request) {
 
     const images = formData.getAll("images") as File[];
 
-    const fields = Object.fromEntries(formData.entries());
-
-    // 🔁 Parse helpers
+    // Parse helpers
     const getString = (key: string) => formData.get(key)?.toString() ?? "";
     const getBoolean = (key: string) => formData.get(key) === "true";
     const getNumber = (key: string) => Number(formData.get(key));
     const getArray = (key: string) =>
       formData.getAll(key).map((val) => val.toString());
 
-    // 🧠 Coerce all fields
+    // Coerce all fields
     const propertyName = getString("propertyName");
     const hostId = getString("hostId") || "tQOS0pn890KLThn075ob4ZFPfX8zvvvW";
     const availableOccupancyType = getArray(
@@ -102,9 +100,9 @@ export async function POST(req: Request) {
       return property;
     });
 
-    return NextResponse.json({ success: true, createdProperty });
+    return NextResponse.json({ success: true, message: "Property is listed successfully" });
   } catch (error: any) {
-    console.error("❌ Transaction failed:", error);
+    console.error("Transaction failed:", error);
     return NextResponse.json(
       { success: false, error: error.message },
       { status: 500 }
