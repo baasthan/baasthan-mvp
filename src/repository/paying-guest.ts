@@ -117,7 +117,7 @@ export const getPayingGuestInfoByFilters = async (
     const prisma = new PrismaClient({
       log: ["error"],
     });
-    const properties = await prisma.payingGuestInfo.findMany({
+    const payingGuestLists = await prisma.payingGuestInfo.findMany({
       where: filter,
       take: take,
       skip: skip,
@@ -137,9 +137,41 @@ export const getPayingGuestInfoByFilters = async (
       },
     });
 
-    return properties;
+    return payingGuestLists;
   } catch (error) {
-    console.error("Unable to fetch properties");
+    console.error("Unable to fetch Paying Guests");
+    console.debug(error);
+    return null;
+  }
+};
+
+export const getPayingGuestInfoById = async (
+  id: string
+): Promise<PayingGuestInfoWithPublicUser | null> => {
+  try {
+    const prisma = new PrismaClient({ log: ["error"] });
+    const payingGuestInfo = await prisma.payingGuestInfo.findUnique({
+      where: {
+        id,
+      },
+      include: {
+        PayingGuestImages: {
+          select: {
+            id: true,
+            url: true,
+          },
+        },
+        user: {
+          select: {
+            image: true,
+            name: true,
+          },
+        },
+      },
+    });
+    return payingGuestInfo;
+  } catch (error) {
+    console.error("Unable to fetch paying guest by id");
     console.debug(error);
     return null;
   }

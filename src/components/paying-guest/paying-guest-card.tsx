@@ -2,10 +2,12 @@ import { PGAmenitiesEnumMap } from "@/constants/PGAmenitiesType";
 import { PGOccupancyTypeEnumMap } from "@/constants/PGOccupancyType";
 import { SeriliazedPayingGuestInfoWithPublicUser } from "@/types/paying-guest";
 import { Heart, MapPin, Share2, Star } from "lucide-react";
+import Link from "next/link";
 import { Button } from "../ui/button";
 import PayingGuestImageCarosel from "./paying-guest-image-carosel";
 
 const PayingGuestCard = ({
+  id,
   propertyName,
   startingPrice,
   baasthanVerified,
@@ -113,7 +115,9 @@ const PayingGuestCard = ({
         </div>
       </div>
       <div className="px-4">
-        <Button className="w-full">View Details</Button>
+        <Button className="w-full" asChild>
+          <Link href={`/paying-guest/details/${id}`}>View Details</Link>
+        </Button>
       </div>
     </div>
   );
