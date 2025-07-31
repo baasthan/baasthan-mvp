@@ -44,6 +44,7 @@ import { PGFormData, pgSchema } from "@/constants/PgTypes";
 import usePGRegistarationService from "@/hooks/client-hooks/usePgRegistrationService";
 
 import {toast} from "react-toastify";
+import { useEffect } from "react";
 
 export default function PGRegisterPage() {
   const form = useForm<PGFormData>({
@@ -65,13 +66,20 @@ export default function PGRegisterPage() {
     error,
   } = usePGRegistarationService();
 
+  useEffect(() => {
+    if (!isSuccess && error) {
+      toast.error(error);
+      console.log(`Error: ${error}`);
+    }
+    else if (isSuccess && response) {
+      form.reset();
+      toast.success(response && (response?.message || "Pg has been registered successfully"));
+      console.log("Server response: ", response);
+    }
+  }, [response])
+
   const onSubmit = async (data: PGFormData) => {
     await execute(data);
-    if (!isSuccess) {
-      toast.error(error);
-    }
-    toast.success(response && (response?.message || "Pg has been registered successfully"));
-    console.log("Server response:", response);
   };
 
   const renderCheckboxGroup = <T extends string>(
@@ -802,8 +810,8 @@ export default function PGRegisterPage() {
               <Button
                 type="submit"
                 size="lg"
-                className="w-full max-w-md h-14 text-base font-semibold bg-primary hover:bg-blue-700 shadow-lg hover:shadow-xl transition-all duration-200 disabled:opacity-80 disabled:cursor-not-allowed"
-                disabled={!form.formState.isValid}
+                className="w-full"
+                disabled={!form.formState.isValid || isLoading}
               >
                 Register PG Property
               </Button>
