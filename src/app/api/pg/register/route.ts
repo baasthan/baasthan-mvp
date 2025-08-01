@@ -1,3 +1,4 @@
+import { uploadImageToSupabase } from "@/utils/uploadImageToSupabase";
 import { NextResponse } from "next/server";
 import {
   PGAmenitiesEnum,
@@ -8,7 +9,6 @@ import {
   PGWashroomEnum,
   PrismaClient,
 } from "../../../../../prisma/generated/prisma";
-import { uploadImageToSupabase } from "@/utils/uploadImageToSupabase";
 
 export async function POST(req: Request) {
   try {
@@ -30,13 +30,12 @@ export async function POST(req: Request) {
     const availableOccupancyType = getArray(
       "availableOccupancyType"
     ) as PGOccupancyTypeEnum[];
-    const genderPolicy = formData.get(
-      "genderPolicy"
-    ) as PGGenderPolicyEnum;
+    const genderPolicy = formData.get("genderPolicy") as PGGenderPolicyEnum;
     const startingPrice = parseFloat(formData.get("startingPrice") as string);
     const baasthanVerified = getBoolean("baasthanVerified");
     const reraRegistered = getBoolean("reraRegistered");
-    const reraRegistrationNumber = formData.get("reraRegistrationNumber") as string || null;
+    const reraRegistrationNumber =
+      (formData.get("reraRegistrationNumber") as string) || null;
     const amenities = getArray("amenities") as PGAmenitiesEnum[];
     const preferedTenants = getArray(
       "preferedTenants"
@@ -100,11 +99,16 @@ export async function POST(req: Request) {
       return property;
     });
 
-    return NextResponse.json({ success: true, message: "Property is listed successfully" });
-  } catch (error: any) {
+    return NextResponse.json({
+      success: true,
+      message: "Property is listed successfully",
+    });
+  } catch (error: unknown) {
     console.error("Transaction failed:", error);
+    const errorMessage =
+      error instanceof Error ? error.message : "An unexpected error occurred";
     return NextResponse.json(
-      { success: false, error: error.message },
+      { success: false, error: errorMessage },
       { status: 500 }
     );
   }
