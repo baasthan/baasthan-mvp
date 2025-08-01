@@ -34,3 +34,6 @@ const PayingGuestImageCarosel = ({ images }: PayingGuestImageCaroselProps) => {
 };
 
 export default PayingGuestImageCarosel;
+
+
+
