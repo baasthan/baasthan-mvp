@@ -10,11 +10,13 @@ const LocationAutoComplete = () => {
   const searchParams = useSearchParams();
   const router = useRouter();
   const [query, setQuery] = useState("");
+  const [budget, setBudget] = useState(""); // 👈 New state for numeric budget
   const [showSuggestions, setShowSuggestions] = useState(false);
 
   const debounceTimer = useRef<NodeJS.Timeout | null>(null);
   const { data: suggestions, execute, isLoading } = useLocationService();
   const [selectedLocation, setSelectedLocation] = useState<LocationInfo>();
+
   useEffect(() => {
     return () => {
       if (debounceTimer.current) {
@@ -44,36 +46,37 @@ const LocationAutoComplete = () => {
   const handleLocationSelect = (location: LocationInfo) => {
     setSelectedLocation(location);
     setShowSuggestions(false);
-    const queryParams = new URLSearchParams(searchParams);
-    queryParams.set("pincode", location.pincode);
-    router.push(`?${queryParams.toString()}`);
+    setQuery("");
   };
 
   const handleLocationReset = () => {
     setSelectedLocation(undefined);
     setShowSuggestions(true);
     setQuery("");
-    const queryParams = new URLSearchParams(searchParams);
-    queryParams.delete("pincode");
-    router.push(`?${queryParams.toString()}`);
+  };
+
+  const handleSearch = () => {
+    if (!selectedLocation || !budget) return;
+    const pincode = selectedLocation.pincode;
+    const url = `/paying-guest?pincode=${pincode}&startingPrice=${budget}`;
+    router.push(url);
   };
 
   return (
-    <div className="w-full relative" ref={containerRef}>
+    <div className="w-full relative space-y-2" ref={containerRef}>
       <div className="relative w-full rounded-md flex flex-row items-center outline py-2 h-12">
-        {selectedLocation && (
+        {selectedLocation ? (
           <Button variant={"outline"} className="w-full justify-between">
             <div>{selectedLocation.locality}</div>
             <Button
               variant={"ghost"}
               size={"icon"}
-              onClick={() => handleLocationReset()}
+              onClick={handleLocationReset}
             >
               <X />
             </Button>
           </Button>
-        )}
-        {!selectedLocation && (
+        ) : (
           <input
             placeholder="Select a location"
             value={query}
@@ -87,11 +90,11 @@ const LocationAutoComplete = () => {
                 if (debounceTimer.current) {
                   clearTimeout(debounceTimer.current);
                 }
-
                 debounceTimer.current = setTimeout(() => {
                   execute(value);
-                }, 500); // 300ms debounce delay
+                }, 500);
               }
+
               if (value === "") {
                 setShowSuggestions(false);
               }
@@ -99,26 +102,37 @@ const LocationAutoComplete = () => {
           />
         )}
       </div>
+
       {showSuggestions && suggestions && suggestions.length > 0 && (
         <ul className="absolute z-10 bg-white border border-gray-300 w-full mt-1 rounded-md shadow-md max-h-48 overflow-y-auto">
           {suggestions.map((location) => (
             <li
               key={location.id}
               className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
-              onClick={() => {
-                handleLocationSelect(location);
-              }}
+              onClick={() => handleLocationSelect(location)}
             >
               <p className="font-semibold">{location.locality}</p>
               <p className=" capitalize font-light">
-                {location.RelatedLocality.map(
-                  (relatedLocality) => relatedLocality.name
-                ).join(", ")}
+                {location.RelatedLocality.map((r) => r.name).join(", ")}
               </p>
             </li>
           ))}
         </ul>
       )}
+
+      {/* Budget Input */}
+      <input
+        type="number"
+        placeholder="Enter budget"
+        value={budget}
+        onChange={(e) => setBudget(e.target.value.replace(/\D/g, ""))}
+        className="border border-gray-300 rounded-md px-3 py-2 w-full focus:outline-none"
+      />
+
+      {/* Search Button */}
+      <Button onClick={handleSearch} className="w-full">
+        Search
+      </Button>
     </div>
   );
 };
