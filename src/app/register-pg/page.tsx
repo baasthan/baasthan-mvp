@@ -1,29 +1,28 @@
 "use client";
 
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { Checkbox } from "@/components/ui/checkbox";
 import {
   Form,
+  FormControl,
   FormField,
   FormItem,
   FormLabel,
-  FormControl,
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
 import {
   Select,
-  SelectTrigger,
   SelectContent,
   SelectItem,
+  SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Card, CardContent } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
-import { Camera, IndianRupee, CheckCircle2 } from "lucide-react";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Camera, IndianRupee } from "lucide-react";
+import { useForm } from "react-hook-form";
 
 import {
   PGAmenitiesEnum,
@@ -34,24 +33,23 @@ import {
   PGWashroomEnum,
 } from "../../../prisma/generated/prisma";
 
-import { PGOccupancyTypeEnumMap } from "@/constants/PGOccupancyType";
-import { PGGenderPolicyEnumMap } from "@/constants/PGGenderPolicyType";
-import { PGWashroomEnumMap } from "@/constants/PGWashroomType";
-import { PGMealsEnumMap } from "@/constants/PGMeals";
 import { PGAmenitiesEnumMap } from "@/constants/PGAmenitiesType";
+import { PGGenderPolicyEnumMap } from "@/constants/PGGenderPolicyType";
+import { PGMealsEnumMap } from "@/constants/PGMeals";
+import { PGOccupancyTypeEnumMap } from "@/constants/PGOccupancyType";
 import { PGPreferedTenantsEnumMap } from "@/constants/PGPreferedTenantsType";
-import { PGFormData, pgSchema } from "@/constants/PgTypes";
+import { createPGSchema, PGFormData } from "@/constants/PgTypes";
+import { PGWashroomEnumMap } from "@/constants/PGWashroomType";
 import usePGRegistarationService from "@/hooks/client-hooks/usePgRegistrationService";
 
-import {toast} from "react-toastify";
 import { useEffect } from "react";
+import { toast } from "react-toastify";
 
 export default function PGRegisterPage() {
   const form = useForm<PGFormData>({
-    resolver: zodResolver(pgSchema),
+    resolver: zodResolver(createPGSchema),
     mode: "onChange",
     defaultValues: {
-      baasthanVerified: false,
       reraRegistered: false,
       amenities: [],
       preferedTenants: [],
@@ -70,13 +68,14 @@ export default function PGRegisterPage() {
     if (!isSuccess && error) {
       toast.error(error);
       console.log(`Error: ${error}`);
-    }
-    else if (isSuccess && response) {
+    } else if (isSuccess && response) {
       form.reset();
-      toast.success(response && (response?.message || "Pg has been registered successfully"));
+      toast.success(
+        response && (response?.message || "Pg has been registered successfully")
+      );
       console.log("Server response: ", response);
     }
-  }, [response])
+  }, [response]);
 
   const onSubmit = async (data: PGFormData) => {
     await execute(data);
@@ -119,9 +118,6 @@ export default function PGRegisterPage() {
               <span className="text-sm font-medium text-gray-900">
                 {enumMap[opt]}
               </span>
-              {isChecked && (
-                <CheckCircle2 className="absolute top-2 right-2 h-4 w-4 text-blue-500" />
-              )}
             </label>
           );
         })}
@@ -147,13 +143,13 @@ export default function PGRegisterPage() {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
-      <div className="bg-primary/60 border-b border-gray-200">
+      <div className="bg-primary border-b border-gray-200">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           <div className="text-center">
-            <h1 className="text-3xl font-bold text-gray-900 mb-2">
+            <h1 className="text-3xl font-bold text-primary-foreground mb-2">
               Register Your PG
             </h1>
-            <p className="text-lg text-white max-w-2xl mx-auto">
+            <p className="text-lg text-muted max-w-2xl mx-auto">
               List your paying guest accommodation and connect with potential
               tenants
             </p>
@@ -177,7 +173,7 @@ export default function PGRegisterPage() {
                   <FormField
                     control={form.control}
                     name="propertyName"
-                    render={({ field }) => (
+                    render={({ field, fieldState }) => (
                       <FormItem>
                         <FormLabel className="text-sm font-medium text-gray-700">
                           Property Name
@@ -185,11 +181,15 @@ export default function PGRegisterPage() {
                         <FormControl>
                           <Input
                             placeholder="e.g., Sunrise PG"
-                            className="h-12 border-gray-300 focus:border-blue-500 focus:ring-blue-500"
+                            className={`h-12 border-gray-300 focus:border-blue-500 focus:ring-blue-500 `}
                             {...field}
                           />
                         </FormControl>
-                        <FormMessage />
+                        {fieldState.error ? (
+                          <FormMessage />
+                        ) : (
+                          <p className="text-sm">&nbsp;</p>
+                        )}
                       </FormItem>
                     )}
                   />
@@ -197,7 +197,7 @@ export default function PGRegisterPage() {
                   <FormField
                     control={form.control}
                     name="startingPrice"
-                    render={({ field }) => (
+                    render={({ field, fieldState }) => (
                       <FormItem>
                         <FormLabel className="text-sm font-medium text-gray-700">
                           Starting Price (₹/month)
@@ -207,13 +207,17 @@ export default function PGRegisterPage() {
                             <IndianRupee className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
                             <Input
                               type="number"
-                              placeholder="5000"
+                              placeholder="e.g., ₹5000/-"
                               className="h-12 pl-10 border-gray-300 focus:border-blue-500 focus:ring-blue-500"
                               {...field}
                             />
                           </div>
                         </FormControl>
-                        <FormMessage />
+                        {fieldState.error ? (
+                          <FormMessage />
+                        ) : (
+                          <p className="text-sm">&nbsp;</p>
+                        )}
                       </FormItem>
                     )}
                   />
@@ -223,7 +227,7 @@ export default function PGRegisterPage() {
                   <FormField
                     control={form.control}
                     name="floors"
-                    render={({ field }) => (
+                    render={({ field, fieldState }) => (
                       <FormItem>
                         <FormLabel className="text-sm font-medium text-gray-700">
                           Number of Floors
@@ -231,12 +235,16 @@ export default function PGRegisterPage() {
                         <FormControl>
                           <Input
                             type="number"
-                            placeholder="3"
+                            placeholder="e.g., 3"
                             className="h-12 border-gray-300 focus:border-blue-500 focus:ring-blue-500"
                             {...field}
                           />
                         </FormControl>
-                        <FormMessage />
+                        {fieldState.error ? (
+                          <FormMessage />
+                        ) : (
+                          <p className="text-sm">&nbsp;</p>
+                        )}
                       </FormItem>
                     )}
                   />
@@ -244,7 +252,7 @@ export default function PGRegisterPage() {
                   <FormField
                     control={form.control}
                     name="operatingSince"
-                    render={({ field }) => (
+                    render={({ field, fieldState }) => (
                       <FormItem>
                         <FormLabel className="text-sm font-medium text-gray-700">
                           Operating Since
@@ -252,12 +260,16 @@ export default function PGRegisterPage() {
                         <FormControl>
                           <Input
                             type="number"
-                            placeholder="2020"
+                            placeholder="e.g., 2020"
                             className="h-12 border-gray-300 focus:border-blue-500 focus:ring-blue-500"
                             {...field}
                           />
                         </FormControl>
-                        <FormMessage />
+                        {fieldState.error ? (
+                          <FormMessage />
+                        ) : (
+                          <p className="text-sm">&nbsp;</p>
+                        )}
                       </FormItem>
                     )}
                   />
@@ -265,7 +277,7 @@ export default function PGRegisterPage() {
                   <FormField
                     control={form.control}
                     name="noticePeriodInDays"
-                    render={({ field }) => (
+                    render={({ field, fieldState }) => (
                       <FormItem>
                         <FormLabel className="text-sm font-medium text-gray-700">
                           Notice Period (Days)
@@ -273,12 +285,16 @@ export default function PGRegisterPage() {
                         <FormControl>
                           <Input
                             type="number"
-                            placeholder="30"
+                            placeholder="e.g., 30 Days"
                             className="h-12 border-gray-300 focus:border-blue-500 focus:ring-blue-500"
                             {...field}
                           />
                         </FormControl>
-                        <FormMessage />
+                        {fieldState.error ? (
+                          <FormMessage />
+                        ) : (
+                          <p className="text-sm">&nbsp;</p>
+                        )}
                       </FormItem>
                     )}
                   />
@@ -298,7 +314,7 @@ export default function PGRegisterPage() {
                   <FormField
                     control={form.control}
                     name="availableOccupancyType"
-                    render={({ field }) => (
+                    render={({ field, fieldState }) => (
                       <FormItem>
                         <FormLabel className="text-base font-medium text-gray-900 mb-4 block">
                           Available Occupancy Types
@@ -310,7 +326,11 @@ export default function PGRegisterPage() {
                           PGOccupancyTypeEnumMap,
                           "occupancy"
                         )}
-                        <FormMessage />
+                        {fieldState.error ? (
+                          <FormMessage />
+                        ) : (
+                          <p className="text-sm">&nbsp;</p>
+                        )}
                       </FormItem>
                     )}
                   />
@@ -321,7 +341,7 @@ export default function PGRegisterPage() {
                     <FormField
                       control={form.control}
                       name="genderPolicy"
-                      render={({ field }) => (
+                      render={({ field, fieldState }) => (
                         <FormItem>
                           <FormLabel className="text-sm font-medium text-gray-700">
                             Gender Policy
@@ -331,7 +351,7 @@ export default function PGRegisterPage() {
                               onValueChange={field.onChange}
                               value={field.value}
                             >
-                              <SelectTrigger className="h-12 border-gray-300 focus:border-blue-500 focus:ring-blue-500">
+                              <SelectTrigger className="h-12! border-gray-300 focus:border-blue-500 focus:ring-blue-500 w-full">
                                 <SelectValue placeholder="Select policy" />
                               </SelectTrigger>
                               <SelectContent>
@@ -345,7 +365,11 @@ export default function PGRegisterPage() {
                               </SelectContent>
                             </Select>
                           </FormControl>
-                          <FormMessage />
+                          {fieldState.error ? (
+                            <FormMessage />
+                          ) : (
+                            <p className="text-sm">&nbsp;</p>
+                          )}
                         </FormItem>
                       )}
                     />
@@ -353,7 +377,7 @@ export default function PGRegisterPage() {
                     <FormField
                       control={form.control}
                       name="washroomType"
-                      render={({ field }) => (
+                      render={({ field, fieldState }) => (
                         <FormItem>
                           <FormLabel className="text-sm font-medium text-gray-700">
                             Washroom Type
@@ -363,7 +387,7 @@ export default function PGRegisterPage() {
                               onValueChange={field.onChange}
                               value={field.value}
                             >
-                              <SelectTrigger className="h-12 border-gray-300 focus:border-blue-500 focus:ring-blue-500">
+                              <SelectTrigger className="h-12! border-gray-300 focus:border-blue-500 focus:ring-blue-500 w-full">
                                 <SelectValue placeholder="Select type" />
                               </SelectTrigger>
                               <SelectContent>
@@ -375,7 +399,11 @@ export default function PGRegisterPage() {
                               </SelectContent>
                             </Select>
                           </FormControl>
-                          <FormMessage />
+                          {fieldState.error ? (
+                            <FormMessage />
+                          ) : (
+                            <p className="text-sm">&nbsp;</p>
+                          )}
                         </FormItem>
                       )}
                     />
@@ -383,7 +411,7 @@ export default function PGRegisterPage() {
                     <FormField
                       control={form.control}
                       name="meals"
-                      render={({ field }) => (
+                      render={({ field, fieldState }) => (
                         <FormItem>
                           <FormLabel className="text-sm font-medium text-gray-700">
                             Meals Policy
@@ -393,7 +421,7 @@ export default function PGRegisterPage() {
                               onValueChange={field.onChange}
                               value={field.value}
                             >
-                              <SelectTrigger className="h-12 border-gray-300 focus:border-blue-500 focus:ring-blue-500">
+                              <SelectTrigger className="h-12! border-gray-300 focus:border-blue-500 focus:ring-blue-500 w-full">
                                 <SelectValue placeholder="Select option" />
                               </SelectTrigger>
                               <SelectContent>
@@ -405,7 +433,11 @@ export default function PGRegisterPage() {
                               </SelectContent>
                             </Select>
                           </FormControl>
-                          <FormMessage />
+                          {fieldState.error ? (
+                            <FormMessage />
+                          ) : (
+                            <p className="text-sm">&nbsp;</p>
+                          )}
                         </FormItem>
                       )}
                     />
@@ -426,7 +458,7 @@ export default function PGRegisterPage() {
                   <FormField
                     control={form.control}
                     name="amenities"
-                    render={({ field }) => (
+                    render={({ field, fieldState }) => (
                       <FormItem>
                         <FormLabel className="text-base font-medium text-gray-900 mb-4 block">
                           Available Amenities
@@ -438,7 +470,11 @@ export default function PGRegisterPage() {
                           PGAmenitiesEnumMap,
                           "amenity"
                         )}
-                        <FormMessage />
+                        {fieldState.error ? (
+                          <FormMessage />
+                        ) : (
+                          <p className="text-sm">&nbsp;</p>
+                        )}
                       </FormItem>
                     )}
                   />
@@ -448,7 +484,7 @@ export default function PGRegisterPage() {
                   <FormField
                     control={form.control}
                     name="preferedTenants"
-                    render={({ field }) => (
+                    render={({ field, fieldState }) => (
                       <FormItem>
                         <FormLabel className="text-base font-medium text-gray-900 mb-4 block">
                           Preferred Tenants
@@ -460,7 +496,11 @@ export default function PGRegisterPage() {
                           PGPreferedTenantsEnumMap,
                           "tenant"
                         )}
-                        <FormMessage />
+                        {fieldState.error ? (
+                          <FormMessage />
+                        ) : (
+                          <p className="text-sm">&nbsp;</p>
+                        )}
                       </FormItem>
                     )}
                   />
@@ -479,44 +519,8 @@ export default function PGRegisterPage() {
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                   <FormField
                     control={form.control}
-                    name="baasthanVerified"
-                    render={({ field }) => (
-                      <FormItem>
-                        <div className="flex items-start space-x-3 p-6 border-2 border-gray-200 rounded-xl hover:border-gray-300 transition-colors">
-                          <Checkbox
-                            id="baasthanVerified"
-                            checked={field.value}
-                            onCheckedChange={field.onChange}
-                            className="mt-1"
-                          />
-                          <div className="flex-1">
-                            <FormLabel
-                              htmlFor="baasthanVerified"
-                              className="text-base font-medium text-gray-900 cursor-pointer"
-                            >
-                              Baasthan Verified
-                            </FormLabel>
-                            <p className="text-sm text-gray-600 mt-1">
-                              Property verified by Baasthan for authenticity
-                            </p>
-                          </div>
-                          {field.value && (
-                            <Badge
-                              variant="secondary"
-                              className="bg-green-100 text-green-800"
-                            >
-                              Verified
-                            </Badge>
-                          )}
-                        </div>
-                      </FormItem>
-                    )}
-                  />
-
-                  <FormField
-                    control={form.control}
                     name="reraRegistered"
-                    render={({ field }) => (
+                    render={({ field, fieldState }) => (
                       <FormItem>
                         <div className="flex items-start space-x-3 p-6 border-2 border-gray-200 rounded-xl hover:border-gray-300 transition-colors">
                           <Checkbox
@@ -536,14 +540,6 @@ export default function PGRegisterPage() {
                               Registered under Real Estate Regulatory Authority
                             </p>
                           </div>
-                          {field.value && (
-                            <Badge
-                              variant="secondary"
-                              className="bg-blue-100 text-blue-800"
-                            >
-                              Registered
-                            </Badge>
-                          )}
                         </div>
                       </FormItem>
                     )}
@@ -563,7 +559,7 @@ export default function PGRegisterPage() {
                           <FormControl>
                             <Input
                               placeholder="Enter RERA Registration Number"
-                              className="h-12 border-gray-300 focus:border-blue-500 focus:ring-blue-500 max-w-md"
+                              className="h-12 border-gray-300 focus:border-blue-500 focus:ring-blue-500 "
                               {...field}
                             />
                           </FormControl>

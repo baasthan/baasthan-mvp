@@ -1,8 +1,14 @@
-import {z} from "zod";
-import { PGGenderPolicyEnum, PGOccupancyTypeEnum, PGAmenitiesEnum, PGPreferedTenantsEnum, PGWashroomEnum, PGMealsEnum } from "../../prisma/generated/prisma";
+import { z } from "zod";
+import {
+  PGAmenitiesEnum,
+  PGGenderPolicyEnum,
+  PGMealsEnum,
+  PGOccupancyTypeEnum,
+  PGPreferedTenantsEnum,
+  PGWashroomEnum,
+} from "../../prisma/generated/prisma";
 
-
-export const pgSchema = z.object({
+export const createPGSchema = z.object({
   propertyName: z
     .string()
     .min(3, "Property name must be at least 3 characters"),
@@ -11,7 +17,6 @@ export const pgSchema = z.object({
     .nonempty("At least one occupancy type is required"),
   genderPolicy: z.nativeEnum(PGGenderPolicyEnum),
   startingPrice: z.coerce.number().min(0, "Price must be greater than 0"),
-  baasthanVerified: z.boolean(),
   reraRegistered: z.boolean(),
   reraRegistrationNumber: z.string().optional(),
   amenities: z.array(z.nativeEnum(PGAmenitiesEnum)),
@@ -30,8 +35,8 @@ export const pgSchema = z.object({
   district: z.string().min(1, "District is required"),
   state: z.string().min(1, "State is required"),
   country: z.string().min(1, "Country is required"),
-  pincode: z.string().min(6, "Valid pincode is required"),
+  pincode: z.string().regex(/^\d{6}$/, "Pincode must be exactly 6 digits"),
   images: z.any().optional(),
 });
 
-export type PGFormData = z.infer<typeof pgSchema>;
+export type PGFormData = z.infer<typeof createPGSchema>;
