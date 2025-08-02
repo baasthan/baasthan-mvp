@@ -22,7 +22,7 @@ const MainHero = () => {
     const params = new URLSearchParams();
     if (searchLocation) params.set("location", searchLocation);
     if (budget) params.set("budget", budget);
-    router.push(`/featured-properties?${params.toString()}`);
+    router.push(`/paying-guest?${params.toString()}`);
   };
 
   return (

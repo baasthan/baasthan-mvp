@@ -1,5 +1,6 @@
 import AppShell from "@/components/app-shell";
 import "./globals.css";
+import {ToastContainer} from "react-toastify"
 
 import { Metadata } from "next";
 
@@ -19,6 +20,7 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <body className={`font-sans antialiased `}>
         <AppShell>{children}</AppShell>
+        <ToastContainer />
       </body>
     </html>
   );

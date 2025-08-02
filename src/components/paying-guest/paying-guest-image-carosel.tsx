@@ -1,6 +1,7 @@
 "use client";
 import { PayingGuestInfoWithPublicUser } from "@/types/paying-guest";
 import { useEffect, useState } from "react";
+import Image from "next/image";
 
 interface PayingGuestImageCaroselProps {
   images: PayingGuestInfoWithPublicUser["PayingGuestImages"];
@@ -18,10 +19,11 @@ const PayingGuestImageCarosel = ({ images }: PayingGuestImageCaroselProps) => {
   return (
     <div className="relative aspect-square overflow-hidden">
       {images.map((image, index) => (
-        <img
+        <Image
           key={image.id}
           src={image.url}
-          className={` absolute object-cover object-center transition-opacity group-hover:scale-105 duration-200 ${
+          fill
+          className={`absolute object-cover object-center transition-opacity group-hover:scale-105 duration-200 ${
             currentImageIndex !== index ? "opacity-0 -z-10" : "opacity-100"
           }`}
           alt={""}
