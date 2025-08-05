@@ -44,17 +44,31 @@ const RegistrationForm = () => {
   } = usePGRegistarationService();
 
   useEffect(() => {
-    if (!isSuccess && error) {
-      toast.error(error);
-      console.log(`Error: ${error}`);
-    } else if (isSuccess && response) {
-      form.reset();
-      toast.success(
-        response && (response?.message || "Pg has been registered successfully")
-      );
-      console.log("Server response: ", response);
+    if (isSuccess !== null) {
+      if (isSuccess) {
+        form.reset();
+        toast.success(
+          response &&
+            (response?.message || "Pg has been registered successfully")
+        );
+      } else {
+        toast.error(error);
+        console.error(error);
+      }
     }
-  }, [response]);
+  }, [isSuccess]);
+
+  // useEffect(() => {
+  //   if (!isSuccess || error) {
+  //     toast.error(error);
+  //     console.log(`Error: ${error}`);
+  //   } else if (isSuccess && response) {
+  // form.reset();
+  // toast.success(
+  //   response && (response?.message || "Pg has been registered successfully")
+  // );
+  //   }
+  // }, [response]);
 
   const onSubmit = async (data: PGFormData) => {
     await execute(data);
@@ -150,7 +164,7 @@ const RegistrationForm = () => {
                             </div>
                           </label>
                           {imagePreviews.length > 0 && (
-                            <div className="mt-4 grid grid-cols-3 gap-4">
+                            <div className="mt-4 grid md:grid-cols-3 gap-4">
                               {imagePreviews.map((src, index) => (
                                 <img
                                   key={index}
