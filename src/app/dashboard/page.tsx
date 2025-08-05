@@ -16,6 +16,7 @@ const Page = async () => {
   }
 
   const { error, success } = await auth.api.userHasPermission({
+    headers: await headers(),
     body: {
       permissions: {
         appDashBoard: ["view"],
