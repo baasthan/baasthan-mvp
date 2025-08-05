@@ -1,3 +1,4 @@
+import { auth } from "@/lib/auth";
 import { uploadImageToSupabase } from "@/utils/uploadImageToSupabase";
 import { NextResponse } from "next/server";
 import {
@@ -11,6 +12,24 @@ import {
 } from "../../../../../prisma/generated/prisma";
 
 export async function POST(req: Request) {
+  const session = await auth.api.getSession({ headers: req.headers });
+  if (!(session && session.user)) {
+    return NextResponse.json({}, { status: 401 });
+  }
+
+  const { error, success } = await auth.api.userHasPermission({
+    headers: req.headers,
+    body: {
+      permissions: {
+        property: ["insert"],
+      },
+    },
+  });
+
+  if (!success || error) {
+    return NextResponse.json({}, { status: 403 });
+  }
+
   try {
     const db = new PrismaClient();
     const formData = await req.formData();
@@ -26,7 +45,7 @@ export async function POST(req: Request) {
 
     // Coerce all fields
     const propertyName = getString("propertyName");
-    const hostId = getString("hostId") || "tQOS0pn890KLThn075ob4ZFPfX8zvvvW";
+    const hostId = session.user.id;
     const availableOccupancyType = getArray(
       "availableOccupancyType"
     ) as PGOccupancyTypeEnum[];
