@@ -1,6 +1,6 @@
 import { getSessionCookie } from "better-auth/cookies";
 import { NextRequest, NextResponse } from "next/server";
-import { APP_CONFIG, AUTH_CONFIG } from "./config";
+import { AUTH_CONFIG } from "./config";
 
 export async function middleware(request: NextRequest) {
   const sessionCookie = getSessionCookie(request);
@@ -13,10 +13,8 @@ export async function middleware(request: NextRequest) {
     const searchParams = new URLSearchParams();
     searchParams.set("redirect", currentUrl);
     searchParams.set(AUTH_CONFIG.SIGN_IN_PROMPT, "true");
-    const redirectUrl = new URL(
-      `?${searchParams.toString()}`,
-      APP_CONFIG.BASE_URL
-    );
+    const origin = request.nextUrl.origin;
+    const redirectUrl = new URL(`${origin}/?${searchParams.toString()}`);
     return NextResponse.redirect(redirectUrl);
   }
 
@@ -24,5 +22,5 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/dashboard"], // Specify the routes the middleware applies to
+  matcher: ["/dashboard", "/register-pg"], // Specify the routes the middleware applies to
 };
