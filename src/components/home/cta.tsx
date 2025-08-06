@@ -14,7 +14,9 @@ const Cta = () => {
         </p>
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
           <Button>
-            <Link href="/paying-guest">Start Searching</Link>
+            <Link href="/paying-guest" prefetch>
+              Start Searching
+            </Link>
           </Button>
         </div>
       </div>

@@ -71,18 +71,10 @@ const HeroSection3 = () => {
       </div>
       <div className="w-full flex flex-row justify-end px-2">
         <Button asChild>
-          <Link href="/explore">
+          <Link href="/explore" prefetch>
             View all <ArrowRight />
           </Link>
         </Button>
-      </div>
-      <div className="w-5xl">
-        <div className="flex flex-row p-2 rounded-2xl  overflow-x-scroll gap-4">
-          {TEMP_PROPERTIES.map((properties, index) => (
-            <></>
-            // <PropertyCard key={index} {...properties} />
-          ))}
-        </div>
       </div>
     </section>
   );

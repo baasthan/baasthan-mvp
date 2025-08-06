@@ -21,7 +21,7 @@ const Header = () => {
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
-          <Link href="/">
+          <Link href="/" prefetch>
             <div className="flex items-center space-x-2">
               {/* <div className="w-8 h-8  rounded-lg flex items-center justify-center"> */}
               <Image
@@ -41,7 +41,7 @@ const Header = () => {
           <nav className="hidden md:flex items-center space-x-8">
             <Button variant={"link"} asChild>
               <Link
-                href="/paying-guest?baasthanVerified=true"
+                href="/paying-guest"
                 prefetch
                 // className="text-gray-700 hover:text-primary font-medium transition-colors"
               >
@@ -72,6 +72,7 @@ const Header = () => {
               {/* Common Links for all users */}
               <Link
                 href="/"
+                prefetch
                 className="flex items-center text-sm text-muted-foreground hover:text-primary font-medium rounded-md px-3 py-2.5 hover:bg-accent/50"
                 onClick={() => setMobileMenuOpen(false)}
               >
@@ -79,6 +80,7 @@ const Header = () => {
               </Link>
               <Link
                 href="/paying-guest"
+                prefetch
                 className="flex items-center text-sm text-muted-foreground hover:text-primary font-medium rounded-md px-3 py-2.5 hover:bg-accent/50"
                 onClick={() => setMobileMenuOpen(false)}
               >
@@ -86,6 +88,7 @@ const Header = () => {
               </Link>
               <Link
                 href="/about-us"
+                prefetch
                 className="flex items-center text-sm text-muted-foreground hover:text-primary font-medium rounded-md px-3 py-2.5 hover:bg-accent/50"
                 onClick={() => setMobileMenuOpen(false)}
               >
@@ -93,6 +96,7 @@ const Header = () => {
               </Link>
               <Link
                 href="/contact"
+                prefetch
                 className="flex items-center text-sm text-muted-foreground hover:text-primary font-medium rounded-md px-3 py-2.5 hover:bg-accent/50"
                 onClick={() => setMobileMenuOpen(false)}
               >
@@ -132,6 +136,7 @@ const Header = () => {
                     {/* User Navigation */}
                     <Link
                       href="/dashboard"
+                      prefetch
                       className="flex items-center text-sm text-muted-foreground hover:text-primary font-medium rounded-md px-3 py-2.5 hover:bg-accent/50"
                       onClick={() => setMobileMenuOpen(false)}
                     >
@@ -157,6 +162,7 @@ const Header = () => {
                     </Link>
                     <Link
                       href="/profile"
+                      prefetch
                       className="flex items-center text-sm text-muted-foreground hover:text-primary font-medium rounded-md px-3 py-2.5 hover:bg-accent/50"
                       onClick={() => setMobileMenuOpen(false)}
                     >

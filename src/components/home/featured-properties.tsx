@@ -88,7 +88,7 @@ const FeaturedProperties: React.FC<FeaturedPropertiesProps> = ({
               Handpicked premium PG accommodations
             </p>
           </div>
-          <Link href="/featured-properties">
+          <Link href="/featured-properties" prefetch>
             <Button variant={"outline"}>
               View All
               <ArrowRight />
