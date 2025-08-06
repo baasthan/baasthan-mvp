@@ -115,7 +115,6 @@ export const getAppliedPayingGuestFiltersByParams = async (
       availableOccupancyType,
       genderPolicy,
       startingPrice,
-      baasthanVerified,
       reraRegistered,
       amenities,
       preferedTenants,
@@ -139,12 +138,6 @@ export const getAppliedPayingGuestFiltersByParams = async (
     if (startingPrice) {
       appliedFilters.startingPrice = {
         lt: startingPrice,
-      };
-    }
-
-    if (baasthanVerified) {
-      appliedFilters.baasthanVerified = {
-        equals: baasthanVerified,
       };
     }
 

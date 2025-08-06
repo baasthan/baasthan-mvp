@@ -117,6 +117,9 @@ export const getPayingGuestInfoByFilters = async (
     const prisma = new PrismaClient({
       log: ["error"],
     });
+    filter.baasthanVerified = {
+      equals: true,
+    };
     const payingGuestLists = await prisma.payingGuestInfo.findMany({
       where: filter,
       take: take,
@@ -149,12 +152,13 @@ export const getPayingGuestInfoById = async (
   id: string
 ): Promise<PayingGuestInfoWithPublicUser | null> => {
   try {
-    const prisma = new PrismaClient({
-      log: ["error", "info", "query", "warn"],
-    });
+    const prisma = new PrismaClient();
     const payingGuestInfo = await prisma.payingGuestInfo.findUnique({
       where: {
         id,
+        baasthanVerified: {
+          equals: true,
+        },
       },
       include: {
         PayingGuestImages: {

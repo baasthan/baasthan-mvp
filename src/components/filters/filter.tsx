@@ -1,6 +1,6 @@
 "use client";
 import { FilterConfig, FilterSelection } from "@/types/filters";
-import { ListFilter, X } from "lucide-react";
+import { ListFilter } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
 
 import { LocationInfo } from "@/types/location";
@@ -103,17 +103,6 @@ const Filter = ({ filters }: FilterProps) => {
     router.push(`?${queryParams.toString()}`);
     setDropdownOpen(false);
     setDrawerOpen(false);
-  };
-
-  const handleBaasthanVerifiedToggle = () => {
-    const queryParams = new URLSearchParams(searchParams);
-    console.log(queryParams.toString());
-    if (queryParams.get("baasthanVerified")) {
-      queryParams.delete("baasthanVerified");
-    } else {
-      queryParams.set("baasthanVerified", "true");
-    }
-    router.push(`?${queryParams.toString()}`);
   };
 
   const handleReraRegisteredToggle = () => {
@@ -226,35 +215,7 @@ const Filter = ({ filters }: FilterProps) => {
           }}
         />
       </div>
-      <div className="flex flex-row  gap-2">
-        <Button
-          variant={"outline"}
-          className={`${
-            searchParams.get("baasthanVerified") === "true"
-              ? "bg-primary/15"
-              : ""
-          } w-fit`}
-          onClick={() => {
-            handleBaasthanVerifiedToggle();
-          }}
-        >
-          Baasthan Verified
-          {searchParams.get("baasthanVerified") === "true" && <X />}
-        </Button>
-        <Button
-          variant={"outline"}
-          className={`${
-            searchParams.get("reraRegistered") === "true" ? "bg-primary/15" : ""
-          } w-fit`}
-          onClick={() => {
-            handleReraRegisteredToggle();
-          }}
-        >
-          RERA Registered
-          {searchParams.get("reraRegistered") === "true" && <X />}
-        </Button>
-      </div>
-      <div className="hidden md:flex">
+      <div className="hidden md:flex flex-1/3">
         <DropdownMenu open={dropdownOpen} onOpenChange={setDropdownOpen}>
           <DropdownMenuTrigger asChild>
             <Button className="w-full">
