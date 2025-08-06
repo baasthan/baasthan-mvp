@@ -7,12 +7,48 @@ import { PGMealsEnumMap } from "@/constants/PGMeals";
 import { PGOccupancyTypeEnumMap } from "@/constants/PGOccupancyType";
 import { PGPreferedTenantsEnumMap } from "@/constants/PGPreferedTenantsType";
 import { PGWashroomEnumMap } from "@/constants/PGWashroomType";
-import { getPayingGuestInfoById } from "@/repository/paying-guest";
+import {
+  getPayingGuestInfoByFilters,
+  getPayingGuestInfoById,
+} from "@/repository/paying-guest";
 import { PayingGuestInfoWithPublicUser } from "@/types/paying-guest";
 import getInitials from "@/utils/getInitials";
 import { Building2, MapPin, PhoneCall, Send } from "lucide-react";
+import { Metadata, ResolvingMetadata } from "next";
 import { redirect } from "next/navigation";
 import z from "zod";
+
+type Props = {
+  params: Promise<{ id: string }>;
+};
+
+export const revalidate = 3600;
+
+export async function generateStaticParams() {
+  const properties = await getPayingGuestInfoByFilters({
+    baasthanVerified: true,
+  });
+
+  if (properties && properties.length > 0) {
+    return properties.map((property) => ({ id: property.id }));
+  }
+  return [];
+}
+
+export async function generateMetadata(
+  { params }: Props,
+  parent: ResolvingMetadata
+): Promise<Metadata> {
+  const { id } = await params;
+  const payingGuestInfo: PayingGuestInfoWithPublicUser | null =
+    await getPayingGuestInfoById(id);
+  if (payingGuestInfo) {
+    return {
+      title: payingGuestInfo.propertyName,
+    };
+  }
+  return {};
+}
 
 const PayingGuestDetailsPage = async ({
   params,
