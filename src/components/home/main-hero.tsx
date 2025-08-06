@@ -1,18 +1,16 @@
 "use client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { LocationInfo } from "@/types/location";
 import { IndianRupee, Search } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { Suspense, useState } from "react";
+import { LocationAutoComplete } from "../filters/location-autocomplete";
 
 const MainHero = () => {
-  const [searchLocation, setSearchLocation] = useState("");
+  const [location, setLocation] = useState<LocationInfo>();
   const [budget, setBudget] = useState("");
   const router = useRouter();
-
-  const handleLocationChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchLocation(e.target.value);
-  };
 
   const handleBudgetChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setBudget(e.target.value);
@@ -20,8 +18,12 @@ const MainHero = () => {
 
   const handleSearch = () => {
     const params = new URLSearchParams();
-    if (searchLocation) params.set("location", searchLocation);
-    if (budget) params.set("budget", budget);
+    if (location) {
+      params.set("pincode", location.pincode);
+    }
+    if (budget) {
+      params.set("startingPrice", budget);
+    }
     router.push(`/paying-guest?${params.toString()}`);
   };
 
@@ -44,13 +46,15 @@ const MainHero = () => {
               <div className="grid md:grid-cols-4 gap-4">
                 <div className="md:col-span-2">
                   <div className="relative">
-                    <Input
-                      type="text"
-                      icon={Search}
-                      placeholder="Enter city or locality"
-                      value={searchLocation}
-                      onChange={handleLocationChange}
-                    />
+                    <Suspense>
+                      <LocationAutoComplete
+                        selectedLocation={location}
+                        onLocationSelect={(location) => {
+                          setLocation(location);
+                        }}
+                        onLocationReset={() => setLocation(undefined)}
+                      />
+                    </Suspense>
                   </div>
                 </div>
                 <div>

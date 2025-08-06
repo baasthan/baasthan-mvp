@@ -1,11 +1,17 @@
-import { getLocations } from "@/repository/location";
+import {
+  getLocationByPincode,
+  getLocationsByHint,
+} from "@/repository/location";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(req: NextRequest) {
   const searchParams = req.nextUrl.searchParams;
   const locationHint = searchParams.get("locationHint") ?? "";
+  const pincode = searchParams.get("pincode");
 
-  const locations = await getLocations(locationHint);
+  const locations = pincode
+    ? await getLocationByPincode(pincode)
+    : await getLocationsByHint(locationHint);
 
   if (locations) {
     return NextResponse.json(

@@ -1,12 +1,23 @@
 "use client";
 import useLocationService from "@/hooks/client-hooks/useLocationService";
+import useLocationServiceByPinCode from "@/hooks/client-hooks/useLocationServiceByPinCode";
 import { LocationInfo } from "@/types/location";
 import { X } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { Button } from "../ui/button";
 
-const LocationAutoComplete = () => {
+interface LocationAutoCompleteProps {
+  selectedLocation?: LocationInfo;
+  onLocationSelect: (v: LocationInfo) => void;
+  onLocationReset: () => void;
+}
+
+const LocationAutoComplete = ({
+  selectedLocation,
+  onLocationSelect,
+  onLocationReset,
+}: LocationAutoCompleteProps) => {
   const searchParams = useSearchParams();
   const router = useRouter();
   const [query, setQuery] = useState("");
@@ -14,7 +25,13 @@ const LocationAutoComplete = () => {
 
   const debounceTimer = useRef<NodeJS.Timeout | null>(null);
   const { data: suggestions, execute, isLoading } = useLocationService();
-  const [selectedLocation, setSelectedLocation] = useState<LocationInfo>();
+
+  const {
+    data: searchParamsLocation,
+    error,
+    execute: getLocation,
+  } = useLocationServiceByPinCode();
+  // const [selectedLocation, setSelectedLocation] = useState<LocationInfo>();
   useEffect(() => {
     return () => {
       if (debounceTimer.current) {
@@ -22,6 +39,21 @@ const LocationAutoComplete = () => {
       }
     };
   }, []);
+
+  useEffect(() => {
+    const pincode = searchParams.get("pincode");
+    if (pincode) {
+      console.log("fetching location");
+      getLocation(pincode);
+    }
+  }, [searchParams]);
+
+  useEffect(() => {
+    console.log("searchParamsLocation==>", searchParamsLocation);
+    if (searchParamsLocation) {
+      onLocationSelect(searchParamsLocation);
+    }
+  }, [searchParamsLocation]);
 
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -42,15 +74,14 @@ const LocationAutoComplete = () => {
   }, []);
 
   const handleLocationSelect = (location: LocationInfo) => {
-    setSelectedLocation(location);
+    // setSelectedLocation(location);
     setShowSuggestions(false);
-    const queryParams = new URLSearchParams(searchParams);
-    queryParams.set("pincode", location.pincode);
-    router.push(`?${queryParams.toString()}`);
+    onLocationSelect(location);
   };
 
   const handleLocationReset = () => {
-    setSelectedLocation(undefined);
+    // setSelectedLocation(undefined);
+    onLocationReset();
     setShowSuggestions(true);
     setQuery("");
     const queryParams = new URLSearchParams(searchParams);
@@ -64,12 +95,10 @@ const LocationAutoComplete = () => {
         {selectedLocation && (
           <Button variant={"outline"} className="w-full justify-between">
             <div>{selectedLocation.locality}</div>
-            <Button
-              variant={"ghost"}
-              size={"icon"}
-              onClick={() => handleLocationReset()}
-            >
-              <X />
+            <Button variant={"ghost"} size={"icon"}>
+              <div onClick={() => handleLocationReset()}>
+                <X />
+              </div>
             </Button>
           </Button>
         )}
