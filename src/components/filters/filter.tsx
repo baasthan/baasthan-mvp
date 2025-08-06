@@ -3,6 +3,7 @@ import { FilterConfig, FilterSelection } from "@/types/filters";
 import { ListFilter, X } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
 
+import { LocationInfo } from "@/types/location";
 import { useEffect, useState } from "react";
 import { Button } from "../ui/button";
 import { Checkbox } from "../ui/checkbox";
@@ -24,7 +25,7 @@ interface FilterProps {
 const Filter = ({ filters }: FilterProps) => {
   const router = useRouter();
   const searchParams = useSearchParams();
-
+  const [location, setLocation] = useState<LocationInfo>();
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [currentFilterIndex, setCurrentFilterIndex] = useState<number>(0);
@@ -209,7 +210,21 @@ const Filter = ({ filters }: FilterProps) => {
   return (
     <div className="flex flex-col md:flex-row gap-4 ">
       <div className="w-full">
-        <LocationAutoComplete />
+        <LocationAutoComplete
+          selectedLocation={location}
+          onLocationReset={() => {
+            setLocation(undefined);
+            const queryParams = new URLSearchParams(searchParams);
+            queryParams.delete("pincode");
+            router.push(`?${queryParams.toString()}`);
+          }}
+          onLocationSelect={(l) => {
+            setLocation(l);
+            const queryParams = new URLSearchParams(searchParams);
+            queryParams.set("pincode", l.pincode);
+            router.push(`?${queryParams.toString()}`);
+          }}
+        />
       </div>
       <div className="flex flex-row  gap-2">
         <Button

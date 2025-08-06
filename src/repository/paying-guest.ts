@@ -103,14 +103,24 @@ export const getPayingGuestFilters = async () => {
 };
 
 export const getPayingGuestInfoByFilters = async (
-  filter: Prisma.PayingGuestInfoWhereInput
+  filter: Prisma.PayingGuestInfoWhereInput,
+  take?: number,
+  skip?: number
 ): Promise<PayingGuestInfoWithPublicUser[] | null> => {
+  if (!take) {
+    take = 10;
+  }
+  if (!skip) {
+    skip = 0;
+  }
   try {
     const prisma = new PrismaClient({
       log: ["error"],
     });
     const properties = await prisma.payingGuestInfo.findMany({
       where: filter,
+      take: take,
+      skip: skip,
       include: {
         user: {
           select: {
