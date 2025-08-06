@@ -116,7 +116,9 @@ const PayingGuestCard = ({
       </div>
       <div className="px-4">
         <Button className="w-full" asChild>
-          <Link href={`/paying-guest/details/${id}`}>View Details</Link>
+          <Link href={`/paying-guest/details/${id}`} prefetch>
+            View Details
+          </Link>
         </Button>
       </div>
     </div>

@@ -67,7 +67,8 @@ export default function Footer() {
             <ul className="space-y-2 text-gray-400">
               <li>
                 <Link
-                  href="/paying-guest?baasthanVerified=true"
+                  href="/paying-guest"
+                  prefetch
                   className="hover:text-white transition-colors"
                 >
                   Paying Guest

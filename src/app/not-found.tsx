@@ -9,7 +9,9 @@ const NotFound = () => {
       </h2>
 
       <Button variant={"link"} asChild>
-        <Link href="/">Return Home</Link>
+        <Link href="/" prefetch>
+          Return Home
+        </Link>
       </Button>
     </div>
   );
