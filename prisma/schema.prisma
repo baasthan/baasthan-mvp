@@ -236,7 +236,7 @@ model PayingGuestImages {
 
 model PayingGuestHouseRules {
   id            BigInt          @id @default(autoincrement())
-  payingGuestId String          @db.Uuid
+  payingGuestId String          @unique @db.Uuid
   houseRuleHtml String
   propertyInfo  PayingGuestInfo @relation(fields: [payingGuestId], references: [id], onDelete: Cascade)
 }
