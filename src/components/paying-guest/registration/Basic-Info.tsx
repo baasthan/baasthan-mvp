@@ -155,6 +155,61 @@ const BasicInfo = ({ form }: BasicInfoProps) => {
             )}
           />
         </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+          <FormField
+            control={form.control}
+            name="securityDeposite"
+            render={({ field, fieldState }) => (
+              <FormItem>
+                <FormLabel className="text-sm font-medium text-gray-700">
+                  Security deposit
+                </FormLabel>
+                <FormControl>
+                  <Input
+                    placeholder="e.g., ₹5000/-"
+                    type="number"
+                    className={`h-12 border-gray-300 focus:border-blue-500 focus:ring-blue-500 `}
+                    {...field}
+                  />
+                </FormControl>
+                {fieldState.error ? (
+                  <FormMessage />
+                ) : (
+                  <p className="text-sm">&nbsp;</p>
+                )}
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="maintaince"
+            render={({ field, fieldState }) => (
+              <FormItem>
+                <FormLabel className="text-sm font-medium text-gray-700">
+                  Maintainenance (₹/year)
+                </FormLabel>
+                <FormControl>
+                  <div className="relative">
+                    <IndianRupee className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+                    <Input
+                      type="number"
+                      placeholder="e.g., ₹5000/-"
+                      className="h-12 pl-10 border-gray-300 focus:border-blue-500 focus:ring-blue-500"
+                      {...field}
+                    />
+                  </div>
+                </FormControl>
+                {fieldState.error ? (
+                  <FormMessage />
+                ) : (
+                  <p className="text-sm">&nbsp;</p>
+                )}
+              </FormItem>
+            )}
+          />
+        </div>
       </CardContent>
     </Card>
   );

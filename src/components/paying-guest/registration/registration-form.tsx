@@ -71,6 +71,7 @@ const RegistrationForm = () => {
   // }, [response]);
 
   const onSubmit = async (data: PGFormData) => {
+    console.log(data);
     await execute(data);
   };
 
