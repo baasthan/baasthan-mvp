@@ -1,3 +1,4 @@
+import HouseRules from "@/components/paying-guest/registration/house-rules";
 import { redirect } from "next/navigation";
 import z from "zod";
 
@@ -16,7 +17,11 @@ const PayingGuestDetailsPage = async ({
     redirect("/");
   }
 
-  return <div className=" container mx-auto p-2"></div>;
+  return (
+    <div className=" container mx-auto p-2">
+      <HouseRules id={id} />
+    </div>
+  );
 };
 
 export default PayingGuestDetailsPage;
