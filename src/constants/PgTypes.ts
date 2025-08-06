@@ -12,9 +12,14 @@ export const createPGSchema = z.object({
   propertyName: z
     .string()
     .min(3, "Property name must be at least 3 characters"),
+  securityDeposite: z.number(),
+  maintaince: z.number(),
   availableOccupancyType: z
     .array(z.nativeEnum(PGOccupancyTypeEnum))
     .nonempty("At least one occupancy type is required"),
+  singleSharingPrice: z.number().optional(),
+  doubleSharingPrice: z.number().optional(),
+  trippleShareingPrice: z.number().optional(),
   genderPolicy: z.nativeEnum(PGGenderPolicyEnum),
   startingPrice: z.coerce
     .number()
