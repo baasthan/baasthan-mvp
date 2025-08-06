@@ -63,7 +63,7 @@ const PayingGuestDetailsPage = async ({
               <p className="font-semibold">Security Deposite</p>
               <p className="text-primary">
                 {payingGuestInfo.securityDeposite.toNumber() !== 0
-                  ? `Rs. {payingGuestInfo.securityDeposite.toNumber()}`
+                  ? `₹${payingGuestInfo.securityDeposite.toNumber()}`
                   : "N/A"}
               </p>
             </div>
@@ -71,7 +71,7 @@ const PayingGuestDetailsPage = async ({
               <p className="font-semibold">Maintaince</p>
               <p className="text-primary">
                 {payingGuestInfo.maintaince.toNumber() !== 0
-                  ? `Rs.{payingGuestInfo.maintaince.toNumber()}`
+                  ? `₹${payingGuestInfo.maintaince.toNumber()}`
                   : "N/A"}
               </p>
             </div>
@@ -160,7 +160,7 @@ const PayingGuestDetailsPage = async ({
         </div>
         <div id="host-details" className="flex flex-col gap-2">
           <h3 className="text-lg font-medium ">Host Details</h3>
-          <div className="bg-secondary flex flex-row items-center gap-2 w-full md:w-xs rounded-md px-4 py-2 ">
+          <div className="bg-secondary flex flex-row items-center gap-2 w-full md:w-xs rounded-md px-4 py-2 shadow-sm hover:shadow-2xl">
             <Avatar className=" size-10">
               <AvatarFallback>
                 {getInitials(payingGuestInfo.user.name)}
