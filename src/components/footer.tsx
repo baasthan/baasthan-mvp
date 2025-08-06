@@ -98,9 +98,12 @@ export default function Footer() {
                 </a>
               </li>
               <li>
-                <a href="#" className="hover:text-white transition-colors">
+                <Link
+                  href="/terms-conditions"
+                  className="hover:text-white transition-colors"
+                >
                   Terms of Service
-                </a>
+                </Link>
               </li>
               <li>
                 <a href="#" className="hover:text-white transition-colors">
