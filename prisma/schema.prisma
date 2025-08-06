@@ -195,7 +195,13 @@ model PayingGuestInfo {
   hostId       String
   user         User   @relation(fields: [hostId], references: [id], onDelete: NoAction)
 
+  securityDeposite       Decimal               @default(0.00) @db.Decimal(10, 2)
+  maintaince             Decimal               @default(0.00) @db.Decimal(10, 2)
   availableOccupancyType PGOccupancyTypeEnum[]
+  singleShareingPrice    Decimal               @default(0.00) @db.Decimal(10, 2)
+  doubleSharingPrice     Decimal               @default(0.00) @db.Decimal(10, 2)
+  trippleShareingPrice   Decimal               @default(0.00) @db.Decimal(10, 2)
+
   genderPolicy           PGGenderPolicyEnum      @default(coEd)
   startingPrice          Decimal                 @db.Decimal(10, 2)
   baasthanVerified       Boolean                 @default(false)

@@ -107,12 +107,12 @@ export const getPayingGuestInfoByFilters = async (
   take?: number,
   skip?: number
 ): Promise<PayingGuestInfoWithPublicUser[] | null> => {
-  if (!take) {
-    take = 10;
-  }
-  if (!skip) {
-    skip = 0;
-  }
+  // if (!take) {
+  //   take = 10;
+  // }
+  // if (!skip) {
+  //   skip = 0;
+  // }
   try {
     const prisma = new PrismaClient({
       log: ["error"],
@@ -149,7 +149,9 @@ export const getPayingGuestInfoById = async (
   id: string
 ): Promise<PayingGuestInfoWithPublicUser | null> => {
   try {
-    const prisma = new PrismaClient({ log: ["error"] });
+    const prisma = new PrismaClient({
+      log: ["error", "info", "query", "warn"],
+    });
     const payingGuestInfo = await prisma.payingGuestInfo.findUnique({
       where: {
         id,
