@@ -198,7 +198,7 @@ model PayingGuestInfo {
   securityDeposite       Decimal               @default(0.00) @db.Decimal(10, 2)
   maintaince             Decimal               @default(0.00) @db.Decimal(10, 2)
   availableOccupancyType PGOccupancyTypeEnum[]
-  singleShareingPrice    Decimal               @default(0.00) @db.Decimal(10, 2)
+  singleSharingPrice     Decimal               @default(0.00) @db.Decimal(10, 2)
   doubleSharingPrice     Decimal               @default(0.00) @db.Decimal(10, 2)
   trippleShareingPrice   Decimal               @default(0.00) @db.Decimal(10, 2)
 
@@ -215,15 +215,16 @@ model PayingGuestInfo {
   meals                  PGMealsEnum
   noticePeriodInDays     Int                     @db.SmallInt
 
-  addressLine1      String
-  addressLine2      String?
-  locality          String
-  city              String
-  district          String
-  state             String
-  country           String
-  pincode           String
-  PayingGuestImages PayingGuestImages[]
+  addressLine1          String
+  addressLine2          String?
+  locality              String
+  city                  String
+  district              String
+  state                 String
+  country               String
+  pincode               String
+  PayingGuestImages     PayingGuestImages[]
+  PayingGuestHouseRules PayingGuestHouseRules[]
 }
 
 model PayingGuestImages {
@@ -231,6 +232,13 @@ model PayingGuestImages {
   url           String
   payingGuestId String          @db.Uuid
   payingGuest   PayingGuestInfo @relation(fields: [payingGuestId], references: [id], onDelete: Cascade)
+}
+
+model PayingGuestHouseRules {
+  id            BigInt          @id @default(autoincrement())
+  payingGuestId String          @db.Uuid
+  houseRuleHtml String
+  propertyInfo  PayingGuestInfo @relation(fields: [payingGuestId], references: [id], onDelete: Cascade)
 }
 
 model Location {

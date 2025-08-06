@@ -158,7 +158,7 @@ const PayingGuestDetailsPage = async ({
                   {occupancyType === "singleSharing" && (
                     <p>
                       Starting From ₹
-                      {payingGuestInfo.singleShareingPrice.toNumber()}/month
+                      {payingGuestInfo.singleSharingPrice.toNumber()}/month
                     </p>
                   )}
                   {occupancyType === "doubleSharing" && (
