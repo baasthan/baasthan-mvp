@@ -70,7 +70,7 @@ const OccupancyPolicy = ({ form }: OccupancyPolicyProps) => {
             )}
           />
 
-          <div className="grid grid-cols-3 gap-3">
+          <div className="grid grid-cols-1 md:grid-cols-3  gap-3">
             <div>
               {form
                 .watch("availableOccupancyType")
@@ -85,6 +85,7 @@ const OccupancyPolicy = ({ form }: OccupancyPolicyProps) => {
                         type="number"
                         {...field}
                         placeholder="Enter amount"
+                        value={field.value ?? "0"}
                       />
                       {fieldState.error ? (
                         <FormMessage />
@@ -110,6 +111,7 @@ const OccupancyPolicy = ({ form }: OccupancyPolicyProps) => {
                         type="number"
                         {...field}
                         placeholder="Enter amount"
+                        value={field.value ?? "0"}
                       />
                       {fieldState.error ? (
                         <FormMessage />
@@ -135,6 +137,7 @@ const OccupancyPolicy = ({ form }: OccupancyPolicyProps) => {
                         type="number"
                         {...field}
                         placeholder="Enter amount"
+                        value={field.value ?? "0"}
                       />
                       {fieldState.error ? (
                         <FormMessage />
