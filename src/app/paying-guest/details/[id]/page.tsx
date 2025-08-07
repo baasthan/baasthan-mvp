@@ -72,7 +72,7 @@ const PayingGuestDetailsPage = async ({
     authSession &&
     authSession.user &&
     (authSession.user.role === "hostUserRole" ||
-      authSession.user.role === "superAdminUser")
+      authSession.user.role === "superAdminRole")
       ? authSession.user.id
       : undefined;
 
@@ -80,6 +80,7 @@ const PayingGuestDetailsPage = async ({
     await getPayingGuestInfoById(id, userId);
 
   if (!payingGuestInfo) {
+    console.log(authSession?.user);
     return notFound();
   }
   return (
@@ -87,7 +88,7 @@ const PayingGuestDetailsPage = async ({
       <PayingGuestDetailsImage images={payingGuestInfo.PayingGuestImages} />
 
       <div id="pg-basic-details" className="flex flex-col gap-4 p-2 ">
-        <div className="flex flex-row justify-between ">
+        <div className="flex flex-col md:flex-row justify-between gap-4">
           <div>
             <h3 className="text-2xl text-primary font-semibold flex items-center gap-1">
               <Building2 size={16} />
