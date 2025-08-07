@@ -22,7 +22,17 @@ export type CreatePayingGuestPayload = Prisma.PayingGuestInfoCreateInput;
 
 export type SeriliazedPayingGuestInfoWithPublicUser = Omit<
   PayingGuestInfoWithPublicUser,
-  "startingPrice"
+  | "startingPrice"
+  | "maintaince"
+  | "securityDeposite"
+  | "singleSharingPrice"
+  | "doubleSharingPrice"
+  | "trippleShareingPrice"
 > & {
   startingPrice: number;
+  maintaince: number;
+  securityDeposite: number;
+  singleSharingPrice: number;
+  doubleSharingPrice: number;
+  trippleShareingPrice: number;
 };

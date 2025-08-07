@@ -28,6 +28,11 @@ export default async function Page() {
                 key={pgInfo.id}
                 {...pgInfo}
                 startingPrice={pgInfo.startingPrice.toNumber()}
+                maintaince={pgInfo.maintaince.toNumber()}
+                securityDeposite={pgInfo.securityDeposite.toNumber()}
+                singleSharingPrice={pgInfo.singleSharingPrice.toNumber()}
+                doubleSharingPrice={pgInfo.doubleSharingPrice.toNumber()}
+                trippleShareingPrice={pgInfo.trippleShareingPrice.toNumber()}
               />
             ))}
         </div>

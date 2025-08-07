@@ -15,6 +15,11 @@ export default async function Page() {
       ? payingGuestInfo.map((d) => ({
           ...d,
           startingPrice: d.startingPrice.toNumber(),
+          maintaince: d.maintaince.toNumber(),
+          securityDeposite: d.securityDeposite.toNumber(),
+          singleSharingPrice: d.singleSharingPrice.toNumber(),
+          doubleSharingPrice: d.doubleSharingPrice.toNumber(),
+          trippleShareingPrice: d.trippleShareingPrice.toNumber(),
         }))
       : [];
   return (
