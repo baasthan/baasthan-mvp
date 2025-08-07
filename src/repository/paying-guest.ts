@@ -127,6 +127,7 @@ export const getPayingGuestInfoByFilters = async (
       include: {
         user: {
           select: {
+            id: true,
             image: true,
             name: true,
           },
@@ -169,6 +170,7 @@ export const getPayingGuestInfoById = async (
         },
         user: {
           select: {
+            id: true,
             image: true,
             name: true,
           },

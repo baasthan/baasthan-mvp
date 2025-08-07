@@ -4,6 +4,7 @@ export type PayingGuestInfoWithPublicUser = Prisma.PayingGuestInfoGetPayload<{
   include: {
     user: {
       select: {
+        id: true;
         image: true;
         name: true;
       };

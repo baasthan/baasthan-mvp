@@ -1,39 +1,42 @@
 import { auth } from "@/lib/auth";
 import { saveHouseRulesToDB } from "@/repository/houseRules";
+import { getPayingGuestInfoById } from "@/repository/paying-guest";
 import { NextRequest, NextResponse } from "next/server";
 import z from "zod";
 
-// GET Handler - Fetch house rules for a given PG Registration ID
-export async function GET(
-  request: NextRequest,
-  context: { params: { id: string } }
-) {
-  const { id } = context.params;
+// POST Handler - Update/Add house rules for a given PG Registration ID
+export async function POST(request: NextRequest) {
+  const pathName = request.nextUrl.pathname;
+  const segments = pathName.split("/");
+  const id = segments[4];
 
-  // Example: Fetch from DB (replace with real DB call)
-  const houseRules = await fetchHouseRulesFromDB(id);
+  const { success: isValidUUID } = z.string().uuid().safeParse(id);
 
-  if (!houseRules) {
+  if (!isValidUUID) {
     return NextResponse.json(
-      { error: "House Rules not found" },
-      { status: 404 }
+      { message: "Invalid Id", success: false },
+      { status: 400 }
     );
   }
 
-  return NextResponse.json({ houseRules });
-}
+  const body = await request.json();
 
-// POST Handler - Update/Add house rules for a given PG Registration ID
-export async function POST(
-  request: NextRequest,
-  { params }: { params: { id: string } }
-) {
+  if (!body.houseRules) {
+    return NextResponse.json(
+      { message: "Invalid House Rules", success: false },
+      { status: 400 }
+    );
+  }
+
   const session = await auth.api.getSession({
     headers: request.headers,
   });
 
   if (!(session && session.user.id)) {
-    return NextResponse.json({}, { status: 401 });
+    return NextResponse.json(
+      { message: "Unauthenticated", success: false },
+      { status: 401 }
+    );
   }
 
   const { success: hasPermission, error } = await auth.api.userHasPermission({
@@ -46,20 +49,25 @@ export async function POST(
   });
 
   if (!hasPermission || error) {
-    return NextResponse.json({}, { status: 403 });
+    return NextResponse.json(
+      { message: "Access Denied", success: false },
+      { status: 403 }
+    );
   }
 
-  const { id } = await params;
-  const body = await request.json();
-  // console.log("ID===>", id);
-  const { success } = z.string().uuid().safeParse(id);
-  if (!success) {
-    return NextResponse.json({ message: "Invalid Id" }, { status: 400 });
-  }
-  if (!body.houseRules) {
+  const payingGuestInfo = await getPayingGuestInfoById(id);
+
+  if (!payingGuestInfo) {
     return NextResponse.json(
-      { message: "Invalid House Rules" },
-      { status: 400 }
+      { message: "Not Found", success: false },
+      { status: 404 }
+    );
+  }
+
+  if (payingGuestInfo.user.id !== session.user.id) {
+    return NextResponse.json(
+      { message: "Access Denied", success: false },
+      { status: 403 }
     );
   }
 
@@ -72,7 +80,10 @@ export async function POST(
       data: { id: result.id.toString() },
     });
   }
-  return NextResponse.json({}, { status: 500 });
+  return NextResponse.json(
+    { message: "Unable to save House Rules", success: false },
+    { status: 500 }
+  );
 }
 
 // Example Mock Functions (replace with actual DB queries)

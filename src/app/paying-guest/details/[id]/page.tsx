@@ -13,8 +13,9 @@ import {
 } from "@/repository/paying-guest";
 import { PayingGuestInfoWithPublicUser } from "@/types/paying-guest";
 import getInitials from "@/utils/getInitials";
-import { Building2, MapPin, PhoneCall, Send } from "lucide-react";
+import { ArrowRight, Building2, MapPin, PhoneCall, Send } from "lucide-react";
 import { Metadata, ResolvingMetadata } from "next";
+import Link from "next/link";
 import { redirect } from "next/navigation";
 import z from "zod";
 
@@ -216,6 +217,18 @@ const PayingGuestDetailsPage = async ({
                 </Button>
               </div>
             </div>
+          </div>
+        </div>
+        <div id="terms-and-conditions" className=" flex flex-col gap-2">
+          <h3 className="text-lg font-medium ">
+            Terms and Conditions of Property
+          </h3>
+          <div>
+            <Button asChild variant={"secondary"}>
+              <Link href={`/paying-guest/details/${id}/house-rules`}>
+                House Rules <ArrowRight />
+              </Link>
+            </Button>
           </div>
         </div>
       </div>

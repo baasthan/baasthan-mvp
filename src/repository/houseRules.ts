@@ -32,3 +32,18 @@ export async function saveHouseRulesToDB(id: string, houseRules: string) {
     return null;
   }
 }
+
+export const getHouseRulesById = async (id: string) => {
+  try {
+    const client = new PrismaClient();
+    const houseRule = await client.payingGuestHouseRules.findUniqueOrThrow({
+      where: {
+        payingGuestId: id,
+      },
+    });
+
+    return houseRule;
+  } catch (error) {
+    return null;
+  }
+};
