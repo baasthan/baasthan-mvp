@@ -71,6 +71,7 @@ const Verification = ({ form }: VerificationProps) => {
                       placeholder="Enter RERA Registration Number"
                       className="h-12 border-gray-300 focus:border-blue-500 focus:ring-blue-500 "
                       {...field}
+                      value={field.value ?? ""}
                     />
                   </FormControl>
                   <FormMessage />

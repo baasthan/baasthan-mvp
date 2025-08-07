@@ -31,6 +31,10 @@ const RegistrationForm = () => {
     mode: "onChange",
     defaultValues: {
       reraRegistered: false,
+      reraRegistrationNumber: "",
+      singleSharingPrice: 0,
+      doubleSharingPrice: 0,
+      trippleShareingPrice: 0,
       amenities: [],
       preferedTenants: [],
       availableOccupancyType: [],
@@ -61,6 +65,8 @@ const RegistrationForm = () => {
       }
     }
   }, [isSuccess]);
+
+  console.log(form.formState.isValid, form.formState.validatingFields);
 
   // useEffect(() => {
   //   if (!isSuccess || error) {

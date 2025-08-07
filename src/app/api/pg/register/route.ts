@@ -1,4 +1,10 @@
+import { createPGSchema } from "@/constants/PgTypes";
 import { auth } from "@/lib/auth";
+import {
+  savePayingGuest,
+  savePayingGuestImages,
+} from "@/repository/paying-guest";
+import { CreatePayingGuestPayload } from "@/types/paying-guest";
 import { uploadImageToSupabase } from "@/utils/uploadImageToSupabase";
 import { NextResponse } from "next/server";
 import {
@@ -49,6 +55,10 @@ export async function POST(req: Request) {
     const availableOccupancyType = getArray(
       "availableOccupancyType"
     ) as PGOccupancyTypeEnum[];
+    const securityDeposite = parseFloat(
+      formData.get("securityDeposite") as string
+    );
+    const maintaince = parseFloat(formData.get("maintaince") as string);
     const genderPolicy = formData.get("genderPolicy") as PGGenderPolicyEnum;
     const startingPrice = parseFloat(formData.get("startingPrice") as string);
     const baasthanVerified = getBoolean("baasthanVerified");
@@ -88,55 +98,73 @@ export async function POST(req: Request) {
     const uploadedUrls = await uploadImageToSupabase(images, bucket, "upload");
 
     // DB transaction
+
+    const {
+      success,
+      data: validatedData,
+      error: payloadError,
+    } = createPGSchema.safeParse({
+      propertyName,
+      availableOccupancyType,
+      genderPolicy,
+      startingPrice,
+      baasthanVerified,
+      reraRegistered,
+      reraRegistrationNumber,
+      amenities,
+      preferedTenants,
+      washroomType,
+      floors,
+      operatingSince,
+      meals,
+      noticePeriodInDays,
+      addressLine1,
+      addressLine2,
+      locality,
+      city,
+      district,
+      state,
+      country,
+      pincode,
+      singleSharingPrice,
+      doubleSharingPrice,
+      trippleShareingPrice,
+      maintaince,
+      securityDeposite,
+    });
+    if (!success) {
+      return NextResponse.json(
+        { message: "Bad Payload", error: payloadError },
+        { status: 400 }
+      );
+    }
+    const data: CreatePayingGuestPayload = {
+      ...validatedData,
+      user: {
+        connect: { id: hostId },
+      },
+    };
     const createdProperty = await db.$transaction(async (tx) => {
-      const property = await tx.payingGuestInfo.create({
+      const property = await savePayingGuest(data, tx);
+      if (property) {
+        await savePayingGuestImages(
+          uploadedUrls.map((url) => ({ url, payingGuestId: property.id })),
+          tx
+        );
+
+        return property;
+      }
+      return null;
+    });
+    if (createdProperty) {
+      return NextResponse.json({
+        success: true,
+        message: "Property is listed successfully",
         data: {
-          propertyName,
-          hostId,
-          availableOccupancyType,
-          genderPolicy,
-          startingPrice,
-          baasthanVerified,
-          reraRegistered,
-          reraRegistrationNumber,
-          amenities,
-          preferedTenants,
-          washroomType,
-          floors,
-          operatingSince,
-          meals,
-          noticePeriodInDays,
-          addressLine1,
-          addressLine2,
-          locality,
-          city,
-          district,
-          state,
-          country,
-          pincode,
-          singleSharingPrice,
-          doubleSharingPrice,
-          trippleShareingPrice,
+          id: createdProperty.id,
         },
       });
-
-      await tx.payingGuestImages.createMany({
-        data: uploadedUrls.map((url) => ({
-          url,
-          payingGuestId: property.id,
-        })),
-      });
-
-      return property;
-    });
-
-    return NextResponse.json({
-      success: true,
-      message: "Property is listed successfully",
-      data: {
-        id: createdProperty.id,
-      },
-    });
+    }
   } catch (error: unknown) {
     console.error("Transaction failed:", error);
     const errorMessage =

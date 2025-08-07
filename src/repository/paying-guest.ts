@@ -5,8 +5,12 @@ import { PGOccupancyTypeEnumMap } from "@/constants/PGOccupancyType";
 import { PGPreferedTenantsEnumMap } from "@/constants/PGPreferedTenantsType";
 import { PGWashroomEnumMap } from "@/constants/PGWashroomType";
 import { FilterConfig } from "@/types/filters";
-import { PayingGuestInfoWithPublicUser } from "@/types/paying-guest";
+import {
+  CreatePayingGuestPayload,
+  PayingGuestInfoWithPublicUser,
+} from "@/types/paying-guest";
 import { Prisma, PrismaClient } from "../../prisma/generated/prisma";
+import { DefaultArgs } from "../../prisma/generated/prisma/runtime/library";
 
 export const getPayingGuestFilters = async () => {
   const publicFilters: FilterConfig[] = [];
@@ -213,6 +217,50 @@ export const getUnverifiedPayingGuestInfoById = async (
     return payingGuestInfo;
   } catch (error) {
     console.error("Unable to fetch paying guest by id");
+    console.debug(error);
+    return null;
+  }
+};
+
+export const savePayingGuest = async (
+  data: CreatePayingGuestPayload,
+  tx: Omit<
+    PrismaClient<Prisma.PrismaClientOptions, never, DefaultArgs>,
+    "$connect" | "$disconnect" | "$on" | "$transaction" | "$use" | "$extends"
+  >
+) => {
+  try {
+    const createdProperty = await tx.payingGuestInfo.create({
+      data,
+      select: { id: true },
+    });
+    if (createdProperty) {
+      return createdProperty;
+    }
+    return null;
+  } catch (error) {
+    console.error("Unable to create Paying Guest");
+    console.debug(error);
+    return null;
+  }
+};
+
+export const savePayingGuestImages = async (
+  data:
+    | Prisma.PayingGuestImagesCreateManyInput
+    | Prisma.PayingGuestImagesCreateManyInput[],
+  tx: Omit<
+    PrismaClient<Prisma.PrismaClientOptions, never, DefaultArgs>,
+    "$connect" | "$disconnect" | "$on" | "$transaction" | "$use" | "$extends"
+  >
+) => {
+  try {
+    await tx.payingGuestImages.createMany({
+      data,
+    });
+    return true;
+  } catch (error) {
+    console.error("Unable to save images");
     console.debug(error);
     return null;
   }

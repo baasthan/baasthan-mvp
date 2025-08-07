@@ -18,6 +18,8 @@ export type PayingGuestInfoWithPublicUser = Prisma.PayingGuestInfoGetPayload<{
   };
 }>;
 
+export type CreatePayingGuestPayload = Prisma.PayingGuestInfoCreateInput;
+
 export type SeriliazedPayingGuestInfoWithPublicUser = Omit<
   PayingGuestInfoWithPublicUser,
   "startingPrice"
