@@ -2,7 +2,7 @@ import AccessDenied from "@/app/access-denied/page";
 import HouseRules from "@/components/paying-guest/registration/house-rules";
 import { APP_CONFIG, AUTH_CONFIG } from "@/config";
 import { auth } from "@/lib/auth";
-import { getPayingGuestInfoById } from "@/repository/paying-guest";
+import { getUnverifiedPayingGuestInfoById } from "@/repository/paying-guest";
 import { headers } from "next/headers";
 import { notFound, redirect } from "next/navigation";
 import z from "zod";
@@ -44,7 +44,7 @@ const PayingGuestDetailsPage = async ({
     return AccessDenied();
   }
 
-  const payingGuestInfo = await getPayingGuestInfoById(id);
+  const payingGuestInfo = await getUnverifiedPayingGuestInfoById(id);
 
   if (!payingGuestInfo) {
     return notFound();
@@ -60,7 +60,7 @@ const PayingGuestDetailsPage = async ({
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           <div className="text-center">
             <h1 className="text-3xl font-bold text-primary-foreground mb-2">
-              Register Your PG
+              Register Your PG | House Rules
             </h1>
             <p className="text-lg text-muted max-w-2xl mx-auto">
               List your paying guest accommodation and connect with potential

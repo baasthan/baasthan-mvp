@@ -1,6 +1,6 @@
 import { auth } from "@/lib/auth";
 import { saveHouseRulesToDB } from "@/repository/houseRules";
-import { getPayingGuestInfoById } from "@/repository/paying-guest";
+import { getUnverifiedPayingGuestInfoById } from "@/repository/paying-guest";
 import { NextRequest, NextResponse } from "next/server";
 import z from "zod";
 
@@ -55,7 +55,7 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  const payingGuestInfo = await getPayingGuestInfoById(id);
+  const payingGuestInfo = await getUnverifiedPayingGuestInfoById(id);
 
   if (!payingGuestInfo) {
     return NextResponse.json(

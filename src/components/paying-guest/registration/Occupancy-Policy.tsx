@@ -12,6 +12,7 @@ import { PGOccupancyTypeEnumMap } from "@/constants/PGOccupancyType";
 import { PGFormData } from "@/constants/PgTypes";
 import { PGWashroomEnumMap } from "@/constants/PGWashroomType";
 
+import { Input } from "@/components/ui/input";
 import {
   Select,
   SelectContent,
@@ -29,7 +30,6 @@ import {
 } from "../../../../prisma/generated/prisma";
 import { renderCheckboxGroup } from "./Checkbox-Group";
 import { SectionHeader } from "./Section-Header";
-import { Input } from "@/components/ui/input";
 
 interface OccupancyPolicyProps {
   form: UseFormReturn<PGFormData>;
@@ -70,29 +70,82 @@ const OccupancyPolicy = ({ form }: OccupancyPolicyProps) => {
             )}
           />
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-            {form.watch("availableOccupancyType")?.map((occupancyType) => (
-              <FormField
-                key={occupancyType}
-                control={form.control}
-                name={`${occupancyType === 'tripleSharing' ? 'trippleShareing' : 'tripleSharing'}Price` as keyof PGFormData}
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="text-sm font-medium text-gray-700">
-                      Rent for {PGOccupancyTypeEnumMap[occupancyType]}
-                    </FormLabel>
-                    <FormControl>
+          <div className="grid grid-cols-3 gap-3">
+            <div>
+              {form
+                .watch("availableOccupancyType")
+                .includes("singleSharing") && (
+                <FormField
+                  control={form.control}
+                  name="singleSharingPrice"
+                  render={({ field, fieldState }) => (
+                    <FormItem>
+                      <FormLabel>Enter Cost for Single Sharing</FormLabel>
                       <Input
+                        type="number"
                         {...field}
-                        onChange={(e) => field.onChange(Number(e.target.value))}
-                        placeholder={`Enter rent for ${PGOccupancyTypeEnumMap[occupancyType]}`}
+                        placeholder="Enter amount"
                       />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            ))}
+                      {fieldState.error ? (
+                        <FormMessage />
+                      ) : (
+                        <p className="text-sm">&nbsp;</p>
+                      )}
+                    </FormItem>
+                  )}
+                />
+              )}
+            </div>
+            <div>
+              {form
+                .watch("availableOccupancyType")
+                .includes("doubleSharing") && (
+                <FormField
+                  control={form.control}
+                  name="doubleSharingPrice"
+                  render={({ field, fieldState }) => (
+                    <FormItem>
+                      <FormLabel>Enter Cost for Double Sharing</FormLabel>
+                      <Input
+                        type="number"
+                        {...field}
+                        placeholder="Enter amount"
+                      />
+                      {fieldState.error ? (
+                        <FormMessage />
+                      ) : (
+                        <p className="text-sm">&nbsp;</p>
+                      )}
+                    </FormItem>
+                  )}
+                />
+              )}
+            </div>
+            <div>
+              {form
+                .watch("availableOccupancyType")
+                .includes("tripleSharing") && (
+                <FormField
+                  control={form.control}
+                  name="trippleShareingPrice"
+                  render={({ field, fieldState }) => (
+                    <FormItem>
+                      <FormLabel>Enter Cost for Triple Sharing</FormLabel>
+                      <Input
+                        type="number"
+                        {...field}
+                        placeholder="Enter amount"
+                      />
+                      {fieldState.error ? (
+                        <FormMessage />
+                      ) : (
+                        <p className="text-sm">&nbsp;</p>
+                      )}
+                    </FormItem>
+                  )}
+                />
+              )}
+            </div>
           </div>
 
           <Separator className="my-8" />
