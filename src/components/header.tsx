@@ -1,35 +1,38 @@
 "use client";
 import { Button } from "@/components/ui/button";
 import { APP_CONFIG } from "@/config";
-import { authClient, signOut, useSession } from "@/lib/auth-client";
+import { signOut, useSession } from "@/lib/auth-client";
 import getInitials from "@/utils/getInitials";
 import { Menu, X } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { Suspense, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import AuthButtons from "./auth-buttons";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 
 const Header = () => {
+  const [isHostUser, setIsHostUser] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const { data: session } = useSession();
-  const hasHostDashboardAccess = authClient.admin.checkRolePermission({
-    permissions: {
-      property: ["insert", "update"],
-    },
-    role: "hostUserRole",
-  });
+  // const hasHostDashboardAccess = authClient.admin.checkRolePermission({
+  //   permissions: {
+  //     property: ["insert"],
+  //   },
+  //   role: "hostUserRole",
+  // });
 
-  // useEffect(() => {
-  //   if (session && session.user && session.user.role) {
-  //     const user = session.user as typeof session.user & { role?: string };
-  //     const role = user.role;
-  //     if (role === "hostUserRole") {
-  //       setIsHostUser(true);
-  //     }
-  //   }
-  // }, [session]);
+  // console.log(hasHostDashboardAccess);
+
+  useEffect(() => {
+    if (session && session.user && session.user.role) {
+      const user = session.user as typeof session.user & { role?: string };
+      const role = user.role;
+      if (role === "hostUserRole" || role === "superAdminRole") {
+        setIsHostUser(true);
+      }
+    }
+  }, [session]);
 
   return (
     <header
@@ -64,7 +67,7 @@ const Header = () => {
                 Paying Guests
               </Link>
             </Button>
-            {hasHostDashboardAccess && (
+            {isHostUser && (
               <Button variant={"link"} asChild>
                 <Link href="/host/dashboard" prefetch>
                   Dashboard
@@ -95,14 +98,6 @@ const Header = () => {
             <div className="flex flex-col space-y-0.5 px-2">
               {/* Common Links for all users */}
               <Link
-                href="/"
-                prefetch
-                className="flex items-center text-sm text-muted-foreground hover:text-primary font-medium rounded-md px-3 py-2.5 hover:bg-accent/50"
-                onClick={() => setMobileMenuOpen(false)}
-              >
-                Home
-              </Link>
-              <Link
                 href="/paying-guest"
                 prefetch
                 className="flex items-center text-sm text-muted-foreground hover:text-primary font-medium rounded-md px-3 py-2.5 hover:bg-accent/50"
@@ -110,14 +105,14 @@ const Header = () => {
               >
                 Paying Guest
               </Link>
-              <Link
+              {/* <Link
                 href="/about-us"
                 prefetch
                 className="flex items-center text-sm text-muted-foreground hover:text-primary font-medium rounded-md px-3 py-2.5 hover:bg-accent/50"
                 onClick={() => setMobileMenuOpen(false)}
               >
                 About Us
-              </Link>
+              </Link> */}
               <Link
                 href="/contact"
                 prefetch
@@ -158,7 +153,7 @@ const Header = () => {
                     </div>
 
                     {/* User Navigation */}
-                    {hasHostDashboardAccess && (
+                    {isHostUser && (
                       <Link
                         href="/host/dashboard"
                         prefetch

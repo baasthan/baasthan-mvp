@@ -19,10 +19,12 @@ const page = async () => {
     headers: await headers(),
     body: {
       permissions: {
-        property: ["insert", "update"],
+        property: ["insert"],
       },
     },
   });
+
+  console.log("success page==>", success);
   if (!success || error) {
     return AccessDenied();
   }
