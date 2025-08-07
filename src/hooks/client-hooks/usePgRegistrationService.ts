@@ -1,5 +1,5 @@
-import useService from "../useService";
 import type { PGFormData } from "@/constants/PgTypes";
+import useService from "../useService";
 
 const usePGRegistarationService = () => {
   const REGISTER_PG_DETAILS_API = `/api/pg/register`;
@@ -29,21 +29,24 @@ const usePGRegistarationService = () => {
     });
 
     if (!response.ok) {
-        throw new Error("Unable to register pg")
+      throw new Error("Unable to register pg");
     }
 
     const jsonResponse = (await response.json()) as {
-        success: boolean;
-        message: string;
-    }
-    return jsonResponse
+      success: boolean;
+      message: string;
+      data: {
+        id: string;
+      };
+    };
+    return jsonResponse;
   };
 
   const res = useService({
     callback: (formData: PGFormData) => {
-        return registerPgDetails(formData)
-    }
-  })
+      return registerPgDetails(formData);
+    },
+  });
   return res;
 };
 

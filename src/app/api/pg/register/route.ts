@@ -73,6 +73,15 @@ export async function POST(req: Request) {
     const state = getString("state");
     const country = getString("country");
     const pincode = getString("pincode");
+    const singleSharingPrice = parseFloat(
+      formData.get("singleSharingPrice") as string
+    );
+    const doubleSharingPrice = parseFloat(
+      formData.get("doubleSharingPrice") as string
+    );
+    const trippleShareingPrice = parseFloat(
+      formData.get("trippleShareingPrice") as string
+    );
 
     //  Upload Image to supabase
     const bucket = "paying-guest";
@@ -105,6 +114,9 @@ export async function POST(req: Request) {
           state,
           country,
           pincode,
+          singleSharingPrice,
+          doubleSharingPrice,
+          trippleShareingPrice,
         },
       });
 
@@ -121,6 +133,9 @@ export async function POST(req: Request) {
     return NextResponse.json({
       success: true,
       message: "Property is listed successfully",
+      data: {
+        id: createdProperty.id,
+      },
     });
   } catch (error: unknown) {
     console.error("Transaction failed:", error);

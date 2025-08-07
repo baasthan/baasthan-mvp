@@ -184,3 +184,36 @@ export const getPayingGuestInfoById = async (
     return null;
   }
 };
+
+export const getUnverifiedPayingGuestInfoById = async (
+  id: string
+): Promise<PayingGuestInfoWithPublicUser | null> => {
+  try {
+    const prisma = new PrismaClient();
+    const payingGuestInfo = await prisma.payingGuestInfo.findUnique({
+      where: {
+        id,
+      },
+      include: {
+        PayingGuestImages: {
+          select: {
+            id: true,
+            url: true,
+          },
+        },
+        user: {
+          select: {
+            id: true,
+            image: true,
+            name: true,
+          },
+        },
+      },
+    });
+    return payingGuestInfo;
+  } catch (error) {
+    console.error("Unable to fetch paying guest by id");
+    console.debug(error);
+    return null;
+  }
+};

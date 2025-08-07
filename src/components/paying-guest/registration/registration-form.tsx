@@ -13,6 +13,7 @@ import { PGFormData, createPGSchema } from "@/constants/PgTypes";
 import usePGRegistarationService from "@/hooks/client-hooks/usePgRegistrationService";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Camera } from "lucide-react";
+import { redirect } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -51,6 +52,9 @@ const RegistrationForm = () => {
           response &&
             (response?.message || "Pg has been registered successfully")
         );
+        if (response && response.data) {
+          redirect(`/register-pg/${response.data.id}/house-rules`);
+        }
       } else {
         toast.error(error);
         console.error(error);
