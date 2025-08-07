@@ -6,7 +6,6 @@ import { cn } from "@/lib/utils";
 import getInitials from "@/utils/getInitials";
 import { DropdownMenuGroup } from "@radix-ui/react-dropdown-menu";
 import dynamic from "next/dynamic";
-import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
@@ -123,9 +122,7 @@ const AuthButtons = ({
               </div>
             </div>
           </DropdownMenuGroup>
-          <Button variant={"link"} asChild>
-            <Link href="/profile">View Profile</Link>
-          </Button>
+
           <Button
             variant="destructive"
             className="w-full"

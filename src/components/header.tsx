@@ -1,7 +1,7 @@
 "use client";
 import { Button } from "@/components/ui/button";
 import { APP_CONFIG } from "@/config";
-import { signOut, useSession } from "@/lib/auth-client";
+import { authClient, signOut, useSession } from "@/lib/auth-client";
 import getInitials from "@/utils/getInitials";
 import { Menu, X } from "lucide-react";
 import Image from "next/image";
@@ -14,6 +14,22 @@ const Header = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const { data: session } = useSession();
+  const hasHostDashboardAccess = authClient.admin.checkRolePermission({
+    permissions: {
+      property: ["insert", "update"],
+    },
+    role: "hostUserRole",
+  });
+
+  // useEffect(() => {
+  //   if (session && session.user && session.user.role) {
+  //     const user = session.user as typeof session.user & { role?: string };
+  //     const role = user.role;
+  //     if (role === "hostUserRole") {
+  //       setIsHostUser(true);
+  //     }
+  //   }
+  // }, [session]);
 
   return (
     <header
@@ -48,6 +64,14 @@ const Header = () => {
                 Paying Guests
               </Link>
             </Button>
+            {hasHostDashboardAccess && (
+              <Button variant={"link"} asChild>
+                <Link href="/host/dashboard" prefetch>
+                  Dashboard
+                </Link>
+              </Button>
+            )}
+
             <Suspense>
               <AuthButtons />
             </Suspense>
@@ -134,33 +158,36 @@ const Header = () => {
                     </div>
 
                     {/* User Navigation */}
-                    <Link
-                      href="/dashboard"
-                      prefetch
-                      className="flex items-center text-sm text-muted-foreground hover:text-primary font-medium rounded-md px-3 py-2.5 hover:bg-accent/50"
-                      onClick={() => setMobileMenuOpen(false)}
-                    >
-                      <span className="mr-2">
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="16"
-                          height="16"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          stroke="currentColor"
-                          strokeWidth="2"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                        >
-                          <rect width="7" height="9" x="3" y="3" rx="1" />
-                          <rect width="7" height="5" x="14" y="3" rx="1" />
-                          <rect width="7" height="9" x="14" y="12" rx="1" />
-                          <rect width="7" height="5" x="3" y="16" rx="1" />
-                        </svg>
-                      </span>
-                      Dashboard
-                    </Link>
-                    <Link
+                    {hasHostDashboardAccess && (
+                      <Link
+                        href="/host/dashboard"
+                        prefetch
+                        className="flex items-center text-sm text-muted-foreground hover:text-primary font-medium rounded-md px-3 py-2.5 hover:bg-accent/50"
+                        onClick={() => setMobileMenuOpen(false)}
+                      >
+                        <span className="mr-2">
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="16"
+                            height="16"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="2"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                          >
+                            <rect width="7" height="9" x="3" y="3" rx="1" />
+                            <rect width="7" height="5" x="14" y="3" rx="1" />
+                            <rect width="7" height="9" x="14" y="12" rx="1" />
+                            <rect width="7" height="5" x="3" y="16" rx="1" />
+                          </svg>
+                        </span>
+                        Dashboard
+                      </Link>
+                    )}
+
+                    {/* <Link
                       href="/profile"
                       prefetch
                       className="flex items-center text-sm text-muted-foreground hover:text-primary font-medium rounded-md px-3 py-2.5 hover:bg-accent/50"
@@ -183,7 +210,7 @@ const Header = () => {
                         </svg>
                       </span>
                       Profile
-                    </Link>
+                    </Link> */}
                     <Button
                       variant="ghost"
                       className="w-full justify-start h-auto py-2.5 px-3 font-medium text-sm text-destructive hover:text-destructive hover:bg-destructive/10"

@@ -1,7 +1,14 @@
 import { PGAmenitiesEnumMap } from "@/constants/PGAmenitiesType";
 import { PGOccupancyTypeEnumMap } from "@/constants/PGOccupancyType";
 import { SeriliazedPayingGuestInfoWithPublicUser } from "@/types/paying-guest";
-import { Heart, MapPin, Share2, Star } from "lucide-react";
+import {
+  CircleCheck,
+  Heart,
+  MapPin,
+  OctagonAlert,
+  Share2,
+  Star,
+} from "lucide-react";
 import Link from "next/link";
 import { Button } from "../ui/button";
 import PayingGuestImageCarosel from "./paying-guest-image-carosel";
@@ -27,21 +34,15 @@ const PayingGuestCard = ({
         <div className="relative">
           <PayingGuestImageCarosel images={PayingGuestImages} />
           <div className="absolute top-3 left-3">
-            {baasthanVerified && (
-              <span className="bg-green-500 text-white px-2 py-1 rounded-md text-xs font-medium flex items-center">
-                <svg
-                  className="w-3 h-3 mr-1"
-                  fill="currentColor"
-                  viewBox="0 0 20 20"
-                >
-                  <path
-                    fillRule="evenodd"
-                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                    clipRule="evenodd"
-                  />
-                </svg>
-                Verified
-              </span>
+            {baasthanVerified ? (
+              <div className="bg-green-500 text-white px-2 py-1 rounded-md text-xs font-medium flex items-center gap-1">
+                <CircleCheck size={12} /> <span>Verified</span>
+              </div>
+            ) : (
+              <div className="bg-destructive text-white px-2 py-1 rounded-md text-xs font-medium flex items-center gap-1">
+                <OctagonAlert size={12} />
+                <span className="">Not Verified</span>
+              </div>
             )}
           </div>
           <div className="absolute top-3 right-3 flex space-x-2">
