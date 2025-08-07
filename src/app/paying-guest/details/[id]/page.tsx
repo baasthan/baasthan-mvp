@@ -7,6 +7,7 @@ import { PGMealsEnumMap } from "@/constants/PGMeals";
 import { PGOccupancyTypeEnumMap } from "@/constants/PGOccupancyType";
 import { PGPreferedTenantsEnumMap } from "@/constants/PGPreferedTenantsType";
 import { PGWashroomEnumMap } from "@/constants/PGWashroomType";
+import { auth } from "@/lib/auth";
 import {
   getPayingGuestInfoByFilters,
   getPayingGuestInfoById,
@@ -15,8 +16,9 @@ import { PayingGuestInfoWithPublicUser } from "@/types/paying-guest";
 import getInitials from "@/utils/getInitials";
 import { ArrowRight, Building2, MapPin, PhoneCall, Send } from "lucide-react";
 import { Metadata, ResolvingMetadata } from "next";
+import { headers } from "next/headers";
 import Link from "next/link";
-import { redirect } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import z from "zod";
 
 type Props = {
@@ -62,11 +64,23 @@ const PayingGuestDetailsPage = async ({
     redirect("/");
   }
 
+  const authSession = await auth.api.getSession({
+    headers: await headers(),
+  });
+
+  const userId =
+    authSession &&
+    authSession.user &&
+    (authSession.user.role === "hostUserRole" ||
+      authSession.user.role === "superAdminUser")
+      ? authSession.user.id
+      : undefined;
+
   const payingGuestInfo: PayingGuestInfoWithPublicUser | null =
-    await getPayingGuestInfoById(id);
+    await getPayingGuestInfoById(id, userId);
 
   if (!payingGuestInfo) {
-    return <div>Unable to find Property</div>;
+    return notFound();
   }
   return (
     <div className="container shadow-2xl rounded-md overflow-hidden mx-auto py-2 flex flex-col gap-4">

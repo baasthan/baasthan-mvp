@@ -154,16 +154,26 @@ export const getPayingGuestInfoByFilters = async (
 };
 
 export const getPayingGuestInfoById = async (
-  id: string
+  id: string,
+  hostId?: string
 ): Promise<PayingGuestInfoWithPublicUser | null> => {
   try {
     const prisma = new PrismaClient();
     const payingGuestInfo = await prisma.payingGuestInfo.findUnique({
       where: {
         id,
-        baasthanVerified: {
-          equals: true,
-        },
+        OR: [
+          {
+            baasthanVerified: {
+              equals: true,
+            },
+          },
+          {
+            hostId: {
+              equals: hostId,
+            },
+          },
+        ],
       },
       include: {
         PayingGuestImages: {
@@ -261,6 +271,41 @@ export const savePayingGuestImages = async (
     return true;
   } catch (error) {
     console.error("Unable to save images");
+    console.debug(error);
+    return null;
+  }
+};
+
+export const getPayingGuestByUserId = async (hostId: string) => {
+  try {
+    if (hostId) {
+      const client = new PrismaClient();
+      const payingGuests = await client.payingGuestInfo.findMany({
+        where: { hostId },
+        include: {
+          PayingGuestImages: {
+            select: {
+              id: true,
+              url: true,
+            },
+          },
+          user: {
+            select: {
+              id: true,
+              image: true,
+              name: true,
+            },
+          },
+        },
+      });
+      if (payingGuests && payingGuests.length !== 0) {
+        return payingGuests;
+      }
+      return null;
+    }
+    return null;
+  } catch (error) {
+    console.error("Unable to find hosts properties");
     console.debug(error);
     return null;
   }
