@@ -1,12 +1,12 @@
 import { PrismaClient } from "../../prisma/generated/prisma";
-import { getPayingGuestInfoById } from "./paying-guest";
+import { getUnverifiedPayingGuestInfoById } from "./paying-guest";
 
 export async function saveHouseRulesToDB(id: string, houseRules: string) {
   // Simulate saving to DB
 
   try {
     if (id) {
-      const payingGuest = await getPayingGuestInfoById(id);
+      const payingGuest = await getUnverifiedPayingGuestInfoById(id);
       if (!payingGuest) {
         throw new Error("No PG Available");
       }

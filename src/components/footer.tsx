@@ -83,9 +83,12 @@ export default function Footer() {
                 </a>
               </li>
               <li>
-                <a href="#" className="hover:text-white transition-colors">
+                <Link
+                  href="/register-pg"
+                  className="hover:text-white transition-colors"
+                >
                   List Property
-                </a>
+                </Link>
               </li>
             </ul>
           </div>

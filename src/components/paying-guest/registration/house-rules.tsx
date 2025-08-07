@@ -6,6 +6,7 @@ import { useDebounce } from "@/hooks/useDebounce";
 
 // import { Editor } from "@tinymce/tinymce-react";
 import dynamic from "next/dynamic";
+import { redirect } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 import { Editor as TinyMCEEditorType } from "tinymce";
@@ -42,6 +43,7 @@ const HouseRules = ({ id }: HouseRulesProps) => {
     if (isSuccess !== null) {
       if (isSuccess) {
         toast.success(response && "House Rules Created Successfully");
+        redirect("/");
       } else {
         toast.error(error);
         console.error(error);
