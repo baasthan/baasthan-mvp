@@ -22,6 +22,7 @@ import {
   tenantRole,
 } from "./access-controls/org-access-control";
 
+import { greetings } from "./emailTemplates/greetings";
 import { verifyEmail } from "./emailTemplates/verifyEmail";
 import { sendEmail } from "./send-email";
 const prisma = new PrismaClient();
@@ -30,6 +31,21 @@ export const auth = betterAuth({
   database: prismaAdapter(prisma, {
     provider: "postgresql",
   }),
+  databaseHooks: {
+    user: {
+      create: {
+        after: async (user) => {
+          const { subject, html, text } = greetings({ name: user.name });
+          await sendEmail({
+            to: user.email,
+            subject,
+            html,
+            text,
+          });
+        },
+      },
+    },
+  },
   plugins: [
     nextCookies(),
     haveIBeenPwned({

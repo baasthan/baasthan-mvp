@@ -1,3 +1,4 @@
+"use client";
 import useInterestedPGHostsService from "@/hooks/client-hooks/useInterestedPGHostsService";
 import { useSession } from "@/lib/auth-client";
 import { LoaderCircle } from "lucide-react";

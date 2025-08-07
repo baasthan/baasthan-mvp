@@ -1,4 +1,6 @@
 // app/api/pg-owner/route.ts
+import { hostingAcknowledgement } from "@/lib/emailTemplates/host-interested";
+import { sendEmail } from "@/lib/send-email";
 import { NextRequest, NextResponse } from "next/server";
 import { PrismaClient } from "../../../../prisma/generated/prisma";
 
@@ -46,7 +48,13 @@ export async function POST(req: NextRequest) {
     await prisma.pGHostInterested.create({
       data: { email, mobileNumber },
     });
-
+    const { subject, html, text } = hostingAcknowledgement({ name: email });
+    await sendEmail({
+      to: email,
+      subject,
+      html,
+      text,
+    });
     return NextResponse.json(
       {
         success: true,
