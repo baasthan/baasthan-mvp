@@ -12,7 +12,7 @@ const page = async () => {
   if (!session) {
     const searchParams = new URLSearchParams();
     searchParams.set(AUTH_CONFIG.SIGN_IN_PROMPT, "true");
-    redirect(`/?${AUTH_CONFIG.SIGN_IN_PROMPT}=true&redirect=/register-pg`);
+    redirect(`/?${AUTH_CONFIG.SIGN_IN_PROMPT}=true&redirect=/host/dashboard`);
   }
 
   const { error, success } = await auth.api.userHasPermission({

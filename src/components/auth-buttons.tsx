@@ -1,6 +1,6 @@
 "use client";
 
-import { APP_CONFIG, AUTH_CONFIG } from "@/config";
+import { AUTH_CONFIG } from "@/config";
 import { signOut, useSession } from "@/lib/auth-client";
 import { cn } from "@/lib/utils";
 import getInitials from "@/utils/getInitials";
@@ -79,7 +79,7 @@ const AuthButtons = ({
     await signOut();
 
     setOpenDialog(true);
-    router.push(`${APP_CONFIG.BASE_URL}/?${searchParams.toString()}`);
+    router.push(`/?${searchParams.toString()}`);
   };
 
   if (isPending) {
