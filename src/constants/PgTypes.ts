@@ -49,7 +49,7 @@ export const createPGSchema = z
     reraRegistered: z.boolean(),
     reraRegistrationNumber: z.string().nullable().optional(),
     amenities: z.array(z.nativeEnum(PGAmenitiesEnum)),
-    preferedTenants: z.array(z.nativeEnum(PGPreferedTenantsEnum)),
+    preferedTenants: z.array(z.nativeEnum(PGPreferedTenantsEnum)).nonempty("At least one tenants is required"),
     washroomType: z.nativeEnum(PGWashroomEnum),
     floors: z.coerce.number().min(1, "Must have at least 1 floor"),
     operatingSince: z.coerce
@@ -100,6 +100,20 @@ export const createPGSchema = z
           code: z.ZodIssueCode.custom,
         });
       }
+    }
+    const reraRegex =
+      /^[A-Z]{1,3}\/[A-Z]{2}\/RERA\/\d{3,4}\/\d{3}\/[A-Z]{2}\/\d{6,10}$|^[A-Z]{1,3}\d{5,12}$/;
+
+    if (
+      args.reraRegistered &&
+      (!args.reraRegistrationNumber ||
+        !reraRegex.test(args.reraRegistrationNumber))
+    ) {
+      ctx.addIssue({
+        path: ["reraRegistrationNumber"],
+        message: "Enter a valid RERA registration number",
+        code: z.ZodIssueCode.custom,
+      });
     }
   });
 
