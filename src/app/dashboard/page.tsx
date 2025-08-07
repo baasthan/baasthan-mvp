@@ -1,8 +1,8 @@
+import AccessDenied from "@/components/access-denied";
 import { APP_CONFIG, AUTH_CONFIG } from "@/config";
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
-import AccessDenied from "../access-denied/page";
 
 const Page = async () => {
   const session = await auth.api.getSession({
@@ -25,7 +25,7 @@ const Page = async () => {
   });
 
   if (!success || error) {
-    return AccessDenied();
+    return <AccessDenied />;
   }
 
   return <div>Dashboard</div>;

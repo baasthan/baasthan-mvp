@@ -1,10 +1,11 @@
+import AccessDenied from "@/components/access-denied";
+import ListYourPG from "@/components/home/list-your-pg";
 import RegistrationForm from "@/components/paying-guest/registration/registration-form";
 import { APP_CONFIG, AUTH_CONFIG } from "@/config";
 import { auth } from "@/lib/auth";
 
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
-import AccessDenied from "../access-denied/page";
 
 export default async function PGRegisterPage() {
   const session = await auth.api.getSession({
@@ -29,7 +30,7 @@ export default async function PGRegisterPage() {
   });
 
   if (error || !success) {
-    return AccessDenied();
+    return <AccessDenied listYouPg={<ListYourPG />} />;
   }
 
   return <RegistrationForm />;

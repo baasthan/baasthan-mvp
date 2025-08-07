@@ -1,4 +1,4 @@
-import AccessDenied from "@/app/access-denied/page";
+import AccessDenied from "@/components/access-denied";
 import PayingGuestCard from "@/components/paying-guest/paying-guest-card";
 import { AUTH_CONFIG } from "@/config";
 import { auth } from "@/lib/auth";
@@ -24,9 +24,8 @@ const page = async () => {
     },
   });
 
-  console.log("success page==>", success);
   if (!success || error) {
-    return AccessDenied();
+    return <AccessDenied />;
   }
 
   const ownPayingGuestInfo = await getPayingGuestByUserId(session.user.id);

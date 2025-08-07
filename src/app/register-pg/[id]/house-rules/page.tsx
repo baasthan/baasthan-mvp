@@ -1,4 +1,4 @@
-import AccessDenied from "@/app/access-denied/page";
+import AccessDenied from "@/components/access-denied";
 import HouseRules from "@/components/paying-guest/registration/house-rules";
 import { APP_CONFIG, AUTH_CONFIG } from "@/config";
 import { auth } from "@/lib/auth";
@@ -41,7 +41,7 @@ const PayingGuestDetailsPage = async ({
   });
 
   if (!success || error) {
-    return AccessDenied();
+    return <AccessDenied />;
   }
 
   const payingGuestInfo = await getUnverifiedPayingGuestInfoById(id);
@@ -51,7 +51,7 @@ const PayingGuestDetailsPage = async ({
   }
 
   if (session.user.id !== payingGuestInfo.user.id) {
-    return AccessDenied();
+    return <AccessDenied />;
   }
 
   return (
