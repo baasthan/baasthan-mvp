@@ -1,9 +1,12 @@
 "use client";
-import useInterestedPGHostsService from "@/hooks/client-hooks/useInterestedPGHostsService";
+import useSendSupportRequest from "@/hooks/client-hooks/useSendSupportRequest";
 import { useSession } from "@/lib/auth-client";
 import { LoaderCircle } from "lucide-react";
 import { useEffect, useState } from "react";
 import z from "zod";
+
+import { SupportReasonEnumMap } from "@/constants/SupportReason";
+import { SupportReasonEnum } from "../../prisma/generated/prisma";
 import { Button } from "./ui/button";
 import {
   Dialog,
@@ -16,6 +19,7 @@ import {
 } from "./ui/dialog";
 import { Input } from "./ui/input";
 import { Label } from "./ui/label";
+import { RadioGroup, RadioGroupItem } from "./ui/radio-group";
 
 type ShareDetailsProps = {
   open?: boolean;
@@ -23,11 +27,13 @@ type ShareDetailsProps = {
 };
 
 const ShareDetails = ({ open, onOpenChange }: ShareDetailsProps) => {
-  const { data, isPending } = useSession();
+  const { data, isPending, refetch } = useSession();
 
   const [email, setEmail] = useState<string>("");
   const [disableEmailFiled, setDisableEmailField] = useState<boolean>(false);
   const [mobileNumber, setMobileNumber] = useState<string>("");
+
+  const [supportReason, setSupportReason] = useState<SupportReasonEnum>();
 
   const {
     data: response,
@@ -36,7 +42,18 @@ const ShareDetails = ({ open, onOpenChange }: ShareDetailsProps) => {
     isLoading,
     error,
     resetService,
-  } = useInterestedPGHostsService();
+  } = useSendSupportRequest();
+
+  useEffect(() => {
+    if (open === false) {
+      if (!data) {
+        setEmail("");
+      }
+      setMobileNumber("");
+      setSupportReason("hosting");
+      resetService();
+    }
+  }, [open]);
 
   useEffect(() => {
     if (!isPending && data && data.user) {
@@ -46,9 +63,13 @@ const ShareDetails = ({ open, onOpenChange }: ShareDetailsProps) => {
   }, [isPending, data]);
 
   useEffect(() => {
-    setTimeout(() => {
-      if (onOpenChange) onOpenChange(false);
-    }, 2200);
+    if (isSuccess) {
+      setTimeout(() => {
+        if (onOpenChange) {
+          onOpenChange(false);
+        }
+      }, 2200);
+    }
   }, [isSuccess]);
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -85,6 +106,29 @@ const ShareDetails = ({ open, onOpenChange }: ShareDetailsProps) => {
             type="tel"
           />
         </div>
+        <div className="grid gap-2">
+          <Label>Reason</Label>
+          <RadioGroup
+            className="grid gap-2 grid-cols-3"
+            value={supportReason}
+            defaultValue={SupportReasonEnum.hosting}
+            onValueChange={(value: SupportReasonEnum) => {
+              console.log(value);
+              setSupportReason(value);
+            }}
+          >
+            {(
+              Object.keys(SupportReasonEnum) as Array<
+                keyof typeof SupportReasonEnum
+              >
+            ).map((reason) => (
+              <Label key={reason}>
+                <RadioGroupItem value={reason} />
+                {SupportReasonEnumMap[reason]}
+              </Label>
+            ))}
+          </RadioGroup>
+        </div>
         <DialogFooter className="flex flex-col gap-4">
           <div
             className={`${
@@ -110,7 +154,7 @@ const ShareDetails = ({ open, onOpenChange }: ShareDetailsProps) => {
             </DialogClose>
             <Button
               onClick={() => {
-                execute({ email, mobileNumber });
+                execute({ email, mobileNumber, reason: supportReason });
               }}
               disabled={
                 isLoading ||

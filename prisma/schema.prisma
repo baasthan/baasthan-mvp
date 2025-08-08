@@ -263,3 +263,33 @@ model PGHostInterested {
   createdAt      DateTime @default(now())
   updatedAt      DateTime @updatedAt
 }
+
+enum SupportReasonEnum {
+  tenancy
+  hosting
+  other
+}
+
+enum SupportStatusEnum {
+  created
+  inProgress
+  contacted
+  awaitingUserVerification
+  awaitingPropertyVerification
+  done
+  failedUserVerification
+  failedPropertyVerication
+}
+
+model SupportRequest {
+  id             String            @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  email          String
+  mobileNumber   String            @db.Char(10)
+  reason         SupportReasonEnum @default(tenancy)
+  status         SupportStatusEnum @default(created)
+  emailTriggered Boolean           @default(false)
+  createdAt      DateTime          @default(now())
+  updatedAt      DateTime          @updatedAt
+
+  @@unique([email, mobileNumber, reason])
+}

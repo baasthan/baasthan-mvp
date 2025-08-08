@@ -27,11 +27,38 @@ export function greetings({ name }: GreetingsArgs) {
                 </h1>
                 <p style="margin: 0 0 16px; font-size: 15px; color: #444;">
                   Welcome to the Baasthan Community! 🎉
-                  Your account is now ready, and we’re excited to have you here.
+                  Your account is now ready, and we're excited to have you here.
                 </p>
-                <p style="margin: 0 0 24px; font-size: 15px; color: #444;">
+                <h2 style="margin: 0 0 16px; font-size: 18px; color: #4c4ddc; font-weight: 600;">
+                  Explore properties and benefits for tenants:
+                </h2>
+                <ul style="margin: 0 0 24px; padding-left: 20px; font-size: 15px; color: #444;">
+                  <li>Browse verified property listings</li>
+                  <li>Find accommodations that match your preferences</li>
+                  <li>Enjoy secure and seamless communication with hosts</li>
+                </ul>
+                <table role="presentation" border="0" cellpadding="0" cellspacing="0" style="margin-bottom: 32px;">
+                  <tr>
+                    <td bgcolor="#4c4ddc" style="border-radius: 26px;">
+                      <a href="https://mvp.baasthan.com/paying-guest" target="_blank" style="
+                      display: inline-block;
+                      padding: 12px 24px;
+                      font-size: 15px;
+                      font-weight: 500;
+                      color: #ffffff;
+                      text-decoration: none;
+                      border-radius: 26px;
+                      background-color: #4c4ddc;">
+                        Explore Properties
+                      </a>
+                    </td>
+                  </tr>
+                </table>
+                <h2 style="margin: 0 0 16px; font-size: 18px; color: #4c4ddc; font-weight: 600;">
                   Interested in hosting your property?
-                  We’d love to help you get started. Whether it’s a paying guest room, an apartment, or a shared space —
+                </h2>
+                <p style="margin: 0 0 24px; font-size: 15px; color: #444;">
+                  We'd love to help you get started. Whether it's a paying guest room, an apartment, or a shared space —
                   Baasthan makes it easy to connect with people looking for a place to stay.
                 </p>
                 <ul style="margin: 0 0 24px; padding-left: 20px; font-size: 15px; color: #444;">
@@ -51,13 +78,13 @@ export function greetings({ name }: GreetingsArgs) {
                       text-decoration: none;
                       border-radius: 26px;
                       background-color: #4c4ddc;">
-                        Share Your Details with Us
+                        Contact Us to Start Hosting
                       </a>
                     </td>
                   </tr>
                 </table>
                 <p style="margin: 30px 0 0; font-size: 13px; color: #777;">
-                  Not ready yet? That’s okay — you can explore our listings and get inspired anytime.
+                  Not ready yet? That's okay — you can explore our listings and get inspired anytime.
                 </p>
               </td>
             </tr>
@@ -73,6 +100,6 @@ export function greetings({ name }: GreetingsArgs) {
   </body>
 
 </html>`,
-    text: `Hi ${name},\n\nWelcome to the Baasthan Community. Share your details with us to post your properties.`,
+    text: `Hi ${name},\n\nWelcome to the Baasthan Community.`,
   };
 }

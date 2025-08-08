@@ -15,6 +15,7 @@ import {
   endUserRole,
   hostUserRole,
   superAdminRole,
+  supportUserRole,
 } from "./access-controls/app-access-control";
 import {
   orgAcc,
@@ -63,6 +64,7 @@ export const auth = betterAuth({
         contentAdminRole,
         contentCreatorRole,
         endUserRole,
+        supportUserRole,
       },
     }),
     organization({

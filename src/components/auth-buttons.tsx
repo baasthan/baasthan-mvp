@@ -60,6 +60,10 @@ const AuthButtons = ({
   const { data, isPending } = useSession();
 
   useEffect(() => {
+    console.log("Use Effect");
+    if (searchParams.get(AUTH_CONFIG.SIGN_IN_PROMPT) === "true") {
+      setOpenDialog(true);
+    }
     const params = new URLSearchParams(searchParams.toString());
     if (data && data.user) {
       setOpenDialog(false);
@@ -68,7 +72,7 @@ const AuthButtons = ({
         router.replace(`?${params.toString()}`);
       }
     }
-  }, [data]);
+  }, [data, searchParams]);
 
   const handleSignOut = async () => {
     const currentUrl = window.location.href;

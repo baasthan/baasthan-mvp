@@ -1,8 +1,4 @@
-interface AcknowledgementArgs {
-  name: string;
-}
-
-export function hostingAcknowledgement({ name }: AcknowledgementArgs) {
+export function hostingAcknowledgement() {
   return {
     subject: "We’ve Received Your Hosting Request",
     html: `<!DOCTYPE html>
@@ -23,10 +19,10 @@ export function hostingAcknowledgement({ name }: AcknowledgementArgs) {
           <tr>
             <td style="padding: 32px 40px;">
               <h1 style="margin: 0 0 20px; font-size: 22px; color: #333; font-weight: 600;">
-                Hi ${name},
+                Dear User,
               </h1>
               <p style="margin: 0 0 16px; font-size: 15px; color: #444;">
-                Thank you for sharing your details with us. We’ve received your hosting request and our team will get in touch with you shortly.
+                Thank you for sharing your details with us. We've received your hosting request and our team will get in touch with you shortly.
               </p>
               <p style="margin: 0 0 24px; font-size: 15px; color: #444;">
                 In the meantime, feel free to explore our community and discover how other hosts are making the most of their properties.
@@ -48,6 +44,6 @@ export function hostingAcknowledgement({ name }: AcknowledgementArgs) {
 </body>
 
 </html>`,
-    text: `Hi ${name},\n\nThank you for sharing your details with us. We’ve received your hosting request and our team will get in touch with you shortly.\n\nWe appreciate your interest in Baasthan.\n\n— Baasthana Team`,
+    text: `Dear User,\n\nThank you for sharing your details with us. We've received your hosting request and our team will get in touch with you shortly.\n\nWe appreciate your interest in Baasthan.\n\n— Baasthana Team`,
   };
 }

@@ -12,7 +12,7 @@ const blogs = [
   "view_all",
 ] as const;
 
-const support = ["*"] as const;
+const support = ["*", "view", "update"] as const;
 
 const survey = [
   "view",
@@ -65,6 +65,10 @@ const contentAdminRole = appAC.newRole({
   blogs: ["insert", "update", "go-live", "export", "public_view", "delete"],
 });
 
+const supportUserRole = appAC.newRole({
+  support: ["view", "update"],
+});
+
 const contentCreatorRole = appAC.newRole({
   appDashBoard: ["view"],
   survey: ["insert", "update", "view"],
@@ -86,4 +90,5 @@ export {
   endUserRole,
   hostUserRole,
   superAdminRole,
+  supportUserRole,
 };

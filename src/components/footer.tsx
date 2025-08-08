@@ -97,7 +97,10 @@ export default function Footer() {
             <h3 className="font-semibold mb-4">Support</h3>
             <ul className="space-y-2 text-gray-400">
               <li>
-                <a href="#" className="hover:text-white transition-colors">
+                <a
+                  href="/support"
+                  className="hover:text-white transition-colors"
+                >
                   Help Center
                 </a>
               </li>

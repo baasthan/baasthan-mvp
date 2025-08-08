@@ -9,6 +9,7 @@ import {
   endUserRole,
   hostUserRole,
   superAdminRole,
+  supportUserRole,
 } from "./access-controls/app-access-control";
 
 export const authClient = createAuthClient({
@@ -28,6 +29,7 @@ export const authClient = createAuthClient({
         contentAdminRole,
         contentCreatorRole,
         endUserRole,
+        supportUserRole,
       },
     }),
   ],
