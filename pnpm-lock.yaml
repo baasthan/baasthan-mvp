@@ -62,6 +62,9 @@ importers:
       '@tinymce/tinymce-react':
         specifier: ^6.3.0
         version: 6.3.0(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(tinymce@8.0.1)
+      baasthan-mvp:
+        specifier: 'link:'
+        version: 'link:'
       better-auth:
         specifier: ^1.2.12
         version: 1.2.12

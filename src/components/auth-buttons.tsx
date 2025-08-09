@@ -4,8 +4,9 @@ import { AUTH_CONFIG } from "@/config";
 import { signOut, useSession } from "@/lib/auth-client";
 import { cn } from "@/lib/utils";
 import getInitials from "@/utils/getInitials";
-import { DropdownMenuGroup } from "@radix-ui/react-dropdown-menu";
+
 import dynamic from "next/dynamic";
+import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
@@ -21,6 +22,8 @@ import {
 import {
   DropdownMenu,
   DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "./ui/tabs";
@@ -44,11 +47,15 @@ const SignUp = dynamic(() => import("./sign-up"), {
 interface AuthButtonsProps {
   isMobile?: boolean;
   onActionComplete?: () => void;
+  isHostUser?: boolean;
+  isSupportUser?: boolean;
 }
 
 const AuthButtons = ({
   isMobile = false,
   onActionComplete,
+  isHostUser,
+  isSupportUser,
 }: AuthButtonsProps) => {
   const searchParams = useSearchParams();
   const router = useRouter();
@@ -126,7 +133,22 @@ const AuthButtons = ({
               </div>
             </div>
           </DropdownMenuGroup>
-
+          <DropdownMenuGroup>
+            {isHostUser && (
+              <DropdownMenuItem>
+                <Link href="/host/dashboard" prefetch>
+                  Your Dashboard
+                </Link>
+              </DropdownMenuItem>
+            )}
+            {isSupportUser && (
+              <DropdownMenuItem>
+                <Link href="/dashboard/support" prefetch>
+                  Support Dashboard
+                </Link>
+              </DropdownMenuItem>
+            )}
+          </DropdownMenuGroup>
           <Button
             variant="destructive"
             className="w-full"

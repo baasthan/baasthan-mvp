@@ -116,7 +116,7 @@ const PayingGuestCard = ({
         </div>
       </div>
       <div className="px-4">
-        <Button className="w-full" asChild>
+        <Button className="w-full" asChild disabled={!baasthanVerified}>
           <Link href={`/paying-guest/details/${id}`} prefetch>
             View Details
           </Link>

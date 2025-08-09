@@ -68,16 +68,17 @@ const PayingGuestDetailsPage = async ({
     headers: await headers(),
   });
 
-  const userId =
-    authSession &&
-    authSession.user &&
-    (authSession.user.role === "hostUserRole" ||
-      authSession.user.role === "superAdminRole")
-      ? authSession.user.id
-      : undefined;
+  let hostId = undefined;
+  let isSuperAdmin = false;
+
+  if (authSession && authSession.user) {
+    const roles = authSession.user.role?.split(",") ?? [];
+    hostId = roles.includes("hostUserRole") ? authSession.user.id : undefined;
+    isSuperAdmin = roles.includes("superAdminRole");
+  }
 
   const payingGuestInfo: PayingGuestInfoWithPublicUser | null =
-    await getPayingGuestInfoById(id, userId);
+    await getPayingGuestInfoById(id, hostId);
 
   if (!payingGuestInfo) {
     console.log(authSession?.user);

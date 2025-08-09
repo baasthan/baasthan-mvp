@@ -72,3 +72,23 @@ export const getSupportRequestsByEmail = async ({
     return null;
   }
 };
+
+export const getSupportTickets = async () => {
+  try {
+    const client = new PrismaClient();
+    const supportTickets = await client.supportRequest.findMany({
+      orderBy: {
+        createdAt: "asc",
+      },
+    });
+
+    if (supportTickets && supportTickets.length !== 0) {
+      return supportTickets;
+    }
+    return null;
+  } catch (error) {
+    console.error("Unable to fetch support tickets");
+    console.debug(error);
+    return null;
+  }
+};

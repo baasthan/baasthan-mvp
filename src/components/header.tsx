@@ -13,6 +13,8 @@ import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 
 const Header = () => {
   const [isHostUser, setIsHostUser] = useState(false);
+  const [isSupportUser, setIsSupportUser] = useState(false);
+  const [isEndUser, setIsEndUser] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [shareDetailsOpen, setShareDetailsOpen] = useState(false);
   const { data: session } = useSession();
@@ -28,9 +30,16 @@ const Header = () => {
   useEffect(() => {
     if (session && session.user && session.user.role) {
       const user = session.user as typeof session.user & { role?: string };
-      const role = user.role;
-      if (role === "hostUserRole" || role === "superAdminRole") {
+      const roles = user.role ? user.role.split(",") : [];
+
+      if (roles.includes("hostUserRole")) {
         setIsHostUser(true);
+      }
+      if (roles.includes("supportUserRole")) {
+        setIsSupportUser(true);
+      }
+      if (roles.includes("endUserRole")) {
+        setIsEndUser(true);
       }
     }
   }, [session]);
@@ -61,32 +70,26 @@ const Header = () => {
             {/* Desktop Navigation */}
             <nav className="hidden md:flex items-center space-x-8">
               <Button variant={"link"} asChild>
-                <Link
-                  href="/paying-guest"
-                  prefetch
-                  // className="text-gray-700 hover:text-primary font-medium transition-colors"
-                >
+                <Link href="/paying-guest" prefetch>
                   Paying Guests
                 </Link>
               </Button>
-              <Button
-                variant={"link"}
-                onClick={() => {
-                  setShareDetailsOpen(true);
-                }}
-              >
-                Contact Us
-              </Button>
-              {isHostUser && (
-                <Button variant={"link"} asChild>
-                  <Link href="/host/dashboard" prefetch>
-                    Dashboard
-                  </Link>
+              {(isEndUser || isHostUser) && (
+                <Button
+                  variant={"link"}
+                  onClick={() => {
+                    setShareDetailsOpen(true);
+                  }}
+                >
+                  Contact Us
                 </Button>
               )}
 
               <Suspense>
-                <AuthButtons />
+                <AuthButtons
+                  isHostUser={isHostUser}
+                  isSupportUser={isSupportUser}
+                />
               </Suspense>
             </nav>
 
@@ -184,6 +187,15 @@ const Header = () => {
                             </svg>
                           </span>
                           Dashboard
+                        </Link>
+                      )}
+                      {isSupportUser && (
+                        <Link
+                          href="/dashboard/support"
+                          prefetch
+                          className="flex items-center text-sm text-muted-foreground hover:text-primary font-medium rounded-md px-3 py-2.5 hover:bg-accent/50"
+                        >
+                          Support Dashboard
                         </Link>
                       )}
 

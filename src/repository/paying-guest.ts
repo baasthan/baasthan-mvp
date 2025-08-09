@@ -155,7 +155,8 @@ export const getPayingGuestInfoByFilters = async (
 
 export const getPayingGuestInfoById = async (
   id: string,
-  hostId?: string
+  hostId?: string,
+  includeUnverified: boolean = false
 ): Promise<PayingGuestInfoWithPublicUser | null> => {
   try {
     const prisma = new PrismaClient();
