@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { APP_CONFIG } from "@/config";
 import { signOut, useSession } from "@/lib/auth-client";
 import getInitials from "@/utils/getInitials";
-import { Menu, X } from "lucide-react";
+import { Headset, LayoutDashboard, LogOut, Menu, X } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { Suspense, useEffect, useState } from "react";
@@ -168,24 +168,7 @@ const Header = () => {
                           className="flex items-center text-sm text-muted-foreground hover:text-primary font-medium rounded-md px-3 py-2.5 hover:bg-accent/50"
                           onClick={() => setMobileMenuOpen(false)}
                         >
-                          <span className="mr-2">
-                            <svg
-                              xmlns="http://www.w3.org/2000/svg"
-                              width="16"
-                              height="16"
-                              viewBox="0 0 24 24"
-                              fill="none"
-                              stroke="currentColor"
-                              strokeWidth="2"
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                            >
-                              <rect width="7" height="9" x="3" y="3" rx="1" />
-                              <rect width="7" height="5" x="14" y="3" rx="1" />
-                              <rect width="7" height="9" x="14" y="12" rx="1" />
-                              <rect width="7" height="5" x="3" y="16" rx="1" />
-                            </svg>
-                          </span>
+                          <LayoutDashboard size={16} className="mr-2" />
                           Dashboard
                         </Link>
                       )}
@@ -195,34 +178,11 @@ const Header = () => {
                           prefetch
                           className="flex items-center text-sm text-muted-foreground hover:text-primary font-medium rounded-md px-3 py-2.5 hover:bg-accent/50"
                         >
+                          <Headset size={16} className="mr-2" />
                           Support Dashboard
                         </Link>
                       )}
 
-                      {/* <Link
-                      href="/profile"
-                      prefetch
-                      className="flex items-center text-sm text-muted-foreground hover:text-primary font-medium rounded-md px-3 py-2.5 hover:bg-accent/50"
-                      onClick={() => setMobileMenuOpen(false)}
-                    >
-                      <span className="mr-2">
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="16"
-                          height="16"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          stroke="currentColor"
-                          strokeWidth="2"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                        >
-                          <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" />
-                          <circle cx="12" cy="7" r="4" />
-                        </svg>
-                      </span>
-                      Profile
-                    </Link> */}
                       <Button
                         variant="ghost"
                         className="w-full justify-start h-auto py-2.5 px-3 font-medium text-sm text-destructive hover:text-destructive hover:bg-destructive/10"
@@ -231,23 +191,7 @@ const Header = () => {
                           signOut();
                         }}
                       >
-                        <span className="mr-2">
-                          <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            width="16"
-                            height="16"
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            stroke="currentColor"
-                            strokeWidth="2"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                          >
-                            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
-                            <polyline points="16 17 21 12 16 7" />
-                            <line x1="21" y1="12" x2="9" y2="12" />
-                          </svg>
-                        </span>
+                        <LogOut />
                         Sign Out
                       </Button>
                     </>

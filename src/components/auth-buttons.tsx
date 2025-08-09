@@ -5,6 +5,7 @@ import { signOut, useSession } from "@/lib/auth-client";
 import { cn } from "@/lib/utils";
 import getInitials from "@/utils/getInitials";
 
+import { Headset, LayoutDashboard } from "lucide-react";
 import dynamic from "next/dynamic";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -136,14 +137,24 @@ const AuthButtons = ({
           <DropdownMenuGroup>
             {isHostUser && (
               <DropdownMenuItem>
-                <Link href="/host/dashboard" prefetch>
+                <Link
+                  href="/host/dashboard"
+                  prefetch
+                  className="flex flex-row items-center"
+                >
+                  <LayoutDashboard size={16} className="mr-2" />
                   Your Dashboard
                 </Link>
               </DropdownMenuItem>
             )}
             {isSupportUser && (
               <DropdownMenuItem>
-                <Link href="/dashboard/support" prefetch>
+                <Link
+                  href="/dashboard/support"
+                  prefetch
+                  className="flex flex-row items-center"
+                >
+                  <Headset size={16} className="mr-2" />
                   Support Dashboard
                 </Link>
               </DropdownMenuItem>
